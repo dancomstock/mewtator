@@ -1,0 +1,8 @@
+{
+    "game_install_dir": "",
+    "mod_folder": "",
+    "resources_hash": "",
+    "modlist_hash": "",
+    "skip_startup_hash": true,
+    "skip_process_restore": false
+}
