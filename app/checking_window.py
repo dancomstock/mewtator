@@ -1,9 +1,14 @@
 import tkinter as tk
+from app.i18n import t
+
 
 class CheckingWindow:
-    def __init__(self, root, message="Checking..."):
+    def __init__(self, root, message=None):
+        if message is None:
+            message = t("window.checking")
+        
         self.win = tk.Toplevel(root)
-        self.win.title("Please Wait")
+        self.win.title(t("window.please_wait"))
         self.win.geometry("360x120")
         self.win.resizable(False, False)
 

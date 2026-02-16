@@ -1,0 +1,66 @@
+{
+  "window": {
+    "app_title": "Mewtator: Gestor de Mods de Mewgenics",
+    "please_wait": "Por favor espera",
+    "checking": "Verificando..."
+  },
+  "menu": {
+    "file": {
+      "label": "Archivo",
+      "settings": "Configuración",
+      "unpack": "Desempaquetar Recursos Base",
+      "repack": "Reempaquetar Recursos",
+      "open_mods": "Abrir Carpeta de Mods",
+      "open_game": "Abrir Carpeta del Juego",
+      "launch_game": "Lanzar Juego",
+      "exit": "Salir"
+    },
+    "language": "Idioma"
+  },
+  "ui": {
+    "disabled_mods": "Mods Deshabilitados",
+    "enabled_mods": "Mods Habilitados",
+    "disable_all": "Deshabilitar Todo",
+    "enable_all": "Habilitar Todo",
+    "launch_game": "Lanzar Juego",
+    "no_preview": "Sin Imagen de Vista Previa"
+  },
+  "context_menu": {
+    "move_top": "Mover al Inicio",
+    "move_bottom": "Mover al Final",
+    "disable": "Deshabilitar",
+    "enable": "Habilitar"
+  },
+  "settings": {
+    "title": "Configuración",
+    "auto_detect": "Detectar Automáticamente la Instalación del Juego",
+    "game_install_dir": "Directorio de Instalación del Juego",
+    "mods_folder": "Carpeta de Mods",
+    "language": "Idioma",
+    "browse": "Examinar",
+    "save": "Guardar Configuración",
+    "select_language_title": "Seleccionar Idioma",
+    "select_language_text": "Elige tu idioma preferido:",
+    "confirm": "Confirmar"
+  },
+  "messages": {
+    "setup_required_title": "Configuración Requerida",
+    "setup_required_text": "Las rutas del juego aún no están configuradas.\nPor favor, ingresa tu configuración.",
+    "error": "Error",
+    "game_dir_required": "Se requiere el directorio de instalación del juego.",
+    "game_dir_invalid": "El directorio de instalación del juego es inválido.",
+    "game_dir_not_found": "No Encontrado",
+    "game_dir_not_detected": "No se pudo detectar la instalación de Mewgenics.",
+    "missing_mods_title": "Mods Faltantes",
+    "missing_mods_text": "Los siguientes mods habilitados faltan en la carpeta de mods:\n\n{missing}\n\nPor favor, elimínalos de la lista de habilitados o restaura las carpetas.",
+    "exe_not_found": "Mewgenics.exe no encontrado en el directorio del juego seleccionado.",
+    "launch_error": "Error",
+    "launch_failed": "Error al lanzar Mewgenics:\n{error}",
+    "permission_denied_modlist": "Permiso denegado: No se puede escribir en modlist.txt.\nAsegúrate de que la carpeta tenga permisos de escritura.",
+    "save_error": "Error al guardar la lista de mods:\n{error}"
+  },
+  "progress": {
+    "unpacking": "Desempaquetando Recursos",
+    "repacking": "Reempaquetando Recursos"
+  }
+}

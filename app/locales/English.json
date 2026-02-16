@@ -1,0 +1,70 @@
+{
+    "window": {
+        "app_title": "Mewtator: Mewgenics Mod Manager",
+        "please_wait": "Please Wait",
+        "checking": "Checking..."
+    },
+    "menu": {
+        "file": {
+            "label": "File",
+            "settings": "Settings",
+            "unpack": "Unpack Base Resources",
+            "repack": "Repack Resources",
+            "open_mods": "Open Mods Folder",
+            "open_game": "Open Game Folder",
+            "launch_game": "Launch Game",
+            "exit": "Exit"
+        },
+        "language": "Language"
+    },
+    "ui": {
+        "disabled_mods": "Disabled Mods",
+        "enabled_mods": "Enabled Mods",
+        "disable_all": "Disable All",
+        "enable_all": "Enable All",
+        "launch_game": "Launch Game",
+        "no_preview": "No Preview Image"
+    },
+    "context_menu": {
+        "move_top": "Move to Top",
+        "move_bottom": "Move to Bottom",
+        "disable": "Disable",
+        "enable": "Enable"
+    },
+    "settings": {
+        "title": "Settings",
+        "auto_detect": "Auto-Detect Game Install",
+        "game_install_dir": "Game Install Directory",
+        "mods_folder": "Mods Folder",
+        "language": "Language",
+        "browse": "Browse",
+        "save": "Save Settings",
+        "select_language_title": "Select Language",
+        "select_language_text": "Choose your preferred language:",
+        "confirm": "Confirm"
+    },
+    "messages": {
+        "setup_required_title": "Setup Required",
+        "setup_required_text": "Game paths are not configured yet.\nPlease enter your settings.",
+        "error": "Error",
+        "game_dir_required": "Game install directory is required.",
+        "game_dir_invalid": "Game install directory is invalid.",
+        "game_dir_not_found": "Not Found",
+        "game_dir_not_detected": "Unable to detect the Mewgenics installation.",
+        "missing_mods_title": "Missing Mods",
+        "missing_mods_text": "The following enabled mods are missing from the mods folder:\n\n{missing}\n\nPlease remove them from the enabled list or restore the folders.",
+        "exe_not_found": "Mewgenics.exe not found in the selected game directory.",
+        "launch_error": "Error",
+        "launch_failed": "Failed to launch Mewgenics:\n{error}",
+        "permission_denied_modlist": "Permission denied: Unable to write to modlist.txt.\nMake sure the folder has write permissions.",
+        "save_error": "Error saving mod list:\n{error}"
+    },
+    "progress": {
+        "unpacking": "Unpacking Resources",
+        "repacking": "Repacking Resources"
+    },
+    "auto": {
+        "string": " ",
+        "___": "<--->"
+    }
+}

@@ -2,12 +2,42 @@ import json
 import os
 
 def load_config(config_path):
+    """
+    Load config from file. Creates a default config if missing or invalid.
+    Returns a valid config dict or None if required paths are missing.
+    """
+    
+    # Default config template
+    default_config = {
+        "game_install_dir": "",
+        "mod_folder": "",
+        "language": ""
+    }
+    
+    # Check if file exists
     if not os.path.exists(config_path):
-        return None  # triggers first-run settings window
-
-    with open(config_path, "r", encoding="utf-8") as f:
-        cfg = json.load(f)
-
+        # Create new config file with defaults
+        save_config(config_path, default_config)
+        return None  # triggers settings window for paths
+    
+    # Try to load and parse JSON
+    try:
+        with open(config_path, "r", encoding="utf-8") as f:
+            cfg = json.load(f)
+    except (json.JSONDecodeError, IOError):
+        # Invalid JSON or file read error - replace with default
+        save_config(config_path, default_config)
+        return None
+    
+    # Validate structure - ensure required keys exist
+    if not isinstance(cfg, dict):
+        save_config(config_path, default_config)
+        return None
+    
+    for key in default_config.keys():
+        if key not in cfg:
+            cfg[key] = default_config[key]
+    
     # Extract paths
     game_install = cfg.get("game_install_dir", "").strip()
     mod_folder = cfg.get("mod_folder", "").strip()
