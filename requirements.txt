@@ -1,3 +1,2 @@
 psutil
-pywin32
 Pillow

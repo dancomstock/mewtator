@@ -341,19 +341,19 @@ def build_ui(cfg, root, reload_ui_callback):
             ("  Shift+S", "Move mod to bottom"),
             ("  Right-Click", "Context menu (Move Top/Bottom/Disable)"),
             ("", ""),
-            ("Controller (Steam Deck)", ""),
-            ("  D-Pad / Left Stick", "Navigate menus and lists"),
-            ("  A Button (South)", "Confirm / Enable-Disable mod"),
-            ("  B Button (East)", "Back / Cancel"),
-            ("  L1/R1 Bumpers", "Move mods up/down in load order"),
-            ("  L2/R2 Triggers", "Switch between lists"),
-            ("  Start Button", "Launch game"),
-            ("  Select Button", "Open settings"),
-            ("", ""),
-            ("Tips", ""),
-            ("  • Touch screen works for all controls", ""),
-            ("  • Use trackpad for precise selection", ""),
-            ("  • Hold Steam button for on-screen keyboard", ""),
+            # ("Controller (Steam Deck)", ""),
+            # ("  D-Pad / Left Stick", "Navigate menus and lists"),
+            # ("  A Button (South)", "Confirm / Enable-Disable mod"),
+            # ("  B Button (East)", "Back / Cancel"),
+            # ("  L1/R1 Bumpers", "Move mods up/down in load order"),
+            # ("  L2/R2 Triggers", "Switch between lists"),
+            # ("  Start Button", "Launch game"),
+            # ("  Select Button", "Open settings"),
+            # ("", ""),
+            # ("Tips", ""),
+            # ("  • Touch screen works for all controls", ""),
+            # ("  • Use trackpad for precise selection", ""),
+            # ("  • Hold Steam button for on-screen keyboard", ""),
         ]
         
         for shortcut, description in shortcuts:
@@ -379,12 +379,12 @@ def build_ui(cfg, root, reload_ui_callback):
                width=25, height=2).pack(pady=10)
 
     # HELP MENU - added after show_controller_help is defined
-    help_menu = Menu(menubar, tearoff=0)
-    help_menu.add_command(label=t("menu.help.controller", "Controller Guide"), 
-                          command=show_controller_help, accelerator="F1")
-    help_menu.add_command(label=t("menu.help.readme", "README"), 
-                          command=lambda: open_file_or_folder("README.md"))
-    menubar.add_cascade(label=t("menu.help.label", "Help"), menu=help_menu)
+    # help_menu = Menu(menubar, tearoff=0)
+    # help_menu.add_command(label=t("menu.help.shortcuts", "Hotkeys"), 
+    #                       command=show_controller_help, accelerator="F1")
+    # help_menu.add_command(label=t("menu.help.readme", "README"), 
+    #                       command=lambda: open_file_or_folder("README.md"))
+    # menubar.add_cascade(label=t("menu.help.label", "Help"), menu=help_menu)
     
     root.config(menu=menubar)
 
@@ -1041,16 +1041,16 @@ def build_ui(cfg, root, reload_ui_callback):
         launch_game(cfg["game_install_dir"], enabled_mod_paths)
 
     # Add comprehensive keyboard/controller shortcut hints
-    hints_frame = Frame(footer)
-    hints_frame.pack(pady=(10, 5))
+    # hints_frame = Frame(footer)
+    # hints_frame.pack(pady=(10, 5))
     
-    hint_line1 = t("ui.shortcuts_line1", 
-                   default="Quick Keys: F1=Help • F2=Settings • F3=Steam Launch • F5=Launch Game • Ctrl+Q=Quit")
-    hint_line2 = t("ui.shortcuts_line2", 
-                   default="Mod Controls: [ ] PgUp/PgDn=Switch • Space/Enter=Toggle • W/S=Move • Shift+W/S=Top/Bottom")
+    # hint_line1 = t("ui.shortcuts_line1", 
+    #                default="Quick Keys: F1=Help • F2=Settings • F3=Steam Launch • F5=Launch Game • Ctrl+Q=Quit")
+    # hint_line2 = t("ui.shortcuts_line2", 
+    #                default="Mod Controls: [ ] PgUp/PgDn=Switch • Space/Enter=Toggle • W/S=Move • Shift+W/S=Top/Bottom")
     
-    Label(hints_frame, text=hint_line1, font=("Arial", 9, "bold"), fg="#2563eb").pack()
-    Label(hints_frame, text=hint_line2, font=("Arial", 9), fg="gray").pack()
+    # Label(hints_frame, text=hint_line1, font=("Arial", 9, "bold"), fg="#2563eb").pack()
+    # Label(hints_frame, text=hint_line2, font=("Arial", 9), fg="gray").pack()
     
     # Larger launch button for touch/controller
     TTKButton(footer, text=t("ui.launch_game"), command=on_launch_game, width=30).pack(pady=(5, 20))
