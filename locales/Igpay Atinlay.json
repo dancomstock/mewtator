@@ -1,0 +1,84 @@
+{
+    "_metadata": {
+        "language_name": "Igpay Atinlay (Pig Latin)",
+        "machine_translated": false,
+        "note": "Away unfay anguagelay orfay ecretsay essagesmay!"
+    },
+    "window": {
+        "app_title": "Ewtator-May: Ewgenics-May Od-May Anager-May",
+        "please_wait": "Ease-Play Ait-Way",
+        "checking": "Ecking-Chay..."
+    },
+    "menu": {
+        "file": {
+            "label": "Ile-Fay",
+            "settings": "Ettings-Say",
+            "unpack": "Unpack-ay Ase-Bay Esources-Ray",
+            "repack": "Epack-Ray Esources-Ray",
+            "open_mods": "Open-ay Ods-May Older-Fay",
+            "open_game": "Open-ay Ame-Gay Older-Fay",
+            "launch_game": "Aunch-Lay Ame-Gay",
+            "copy_launch_options": "Opy-Cay Aunch-Lay Options-ay (or-fay Eam-Stay)",
+            "exit": "Exit-ay"
+        },
+        "language": "Anguage-Lay"
+    },
+    "ui": {
+        "disabled_mods": "Isabled-Day Ods-May",
+        "enabled_mods": "Enabled-ay Ods-May",
+        "disable_all": "Isable-Day All-ay",
+        "enable_all": "Enable-ay All-ay",
+        "launch_game": "Aunch-Lay Ame-Gay",
+        "no_preview": "O-Nay Eview-Pray Image-ay"
+    },
+    "context_menu": {
+        "move_top": "Ove-May o-tay Op-Tay",
+        "move_bottom": "Ove-May o-tay Ottom-Bay",
+        "disable": "Isable-Day",
+        "enable": "Enable-ay"
+    },
+    "settings": {
+        "title": "Ettings-Say",
+        "auto_detect": "Auto-ay-Etect-Day Ame-Gay Install-ay",
+        "game_install_dir": "Ame-Gay Install-ay Irectory-Day",
+        "mods_folder": "Ods-May Older-Fay",
+        "language": "Anguage-Lay",
+        "browse": "Owse-Bray",
+        "save": "Ave-Say Ettings-Say",
+        "select_language_title": "Elect-Say Anguage-Lay",
+        "select_language_text": "Oose-Chay our-yay eferred-pray anguage-lay:",
+        "confirm": "Onfirm-Cay"
+    },
+    "messages": {
+        "setup_required_title": "Etup-Say Equired-Ray",
+        "setup_required_text": "Ame-Gay aths-pay are-ay ot-nay onfigured-cay et-yay.\nEase-play enter-ay our-yay ettings-say.",
+        "error": "Error-ay",
+        "game_dir_required": "Ame-Gay install-ay irectory-day is-ay equired-ray.",
+        "game_dir_invalid": "Ame-Gay install-ay irectory-day is-ay invalid-ay.",
+        "game_dir_not_found": "Ot-Nay Ound-Fay",
+        "game_dir_not_detected": "Unable-ay o-tay etect-day e-thay Ewgenics-May installation-ay.",
+        "missing_mods_title": "Issing-May Ods-May",
+        "missing_mods_text": "E-Thay ollowing-fay enabled-ay ods-may are-ay issing-may om-fray e-thay ods-may older-fay:\n\n{missing}\n\nEase-play emove-ray em-thay om-fray e-thay enabled-ay ist-lay or-ay estore-ray e-thay olders-fay.",
+        "exe_not_found": "Ewgenics-May.exe-ay ot-nay ound-fay in-ay e-thay elected-say ame-gay irectory-day.",
+        "launch_error": "Error-ay",
+        "launch_failed": "Ailed-Fay o-tay aunch-lay Ewgenics-May:\n{error}",
+        "permission_denied_modlist": "Ermission-Pay enied-day: Unable-ay o-tay ite-wray o-tay odlist-may.txt-ay.\nAke-May ure-say e-thay older-fay as-hay ite-wray ermissions-pay.",
+        "save_error": "Error-ay aving-say od-may ist-lay:\n{error}",
+        "proton_warning_title": "Oton-Pray/Eam-Stay Eck-Day Arning-Way",
+        "proton_warning_text": "Ou-Yay are-ay unning-ray on-ay Inux-Lay ith-way a-ay Indows-Way .exe-ay (Oton-Pray).\n\nOds-May outside-ay e-thay ame-gay irectory-day ay-may ot-nay ork-way orrectly-cay.\nIt's-ay ecommended-ray o-tay eep-kay ods-may in-ay e-thay ame-gay older-fay on-ay Inux-Lay/Eam-Stay Eck-Day.\n\nOntinue-Cay anyway-ay?",
+        "no_mods_title": "O-Nay Ods-May Enabled-ay",
+        "no_mods_text": "O-Nay ods-may are-ay enabled-ay. Enable-ay ome-say ods-may irst-fay.",
+        "launch_options_title": "Eam-Stay Aunch-Lay Options-ay",
+        "launch_options_instructions": "Opy-Cay ese-thay aunch-lay options-ay and-ay aste-pay em-thay in-ay Eam-Stay:\nIght-Ray-ick-clay ame-gay → Operties-Pray → Aunch-Lay Options-ay\n\nOte-Nay: On-ay Inux-Lay/Oton-Pray/Eam-Stay Eck-Day, eep-kay ods-may in-ay e-thay ame-gay irectory-day or-fay est-bay ompatibility-cay.",
+        "copy_to_clipboard": "Opy-Cay o-tay Ipboard-Clay",
+        "close": "Ose-Clay"
+    },
+    "progress": {
+        "unpacking": "Unpacking-ay Esources-Ray",
+        "repacking": "Epacking-Ray Esources-Ray"
+    },
+    "auto": {
+        "string": " ",
+        "___": "<--->"
+    }
+}

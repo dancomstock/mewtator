@@ -6,28 +6,28 @@ class ProgressWindow:
         # Create a top-level window
         self.win = tk.Toplevel(root)
         self.win.title(title)
-        self.win.geometry("420x140")
+        self.win.geometry("500x160")  # Larger for Steam Deck
         self.win.resizable(False, False)
 
         # Prevent user from closing mid-operation
         self.win.protocol("WM_DELETE_WINDOW", lambda: None)
 
         # Title label
-        self.label = tk.Label(self.win, text=title, font=("Arial", 12))
+        self.label = tk.Label(self.win, text=title, font=("Arial", 13))
         self.label.pack(pady=10)
 
         # Progress bar
         self.pb = ttk.Progressbar(
             self.win,
             orient="horizontal",
-            length=380,
+            length=450,
             mode="determinate",
             maximum=maximum
         )
         self.pb.pack(pady=10)
 
         # Percentage label
-        self.percent_label = tk.Label(self.win, text="0%", font=("Arial", 10))
+        self.percent_label = tk.Label(self.win, text="0%", font=("Arial", 11))
         self.percent_label.pack()
 
         # Force initial draw

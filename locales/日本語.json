@@ -1,0 +1,84 @@
+{
+    "_metadata": {
+        "language_name": "日本語",
+        "machine_translated": true,
+        "note": "This translation was machine-generated. If you would like to submit a better translation, please contact the developer."
+    },
+    "window": {
+        "app_title": "Mewtator：Mewgenics Mod マネージャー",
+        "please_wait": "お待ちください",
+        "checking": "確認中..."
+    },
+    "menu": {
+        "file": {
+            "label": "ファイル",
+            "settings": "設定",
+            "unpack": "ベースリソースを展開",
+            "repack": "リソースを再パック",
+            "open_mods": "Mod フォルダを開く",
+            "open_game": "ゲームフォルダを開く",
+            "launch_game": "ゲームを起動",
+            "copy_launch_options": "起動オプションをコピー（Steam 用）",
+            "exit": "終了"
+        },
+        "language": "言語"
+    },
+    "ui": {
+        "disabled_mods": "無効な Mod",
+        "enabled_mods": "有効な Mod",
+        "disable_all": "すべて無効",
+        "enable_all": "すべて有効",
+        "launch_game": "ゲームを起動",
+        "no_preview": "プレビュー画像なし"
+    },
+    "context_menu": {
+        "move_top": "一番上に移動",
+        "move_bottom": "一番下に移動",
+        "disable": "無効化",
+        "enable": "有効化"
+    },
+    "settings": {
+        "title": "設定",
+        "auto_detect": "ゲームインストールを自動検出",
+        "game_install_dir": "ゲームインストールディレクトリ",
+        "mods_folder": "Mod フォルダ",
+        "language": "言語",
+        "browse": "参照",
+        "save": "設定を保存",
+        "select_language_title": "言語を選択",
+        "select_language_text": "お好みの言語を選択してください：",
+        "confirm": "確認"
+    },
+    "messages": {
+        "setup_required_title": "設定が必要です",
+        "setup_required_text": "ゲームパスがまだ設定されていません。\n設定を入力してください。",
+        "error": "エラー",
+        "game_dir_required": "ゲームインストールディレクトリは必須です。",
+        "game_dir_invalid": "ゲームインストールディレクトリが無効です。",
+        "game_dir_not_found": "見つかりません",
+        "game_dir_not_detected": "Mewgenics のインストールを検出できませんでした。",
+        "missing_mods_title": "Mod が見つかりません",
+        "missing_mods_text": "次の有効な Mod が Mod フォルダにありません：\n\n{missing}\n\n有効リストから削除するか、フォルダを復元してください。",
+        "exe_not_found": "選択したゲームディレクトリに Mewgenics.exe が見つかりません。",
+        "launch_error": "エラー",
+        "launch_failed": "Mewgenics の起動に失敗しました：\n{error}",
+        "permission_denied_modlist": "アクセス拒否：modlist.txt に書き込めません。\nフォルダに書き込み権限があることを確認してください。",
+        "save_error": "Mod リストの保存エラー：\n{error}",
+        "proton_warning_title": "Proton/Steam Deck 警告",
+        "proton_warning_text": "Linux で Windows .exe（Proton）を使用しています。\n\nゲームディレクトリ外の Mod は正しく動作しない可能性があります。\nLinux/Steam Deck では Mod をゲームフォルダに保存することをお勧めします。\n\nそれでも続行しますか？",
+        "no_mods_title": "有効な Mod がありません",
+        "no_mods_text": "有効な Mod がありません。まず Mod を有効にしてください。",
+        "launch_options_title": "Steam 起動オプション",
+        "launch_options_instructions": "これらの起動オプションをコピーして Steam に貼り付けてください：\nゲームを右クリック → プロパティ → 起動オプション\n\n注：Linux/Proton/Steam Deck では、最高の互換性のために Mod をゲームディレクトリに保存してください。",
+        "copy_to_clipboard": "クリップボードにコピー",
+        "close": "閉じる"
+    },
+    "progress": {
+        "unpacking": "リソースを展開中",
+        "repacking": "リソースを再パック中"
+    },
+    "auto": {
+        "string": " ",
+        "___": "<--->"
+    }
+}

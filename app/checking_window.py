@@ -9,13 +9,13 @@ class CheckingWindow:
         
         self.win = tk.Toplevel(root)
         self.win.title(t("window.please_wait"))
-        self.win.geometry("360x120")
+        self.win.geometry("420x140")  # Larger for Steam Deck
         self.win.resizable(False, False)
 
         # Prevent closing
         self.win.protocol("WM_DELETE_WINDOW", lambda: None)
 
-        label = tk.Label(self.win, text=message, font=("Arial", 12))
+        label = tk.Label(self.win, text=message, font=("Arial", 13))
         label.pack(expand=True, pady=20)
 
         # Force draw

@@ -1,0 +1,84 @@
+{
+    "_metadata": {
+        "language_name": "Deutsch",
+        "machine_translated": true,
+        "note": "This translation was machine-generated. If you would like to submit a better translation, please contact the developer."
+    },
+    "window": {
+        "app_title": "Mewtator: Mewgenics Mod-Manager",
+        "please_wait": "Bitte Warten",
+        "checking": "Überprüfung..."
+    },
+    "menu": {
+        "file": {
+            "label": "Datei",
+            "settings": "Einstellungen",
+            "unpack": "Basis-Ressourcen Entpacken",
+            "repack": "Ressourcen Neu Packen",
+            "open_mods": "Mods-Ordner Öffnen",
+            "open_game": "Spiel-Ordner Öffnen",
+            "launch_game": "Spiel Starten",
+            "copy_launch_options": "Startoptionen Kopieren (für Steam)",
+            "exit": "Beenden"
+        },
+        "language": "Sprache"
+    },
+    "ui": {
+        "disabled_mods": "Deaktivierte Mods",
+        "enabled_mods": "Aktivierte Mods",
+        "disable_all": "Alle Deaktivieren",
+        "enable_all": "Alle Aktivieren",
+        "launch_game": "Spiel Starten",
+        "no_preview": "Kein Vorschaubild"
+    },
+    "context_menu": {
+        "move_top": "Nach Oben",
+        "move_bottom": "Nach Unten",
+        "disable": "Deaktivieren",
+        "enable": "Aktivieren"
+    },
+    "settings": {
+        "title": "Einstellungen",
+        "auto_detect": "Spiel-Installation Automatisch Erkennen",
+        "game_install_dir": "Spiel-Installationsverzeichnis",
+        "mods_folder": "Mods-Ordner",
+        "language": "Sprache",
+        "browse": "Durchsuchen",
+        "save": "Einstellungen Speichern",
+        "select_language_title": "Sprache Auswählen",
+        "select_language_text": "Wählen Sie Ihre bevorzugte Sprache:",
+        "confirm": "Bestätigen"
+    },
+    "messages": {
+        "setup_required_title": "Einrichtung Erforderlich",
+        "setup_required_text": "Spielpfade sind noch nicht konfiguriert.\nBitte geben Sie Ihre Einstellungen ein.",
+        "error": "Fehler",
+        "game_dir_required": "Spiel-Installationsverzeichnis ist erforderlich.",
+        "game_dir_invalid": "Spiel-Installationsverzeichnis ist ungültig.",
+        "game_dir_not_found": "Nicht Gefunden",
+        "game_dir_not_detected": "Mewgenics-Installation konnte nicht erkannt werden.",
+        "missing_mods_title": "Fehlende Mods",
+        "missing_mods_text": "Die folgenden aktivierten Mods fehlen im Mods-Ordner:\n\n{missing}\n\nBitte entfernen Sie sie aus der aktivierten Liste oder stellen Sie die Ordner wieder her.",
+        "exe_not_found": "Mewgenics.exe im ausgewählten Spielverzeichnis nicht gefunden.",
+        "launch_error": "Fehler",
+        "launch_failed": "Mewgenics konnte nicht gestartet werden:\n{error}",
+        "permission_denied_modlist": "Zugriff verweigert: Kann nicht in modlist.txt schreiben.\nStellen Sie sicher, dass der Ordner Schreibrechte hat.",
+        "save_error": "Fehler beim Speichern der Mod-Liste:\n{error}",
+        "proton_warning_title": "Proton/Steam Deck Warnung",
+        "proton_warning_text": "Sie verwenden Linux mit einer Windows .exe (Proton).\n\nMods außerhalb des Spielverzeichnisses funktionieren möglicherweise nicht richtig.\nEs wird empfohlen, Mods im Spielordner auf Linux/Steam Deck zu behalten.\n\nTrotzdem fortfahren?",
+        "no_mods_title": "Keine Mods Aktiviert",
+        "no_mods_text": "Keine Mods sind aktiviert. Aktivieren Sie zuerst einige Mods.",
+        "launch_options_title": "Steam-Startoptionen",
+        "launch_options_instructions": "Kopieren Sie diese Startoptionen und fügen Sie sie in Steam ein:\nRechtsklick auf Spiel → Eigenschaften → Startoptionen\n\nHinweis: Behalten Sie Mods auf Linux/Proton/Steam Deck im Spielverzeichnis für beste Kompatibilität.",
+        "copy_to_clipboard": "In Zwischenablage Kopieren",
+        "close": "Schließen"
+    },
+    "progress": {
+        "unpacking": "Ressourcen Entpacken",
+        "repacking": "Ressourcen Neu Packen"
+    },
+    "auto": {
+        "string": " ",
+        "___": "<--->"
+    }
+}

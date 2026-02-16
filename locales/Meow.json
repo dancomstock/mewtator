@@ -1,0 +1,84 @@
+{
+    "_metadata": {
+        "language_name": "Meow (Cat)",
+        "machine_translated": false,
+        "note": "A purr-fectly fun language for cat lovers!"
+    },
+    "window": {
+        "app_title": "Mewtator: Meowgenics Meow Meownager",
+        "please_wait": "Meow Meow",
+        "checking": "Meowing..."
+    },
+    "menu": {
+        "file": {
+            "label": "Meow",
+            "settings": "Meow Meow",
+            "unpack": "Meow Meow Meow",
+            "repack": "Meow Meow Meow",
+            "open_mods": "Meow Meow Meow",
+            "open_game": "Meow Meow Meow",
+            "launch_game": "Meow Meow",
+            "copy_launch_options": "Meow Meow Meow (meow Meow)",
+            "exit": "Meow"
+        },
+        "language": "Meow"
+    },
+    "ui": {
+        "disabled_mods": "Meow Meow",
+        "enabled_mods": "Meow Meow",
+        "disable_all": "Meow Meow",
+        "enable_all": "Meow Meow",
+        "launch_game": "Meow Meow",
+        "no_preview": "Meow Meow Meow"
+    },
+    "context_menu": {
+        "move_top": "Meow meow Meow",
+        "move_bottom": "Meow meow Meow",
+        "disable": "Meow",
+        "enable": "Meow"
+    },
+    "settings": {
+        "title": "Meow Meow",
+        "auto_detect": "Meow-Meow Meow Meow",
+        "game_install_dir": "Meow Meow Meow",
+        "mods_folder": "Meow Meow",
+        "language": "Meow",
+        "browse": "Meow",
+        "save": "Meow Meow",
+        "select_language_title": "Meow Meow",
+        "select_language_text": "Meow meow meow meow meow:",
+        "confirm": "Meow"
+    },
+    "messages": {
+        "setup_required_title": "Meow Meow",
+        "setup_required_text": "Meow meow meow meow meow meow.\nMeow meow meow meow.",
+        "error": "Meow",
+        "game_dir_required": "Meow meow meow meow meow.",
+        "game_dir_invalid": "Meow meow meow meow meow.",
+        "game_dir_not_found": "Meow Meow",
+        "game_dir_not_detected": "Meow meow meow meow Meowgenics meow.",
+        "missing_mods_title": "Meow Meow",
+        "missing_mods_text": "Meow meow meow meow meow meow meow meow:\n\n{missing}\n\nMeow meow meow meow meow meow meow meow meow.",
+        "exe_not_found": "Meowgenics.exe meow meow meow meow meow meow.",
+        "launch_error": "Meow",
+        "launch_failed": "Meow meow meow Meowgenics:\n{error}",
+        "permission_denied_modlist": "Meow meow: Meow meow meow meow modlist.txt.\nMeow meow meow meow meow meow meow.",
+        "save_error": "Meow meow meow meow:\n{error}",
+        "proton_warning_title": "Meow/Meow Meow Meow",
+        "proton_warning_text": "Meow meow meow Meow meow meow Meow .exe (Meow).\n\nMeow meow meow meow meow meow meow meow meow.\nMeow meow meow meow meow meow meow meow Meow/Meow Meow.\n\nMeow meow?",
+        "no_mods_title": "Meow Meow Meow",
+        "no_mods_text": "Meow meow meow meow. Meow meow meow meow.",
+        "launch_options_title": "Meow Meow Meow",
+        "launch_options_instructions": "Meow meow meow meow meow meow meow meow Meow:\nMeow-meow meow → Meow → Meow Meow\n\nMeow: Meow Meow/Meow/Meow Meow, meow meow meow meow meow meow meow meow meow.",
+        "copy_to_clipboard": "Meow meow Meow",
+        "close": "Meow"
+    },
+    "progress": {
+        "unpacking": "Meow Meow",
+        "repacking": "Meow Meow"
+    },
+    "auto": {
+        "string": " ",
+        "___": "<--->"
+    }
+}

@@ -1,0 +1,84 @@
+{
+    "_metadata": {
+        "language_name": "Français",
+        "machine_translated": true,
+        "note": "This translation was machine-generated. If you would like to submit a better translation, please contact the developer."
+    },
+    "window": {
+        "app_title": "Mewtator : Gestionnaire de Mods Mewgenics",
+        "please_wait": "Veuillez Patienter",
+        "checking": "Vérification..."
+    },
+    "menu": {
+        "file": {
+            "label": "Fichier",
+            "settings": "Paramètres",
+            "unpack": "Décompresser les Ressources de Base",
+            "repack": "Recompresser les Ressources",
+            "open_mods": "Ouvrir le Dossier des Mods",
+            "open_game": "Ouvrir le Dossier du Jeu",
+            "launch_game": "Lancer le Jeu",
+            "copy_launch_options": "Copier les Options de Lancement (pour Steam)",
+            "exit": "Quitter"
+        },
+        "language": "Langue"
+    },
+    "ui": {
+        "disabled_mods": "Mods Désactivés",
+        "enabled_mods": "Mods Activés",
+        "disable_all": "Tout Désactiver",
+        "enable_all": "Tout Activer",
+        "launch_game": "Lancer le Jeu",
+        "no_preview": "Pas d'Image d'Aperçu"
+    },
+    "context_menu": {
+        "move_top": "Déplacer en Haut",
+        "move_bottom": "Déplacer en Bas",
+        "disable": "Désactiver",
+        "enable": "Activer"
+    },
+    "settings": {
+        "title": "Paramètres",
+        "auto_detect": "Détection Automatique du Jeu",
+        "game_install_dir": "Répertoire d'Installation du Jeu",
+        "mods_folder": "Dossier des Mods",
+        "language": "Langue",
+        "browse": "Parcourir",
+        "save": "Enregistrer les Paramètres",
+        "select_language_title": "Sélectionner la Langue",
+        "select_language_text": "Choisissez votre langue préférée :",
+        "confirm": "Confirmer"
+    },
+    "messages": {
+        "setup_required_title": "Configuration Requise",
+        "setup_required_text": "Les chemins du jeu ne sont pas encore configurés.\nVeuillez entrer vos paramètres.",
+        "error": "Erreur",
+        "game_dir_required": "Le répertoire d'installation du jeu est requis.",
+        "game_dir_invalid": "Le répertoire d'installation du jeu est invalide.",
+        "game_dir_not_found": "Non Trouvé",
+        "game_dir_not_detected": "Impossible de détecter l'installation de Mewgenics.",
+        "missing_mods_title": "Mods Manquants",
+        "missing_mods_text": "Les mods activés suivants sont manquants dans le dossier des mods :\n\n{missing}\n\nVeuillez les retirer de la liste activée ou restaurer les dossiers.",
+        "exe_not_found": "Mewgenics.exe introuvable dans le répertoire de jeu sélectionné.",
+        "launch_error": "Erreur",
+        "launch_failed": "Échec du lancement de Mewgenics :\n{error}",
+        "permission_denied_modlist": "Permission refusée : Impossible d'écrire dans modlist.txt.\nAssurez-vous que le dossier a les permissions d'écriture.",
+        "save_error": "Erreur lors de l'enregistrement de la liste des mods :\n{error}",
+        "proton_warning_title": "Avertissement Proton/Steam Deck",
+        "proton_warning_text": "Vous utilisez Linux avec un .exe Windows (Proton).\n\nLes mods en dehors du répertoire du jeu peuvent ne pas fonctionner correctement.\nIl est recommandé de garder les mods dans le dossier du jeu sur Linux/Steam Deck.\n\nContinuer quand même ?",
+        "no_mods_title": "Aucun Mod Activé",
+        "no_mods_text": "Aucun mod n'est activé. Activez d'abord des mods.",
+        "launch_options_title": "Options de Lancement Steam",
+        "launch_options_instructions": "Copiez ces options de lancement et collez-les dans Steam :\nClic droit sur le jeu → Propriétés → Options de Lancement\n\nNote : Sur Linux/Proton/Steam Deck, gardez les mods dans le répertoire du jeu pour une meilleure compatibilité.",
+        "copy_to_clipboard": "Copier dans le Presse-papiers",
+        "close": "Fermer"
+    },
+    "progress": {
+        "unpacking": "Décompression des Ressources",
+        "repacking": "Recompression des Ressources"
+    },
+    "auto": {
+        "string": " ",
+        "___": "<--->"
+    }
+}

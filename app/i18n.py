@@ -1,5 +1,6 @@
 import json
 import os
+import sys
 from pathlib import Path
 
 class Translator:
@@ -9,7 +10,14 @@ class Translator:
         self.load_translations()
     
     def load_translations(self):
-        lang_dir = Path(__file__).parent / "locales"
+        # Handle both frozen (PyInstaller) and normal execution
+        if getattr(sys, 'frozen', False):
+            # Running as compiled executable - locales next to .exe
+            lang_dir = Path(sys.executable).parent / "locales"
+        else:
+            # Running as script - locales in project root
+            lang_dir = Path(__file__).parent.parent / "locales"
+        
         lang_file = lang_dir / f"{self.language}.json"
         
         # Always load English as fallback

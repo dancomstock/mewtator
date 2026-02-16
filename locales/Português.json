@@ -1,0 +1,84 @@
+{
+    "_metadata": {
+        "language_name": "Português (Brasil)",
+        "machine_translated": true,
+        "note": "This translation was machine-generated. If you would like to submit a better translation, please contact the developer."
+    },
+    "window": {
+        "app_title": "Mewtator: Gerenciador de Mods Mewgenics",
+        "please_wait": "Por Favor Aguarde",
+        "checking": "Verificando..."
+    },
+    "menu": {
+        "file": {
+            "label": "Arquivo",
+            "settings": "Configurações",
+            "unpack": "Descompactar Recursos Base",
+            "repack": "Recompactar Recursos",
+            "open_mods": "Abrir Pasta de Mods",
+            "open_game": "Abrir Pasta do Jogo",
+            "launch_game": "Iniciar Jogo",
+            "copy_launch_options": "Copiar Opções de Inicialização (para Steam)",
+            "exit": "Sair"
+        },
+        "language": "Idioma"
+    },
+    "ui": {
+        "disabled_mods": "Mods Desativados",
+        "enabled_mods": "Mods Ativados",
+        "disable_all": "Desativar Todos",
+        "enable_all": "Ativar Todos",
+        "launch_game": "Iniciar Jogo",
+        "no_preview": "Sem Imagem de Visualização"
+    },
+    "context_menu": {
+        "move_top": "Mover para o Topo",
+        "move_bottom": "Mover para Baixo",
+        "disable": "Desativar",
+        "enable": "Ativar"
+    },
+    "settings": {
+        "title": "Configurações",
+        "auto_detect": "Detectar Automaticamente o Jogo",
+        "game_install_dir": "Diretório de Instalação do Jogo",
+        "mods_folder": "Pasta de Mods",
+        "language": "Idioma",
+        "browse": "Procurar",
+        "save": "Salvar Configurações",
+        "select_language_title": "Selecionar Idioma",
+        "select_language_text": "Escolha seu idioma preferido:",
+        "confirm": "Confirmar"
+    },
+    "messages": {
+        "setup_required_title": "Configuração Necessária",
+        "setup_required_text": "Os caminhos do jogo ainda não estão configurados.\nPor favor, insira suas configurações.",
+        "error": "Erro",
+        "game_dir_required": "O diretório de instalação do jogo é obrigatório.",
+        "game_dir_invalid": "O diretório de instalação do jogo é inválido.",
+        "game_dir_not_found": "Não Encontrado",
+        "game_dir_not_detected": "Não foi possível detectar a instalação do Mewgenics.",
+        "missing_mods_title": "Mods Faltando",
+        "missing_mods_text": "Os seguintes mods ativados estão faltando na pasta de mods:\n\n{missing}\n\nPor favor, remova-os da lista ativada ou restaure as pastas.",
+        "exe_not_found": "Mewgenics.exe não encontrado no diretório do jogo selecionado.",
+        "launch_error": "Erro",
+        "launch_failed": "Falha ao iniciar o Mewgenics:\n{error}",
+        "permission_denied_modlist": "Permissão negada: Não é possível gravar no modlist.txt.\nCertifique-se de que a pasta tenha permissões de gravação.",
+        "save_error": "Erro ao salvar a lista de mods:\n{error}",
+        "proton_warning_title": "Aviso Proton/Steam Deck",
+        "proton_warning_text": "Você está usando Linux com um .exe do Windows (Proton).\n\nMods fora do diretório do jogo podem não funcionar corretamente.\nÉ recomendado manter os mods na pasta do jogo no Linux/Steam Deck.\n\nContinuar mesmo assim?",
+        "no_mods_title": "Nenhum Mod Ativado",
+        "no_mods_text": "Nenhum mod está ativado. Ative alguns mods primeiro.",
+        "launch_options_title": "Opções de Inicialização do Steam",
+        "launch_options_instructions": "Copie estas opções de inicialização e cole no Steam:\nClique com o botão direito no jogo → Propriedades → Opções de Inicialização\n\nNota: No Linux/Proton/Steam Deck, mantenha os mods no diretório do jogo para melhor compatibilidade.",
+        "copy_to_clipboard": "Copiar para a Área de Transferência",
+        "close": "Fechar"
+    },
+    "progress": {
+        "unpacking": "Descompactando Recursos",
+        "repacking": "Recompactando Recursos"
+    },
+    "auto": {
+        "string": " ",
+        "___": "<--->"
+    }
+}

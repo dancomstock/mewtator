@@ -1,6 +1,7 @@
 from tkinter import (
-    Toplevel, Label, Entry, Button, filedialog, messagebox, Frame, END, StringVar, OptionMenu
+    Toplevel, Label, Entry, Button, filedialog, messagebox, Frame, END, StringVar
 )
+from tkinter import ttk
 import os
 import sys
 import json
@@ -21,11 +22,31 @@ def get_executable_dir():
     return os.path.dirname(os.path.abspath(__file__))
 
 def get_available_languages():
-    lang_dir = Path(__file__).parent / "locales"
+    # Handle both frozen (PyInstaller) and normal execution
+    if getattr(sys, 'frozen', False):
+        # Running as compiled executable - locales next to .exe
+        lang_dir = Path(sys.executable).parent / "locales"
+    else:
+        # Running as script - locales in project root
+        lang_dir = Path(__file__).parent.parent / "locales"
+    
     langs = []
-    for file in lang_dir.glob("*.json"):
-        langs.append(file.stem)  # "English", "fr", "de"
-    return sorted(langs)
+    if lang_dir.exists():
+        for file in lang_dir.glob("*.json"):
+            langs.append(file.stem)  # "English", "fr", "de"
+    
+    if not langs:
+        return ["English"]
+    
+    # Sort alphabetically
+    langs = sorted(langs)
+    
+    # Move English to the top if it exists
+    if "English" in langs:
+        langs.remove("English")
+        langs.insert(0, "English")
+    
+    return langs
 
 
 def show_language_selection_dialog(root):
@@ -51,16 +72,29 @@ def show_language_selection_dialog(root):
     Label(win, text=t("settings.select_language_text", "Choose your preferred language:")).pack(pady=5)
     
     available_langs = get_available_languages()
-    lang_var = StringVar(value=available_langs[0] if available_langs else "English")
+    if not available_langs:
+        available_langs = ["English"]  # Fallback if no languages found
     
-    lang_menu = OptionMenu(win, lang_var, *available_langs)
+    lang_var = StringVar(value=available_langs[0])
+    
+    # Use ttk.Combobox for better Wine/Proton compatibility
+    lang_menu = ttk.Combobox(win, textvariable=lang_var, values=available_langs, state="readonly", width=30, height=15)
     lang_menu.pack(pady=10)
     
     def confirm():
         result[0] = lang_var.get()
         win.destroy()
     
-    Button(win, text=t("settings.confirm", "Confirm"), command=confirm).pack(pady=15)
+    # Larger button for touch/controller input
+    confirm_btn = Button(win, text=t("settings.confirm", "Confirm"), command=confirm, width=20, height=2)
+    confirm_btn.pack(pady=15)
+    
+    # Keyboard shortcuts
+    win.bind("<Return>", lambda e: confirm())
+    win.bind("<KP_Enter>", lambda e: confirm())
+    
+    # Set focus to combobox
+    lang_menu.focus_set()
     
     win.wait_window()
     return result[0]
@@ -73,8 +107,10 @@ def open_settings_window(root, config_path, on_save_callback):
 
     win = Toplevel(root)
     win.title(t("settings.title", "Settings"))
-    win.geometry("600x260")
+    win.geometry("700x340")  # Larger for touch/controller
     win.resizable(False, False)
+    win.grab_set()
+    win.transient(root)
 
 
     # ---------------------------------------------------------
@@ -87,11 +123,12 @@ def open_settings_window(root, config_path, on_save_callback):
         lbl = Label(row, text=label_text, width=20, anchor="w")
         lbl.pack(side="left")
 
-        entry = Entry(row, width=50)
+        entry = Entry(row, width=50, font=("Arial", 10))
         entry.pack(side="left", fill="x", expand=True, padx=5)
 
-        btn = Button(row, text=t("settings.browse"))
-        btn.pack(side="right")
+        # Larger button for touch/controller
+        btn = Button(row, text=t("settings.browse"), width=12, height=1)
+        btn.pack(side="right", padx=2)
 
         return entry, btn
 
@@ -111,7 +148,9 @@ def open_settings_window(root, config_path, on_save_callback):
         else:
             messagebox.showwarning(t("messages.game_dir_not_found"), t("messages.game_dir_not_detected"))
 
-    Button(win, text=t("settings.auto_detect"), command=do_auto_detect).pack(pady=5)
+    # Larger button for touch/controller
+    auto_detect_btn = Button(win, text=t("settings.auto_detect"), command=do_auto_detect, width=25, height=2)
+    auto_detect_btn.pack(pady=10)
 
     # ---------------------------------------------------------
     # Game Install Directory
@@ -163,7 +202,8 @@ def open_settings_window(root, config_path, on_save_callback):
 
     lang_var = StringVar(value=current_lang)
 
-    lang_menu = OptionMenu(lang_row, lang_var, *available_langs)
+    # Use ttk.Combobox for better Wine/Proton compatibility
+    lang_menu = ttk.Combobox(lang_row, textvariable=lang_var, values=available_langs, state="readonly", width=25, height=15)
     lang_menu.pack(side="left", padx=5)
 
 
@@ -183,6 +223,9 @@ def open_settings_window(root, config_path, on_save_callback):
             messagebox.showerror(t("messages.error"), t("messages.game_dir_required"))
             return
 
+        # Normalize game path
+        game = os.path.normpath(game)
+
         if not os.path.isdir(game):
             messagebox.showerror(t("messages.error"), t("messages.game_dir_invalid"))
             return
@@ -191,6 +234,9 @@ def open_settings_window(root, config_path, on_save_callback):
             # Default mods folder = executable directory / mods
             exe_dir = get_executable_dir()
             mod = os.path.join(exe_dir, "mods")
+        else:
+            # Normalize mod path
+            mod = os.path.normpath(mod)
 
         # Ensure mods folder exists
         os.makedirs(mod, exist_ok=True)
@@ -219,4 +265,19 @@ def open_settings_window(root, config_path, on_save_callback):
         win.destroy()
         on_save_callback(cfg, changed)
 
-    Button(win, text=t("settings.save", "Save Settings"), command=save_settings).pack(pady=15)
+    # Larger button for touch/controller
+    save_btn = Button(win, text=t("settings.save", "Save Settings"), command=save_settings, width=25, height=2)
+    save_btn.pack(pady=15)
+    
+    # Keyboard shortcuts for controller/keyboard users
+    win.bind("<Return>", lambda e: save_settings() if e.widget != game_entry and e.widget != mod_entry else None)
+    win.bind("<KP_Enter>", lambda e: save_settings() if e.widget != game_entry and e.widget != mod_entry else None)
+    win.bind("<Escape>", lambda e: win.destroy())
+    
+    # Add controller hint label
+    hint_label = Label(win, text=t("settings.shortcuts", "Shortcuts: Enter=Save • Esc=Cancel • Tab=Navigate"), 
+                       font=("Arial", 9), fg="gray")
+    hint_label.pack(pady=(0, 5))
+    
+    # Set initial focus to first entry
+    game_entry.focus_set()

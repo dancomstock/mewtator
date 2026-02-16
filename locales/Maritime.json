@@ -1,0 +1,84 @@
+{
+    "_metadata": {
+        "language_name": "Maritime (Pirate)",
+        "machine_translated": false,
+        "note": "Arrr! A swashbucklin' language fer seafarin' scallywags!"
+    },
+    "window": {
+        "app_title": "Mewtator: Mewgenics Mod Quartermaster",
+        "please_wait": "Hold Fast",
+        "checking": "Scannin' th' Horizons..."
+    },
+    "menu": {
+        "file": {
+            "label": "Ship's Log",
+            "settings": "Riggin' & Sails",
+            "unpack": "Plunder th' Base Cargo",
+            "repack": "Stow th' Cargo",
+            "open_mods": "Open th' Mod Hold",
+            "open_game": "Open th' Game Bay",
+            "launch_game": "Set Sail!",
+            "copy_launch_options": "Copy Launch Orders (fer Steam)",
+            "exit": "Abandon Ship"
+        },
+        "language": "Tongue"
+    },
+    "ui": {
+        "disabled_mods": "Landlubber Mods",
+        "enabled_mods": "Sailin' Mods",
+        "disable_all": "Maroon All",
+        "enable_all": "Crew Up All",
+        "launch_game": "Set Sail!",
+        "no_preview": "No Portrait Available"
+    },
+    "context_menu": {
+        "move_top": "Hoist to th' Crow's Nest",
+        "move_bottom": "Send to th' Bilge",
+        "disable": "Maroon",
+        "enable": "Recruit"
+    },
+    "settings": {
+        "title": "Riggin' & Sails",
+        "auto_detect": "Auto-Spot th' Game Port",
+        "game_install_dir": "Game Port Directory",
+        "mods_folder": "Mod Cargo Hold",
+        "language": "Tongue",
+        "browse": "Chart th' Course",
+        "save": "Weigh Anchor",
+        "select_language_title": "Choose Yer Tongue",
+        "select_language_text": "Pick yer preferred tongue, matey:",
+        "confirm": "Aye!"
+    },
+    "messages": {
+        "setup_required_title": "Riggin' Required",
+        "setup_required_text": "Game coordinates ain't charted yet, cap'n.\nPlease enter yer bearings.",
+        "error": "Sink Me!",
+        "game_dir_required": "Game port directory be required, arrr.",
+        "game_dir_invalid": "Game port directory be invalid, ye scurvy dog.",
+        "game_dir_not_found": "Lost at Sea",
+        "game_dir_not_detected": "Can't spot th' Mewgenics port from here.",
+        "missing_mods_title": "Missing Cargo",
+        "missing_mods_text": "Th' followin' mods be missin' from th' cargo hold:\n\n{missing}\n\nRemove 'em from th' manifest or find th' lost treasure.",
+        "exe_not_found": "Mewgenics.exe not spotted in th' selected port.",
+        "launch_error": "Shipwreck!",
+        "launch_failed": "Failed to set sail with Mewgenics:\n{error}",
+        "permission_denied_modlist": "Access denied: Can't write to th' ship's log.\nMake sure th' hold has proper access.",
+        "save_error": "Error stowin' th' mod manifest:\n{error}",
+        "proton_warning_title": "Proton/Steam Deck Warnin'",
+        "proton_warning_text": "Ye be runnin' on Linux with a Windows .exe (Proton).\n\nMods outside th' game bay may not work proper-like.\n'Tis recommended to keep mods in th' game hold on Linux/Steam Deck.\n\nSail on anyway?",
+        "no_mods_title": "No Crew Aboard",
+        "no_mods_text": "No mods be aboard. Recruit some crew first.",
+        "launch_options_title": "Steam Launch Orders",
+        "launch_options_instructions": "Copy these launch orders and paste 'em in Steam:\nRight-click game → Properties → Launch Options\n\nNote: On Linux/Proton/Steam Deck, keep mods in th' game bay fer best sailin'.",
+        "copy_to_clipboard": "Copy to Logbook",
+        "close": "Shove Off"
+    },
+    "progress": {
+        "unpacking": "Plunderin' Cargo",
+        "repacking": "Stowin' Cargo"
+    },
+    "auto": {
+        "string": " ",
+        "___": "<--->"
+    }
+}

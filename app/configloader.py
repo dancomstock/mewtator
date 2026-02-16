@@ -46,9 +46,14 @@ def load_config(config_path):
     if not game_install:
         return None
 
+    # Normalize paths for cross-platform compatibility
+    game_install = os.path.normpath(game_install)
+
     # Default mods folder = program directory / mods
     if not mod_folder:
         mod_folder = os.path.join(os.getcwd(), "mods")
+    else:
+        mod_folder = os.path.normpath(mod_folder)
 
     # Ensure mods folder exists
     os.makedirs(mod_folder, exist_ok=True)

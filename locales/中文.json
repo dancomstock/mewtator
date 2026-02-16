@@ -1,0 +1,84 @@
+{
+    "_metadata": {
+        "language_name": "中文",
+        "machine_translated": true,
+        "note": "This translation was machine-generated. If you would like to submit a better translation, please contact the developer."
+    },
+    "window": {
+        "app_title": "Mewtator：Mewgenics 模组管理器",
+        "please_wait": "请稍候",
+        "checking": "检查中..."
+    },
+    "menu": {
+        "file": {
+            "label": "文件",
+            "settings": "设置",
+            "unpack": "解包基础资源",
+            "repack": "重新打包资源",
+            "open_mods": "打开模组文件夹",
+            "open_game": "打开游戏文件夹",
+            "launch_game": "启动游戏",
+            "copy_launch_options": "复制启动选项（用于 Steam）",
+            "exit": "退出"
+        },
+        "language": "语言"
+    },
+    "ui": {
+        "disabled_mods": "已禁用的模组",
+        "enabled_mods": "已启用的模组",
+        "disable_all": "全部禁用",
+        "enable_all": "全部启用",
+        "launch_game": "启动游戏",
+        "no_preview": "无预览图片"
+    },
+    "context_menu": {
+        "move_top": "移至顶部",
+        "move_bottom": "移至底部",
+        "disable": "禁用",
+        "enable": "启用"
+    },
+    "settings": {
+        "title": "设置",
+        "auto_detect": "自动检测游戏安装",
+        "game_install_dir": "游戏安装目录",
+        "mods_folder": "模组文件夹",
+        "language": "语言",
+        "browse": "浏览",
+        "save": "保存设置",
+        "select_language_title": "选择语言",
+        "select_language_text": "选择您的首选语言：",
+        "confirm": "确认"
+    },
+    "messages": {
+        "setup_required_title": "需要设置",
+        "setup_required_text": "游戏路径尚未配置。\n请输入您的设置。",
+        "error": "错误",
+        "game_dir_required": "游戏安装目录是必需的。",
+        "game_dir_invalid": "游戏安装目录无效。",
+        "game_dir_not_found": "未找到",
+        "game_dir_not_detected": "无法检测到 Mewgenics 安装。",
+        "missing_mods_title": "缺少模组",
+        "missing_mods_text": "以下已启用的模组在模组文件夹中缺失：\n\n{missing}\n\n请将它们从已启用列表中删除或恢复文件夹。",
+        "exe_not_found": "在所选游戏目录中未找到 Mewgenics.exe。",
+        "launch_error": "错误",
+        "launch_failed": "启动 Mewgenics 失败：\n{error}",
+        "permission_denied_modlist": "权限被拒绝：无法写入 modlist.txt。\n请确保文件夹具有写入权限。",
+        "save_error": "保存模组列表时出错：\n{error}",
+        "proton_warning_title": "Proton/Steam Deck 警告",
+        "proton_warning_text": "您在 Linux 上使用 Windows .exe（Proton）。\n\n游戏目录之外的模组可能无法正常工作。\n建议在 Linux/Steam Deck 上将模组保存在游戏文件夹中。\n\n仍要继续吗？",
+        "no_mods_title": "未启用模组",
+        "no_mods_text": "未启用任何模组。请先启用一些模组。",
+        "launch_options_title": "Steam 启动选项",
+        "launch_options_instructions": "复制这些启动选项并粘贴到 Steam 中：\n右键点击游戏 → 属性 → 启动选项\n\n注意：在 Linux/Proton/Steam Deck 上，将模组保存在游戏目录中以获得最佳兼容性。",
+        "copy_to_clipboard": "复制到剪贴板",
+        "close": "关闭"
+    },
+    "progress": {
+        "unpacking": "解包资源中",
+        "repacking": "重新打包资源中"
+    },
+    "auto": {
+        "string": " ",
+        "___": "<--->"
+    }
+}

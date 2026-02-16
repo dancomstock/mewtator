@@ -1,4 +1,9 @@
 {
+    "_metadata": {
+        "language_name": "English",
+        "machine_translated": false,
+        "note": ""
+    },
     "window": {
         "app_title": "Mewtator: Mewgenics Mod Manager",
         "please_wait": "Please Wait",
@@ -13,6 +18,7 @@
             "open_mods": "Open Mods Folder",
             "open_game": "Open Game Folder",
             "launch_game": "Launch Game",
+            "copy_launch_options": "Copy Launch Options (for Steam)",
             "exit": "Exit"
         },
         "language": "Language"
@@ -57,7 +63,15 @@
         "launch_error": "Error",
         "launch_failed": "Failed to launch Mewgenics:\n{error}",
         "permission_denied_modlist": "Permission denied: Unable to write to modlist.txt.\nMake sure the folder has write permissions.",
-        "save_error": "Error saving mod list:\n{error}"
+        "save_error": "Error saving mod list:\n{error}",
+        "proton_warning_title": "Proton/Steam Deck Warning",
+        "proton_warning_text": "You are running on Linux with a Windows .exe (Proton).\n\nMods outside the game directory may not work correctly.\nIt's recommended to keep mods in the game folder on Linux/Steam Deck.\n\nContinue anyway?",
+        "no_mods_title": "No Mods Enabled",
+        "no_mods_text": "No mods are enabled. Enable some mods first.",
+        "launch_options_title": "Steam Launch Options",
+        "launch_options_instructions": "Copy these launch options and paste them in Steam:\nRight-click game → Properties → Launch Options\n\nNote: On Linux/Proton/Steam Deck, keep mods in the game directory for best compatibility.",
+        "copy_to_clipboard": "Copy to Clipboard",
+        "close": "Close"
     },
     "progress": {
         "unpacking": "Unpacking Resources",

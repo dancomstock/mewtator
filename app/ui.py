@@ -1,19 +1,39 @@
 import os
+import sys
 import json
+import subprocess
+import tkinter as tk
 from pathlib import Path
 from tkinter import (
     Frame, Label, Listbox, Scrollbar, Text, Menu,
-    BOTH, LEFT, RIGHT, Y, END, SINGLE, VERTICAL, Button, messagebox
+    BOTH, LEFT, RIGHT, Y, END, SINGLE, VERTICAL, Button, messagebox, Toplevel, WORD
 )
 from tkinter.ttk import Button as TTKButton
 from PIL import Image, ImageTk
 
 from app.settings_window import open_settings_window
 from app.modutils import list_mods
-from app.launcher import launch_game
+from app.launcher import launch_game, get_launch_options
 from app.rebuild import manual_unpack, manual_repack
 from app.i18n import t, init_translator
 from app.configloader import save_config
+
+
+# -----------------------------------------------------
+# Cross-platform file/folder opener
+# -----------------------------------------------------
+
+def open_file_or_folder(path):
+    """
+    Open a file or folder in the system's default file manager.
+    Works cross-platform.
+    """
+    if sys.platform == "win32":
+        os.startfile(path)
+    elif sys.platform == "darwin":
+        subprocess.Popen(["open", path])
+    else:
+        subprocess.Popen(["xdg-open", path])
 
 
 # -----------------------------------------------------
@@ -27,7 +47,6 @@ def reload_ui(old_root, cfg):
         pass  # Callback may have already fired or doesn't exist
     
     old_root.destroy()
-    import tkinter as tk
     new_root = tk.Tk()
 
     def reload_callback(new_cfg, changed=None):
@@ -92,7 +111,7 @@ def build_ui(cfg, root, reload_ui_callback):
     modlist_path = os.path.join(mod_root, "modlist.txt")
 
     root.title(t("window.app_title"))
-    root.geometry("1200x650")
+    root.geometry("1280x720")  # Optimized for Steam Deck resolution
 
     # =======================================================
     # Define Launch Game function (early, for menu use)
@@ -115,6 +134,61 @@ def build_ui(cfg, root, reload_ui_callback):
 
         launch_game(cfg["game_install_dir"], enabled_mod_paths)
 
+    def on_copy_launch_options():
+        """Copy Steam launch options to clipboard"""
+        mods = list_mods(mod_root)
+        
+        # Find enabled mods that are missing
+        missing = [m["name"] for m in mods if m["enabled"] and m["missing"]]
+        
+        if missing:
+            messagebox.showerror(
+                t("messages.missing_mods_title"),
+                t("messages.missing_mods_text", default="").replace("{missing}", "\n".join(missing))
+            )
+            return
+        
+        # Build list of enabled mod paths
+        enabled_mod_paths = [m["path"] for m in mods if m["enabled"]]
+        
+        if not enabled_mod_paths:
+            messagebox.showinfo(
+                t("messages.no_mods_title", "No Mods Enabled"),
+                t("messages.no_mods_text", "No mods are enabled. Enable some mods first.")
+            )
+            return
+        
+        # Generate launch options
+        launch_opts = get_launch_options(enabled_mod_paths, cfg["game_install_dir"])
+        
+        # Copy to clipboard
+        root.clipboard_clear()
+        root.clipboard_append(launch_opts)
+        root.update()
+        
+        # Show in dialog with instructions
+        dialog = Toplevel(root)
+        dialog.title(t("messages.launch_options_title", "Steam Launch Options"))
+        dialog.geometry("700x400")
+        dialog.transient(root)
+        
+        Label(dialog, text=t("messages.launch_options_instructions", 
+                            "Copy these launch options and paste them in Steam:\n"
+                            "Right-click game → Properties → Launch Options\n\n"
+                            "Note: On Linux/Proton/Steam Deck, keep mods in the game directory for best compatibility."),
+              wraplength=650, justify="left", pady=10).pack()
+        
+        text_widget = Text(dialog, wrap=WORD, height=15, font=("Consolas", 9))
+        text_widget.pack(fill=BOTH, expand=True, padx=10, pady=5)
+        text_widget.insert("1.0", launch_opts)
+        text_widget.config(state="normal")
+        
+        # Larger buttons for touch/controller
+        Button(dialog, text=t("messages.copy_to_clipboard", "Copy to Clipboard"), 
+               command=lambda: [root.clipboard_clear(), root.clipboard_append(launch_opts), root.update()],
+               width=30, height=2).pack(pady=5)
+        Button(dialog, text=t("messages.close", "Close"), command=dialog.destroy, width=30, height=2).pack(pady=5)
+
     # =======================================================
     # Menu Bar
     # =======================================================
@@ -129,7 +203,8 @@ def build_ui(cfg, root, reload_ui_callback):
             root,
             "config.json",
             lambda new_cfg, changed: reload_ui_callback(new_cfg)
-        )
+        ),
+        accelerator="F2"
     )
 
     file_menu.add_separator()
@@ -153,16 +228,18 @@ def build_ui(cfg, root, reload_ui_callback):
     file_menu.add_separator()
 
     # OPEN FOLDERS
-    file_menu.add_command(label=t("menu.file.open_mods"), command=lambda: os.startfile(mod_root))
-    file_menu.add_command(label=t("menu.file.open_game"), command=lambda: os.startfile(cfg["game_install_dir"]))
+    file_menu.add_command(label=t("menu.file.open_mods"), command=lambda: open_file_or_folder(mod_root))
+    file_menu.add_command(label=t("menu.file.open_game"), command=lambda: open_file_or_folder(cfg["game_install_dir"]))
 
     file_menu.add_separator()
 
     # LAUNCH GAME
-    file_menu.add_command(label=t("menu.file.launch_game"), command=on_launch_game)
+    file_menu.add_command(label=t("menu.file.launch_game"), command=on_launch_game, accelerator="F5")
+    file_menu.add_command(label=t("menu.file.copy_launch_options", "Copy Launch Options (for Steam)"), 
+                          command=on_copy_launch_options, accelerator="F3")
     
     file_menu.add_separator()
-    file_menu.add_command(label=t("menu.file.exit"), command=root.quit)
+    file_menu.add_command(label=t("menu.file.exit"), command=root.quit, accelerator="Ctrl+Q")
 
     menubar.add_cascade(label=t("menu.file.label"), menu=file_menu)
     
@@ -170,11 +247,31 @@ def build_ui(cfg, root, reload_ui_callback):
     lang_menu = Menu(menubar, tearoff=0)
     
     def get_available_languages():
-        lang_dir = Path(__file__).parent / "locales"
+        # Handle both frozen (PyInstaller) and normal execution
+        if getattr(sys, 'frozen', False):
+            # Running as compiled executable - locales next to .exe
+            lang_dir = Path(sys.executable).parent / "locales"
+        else:
+            # Running as script - locales in project root
+            lang_dir = Path(__file__).parent.parent / "locales"
+        
         langs = []
-        for file in lang_dir.glob("*.json"):
-            langs.append(file.stem)
-        return sorted(langs)
+        if lang_dir.exists():
+            for file in lang_dir.glob("*.json"):
+                langs.append(file.stem)
+        
+        if not langs:
+            return ["English"]
+        
+        # Sort alphabetically
+        langs = sorted(langs)
+        
+        # Move English to the top if it exists
+        if "English" in langs:
+            langs.remove("English")
+            langs.insert(0, "English")
+        
+        return langs
     
     def change_language(lang_code):
         # Update config
@@ -193,7 +290,113 @@ def build_ui(cfg, root, reload_ui_callback):
         lang_menu.add_command(label=f"{is_current}{lang.upper()}", command=lambda l=lang: change_language(l))
     
     menubar.add_cascade(label=t("menu.language"), menu=lang_menu)
+    
+    # =======================================================
+    # Controller Help Function
+    # =======================================================
+    
+    def show_controller_help():
+        """Display controller/keyboard shortcuts help dialog"""
+        help_win = Toplevel(root)
+        help_win.title(t("window.controller_help", "Controller & Keyboard Shortcuts"))
+        help_win.geometry("600x500")
+        help_win.resizable(False, False)
+        help_win.transient(root)
+        
+        Label(help_win, text=t("window.controller_help", "Controller & Keyboard Shortcuts"), 
+              font=("Arial", 14, "bold")).pack(pady=10)
+        
+        # Create scrollable frame
+        canvas = tk.Canvas(help_win)
+        scrollbar = Scrollbar(help_win, orient="vertical", command=canvas.yview)
+        scrollable_frame = Frame(canvas)
+        
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+        
+        # Shortcuts list
+        shortcuts = [
+            ("General", ""),
+            ("  F1", "Show this help"),
+            ("  F2", "Open Settings"),
+            ("  F3", "Copy Steam Launch Options"),
+            ("  F5", "Launch Game"),
+            ("  Ctrl+Q", "Quit Application"),
+            ("", ""),
+            ("Mod List Navigation", ""),
+            ("  [ ] or PgUp/PgDn", "Switch between disabled/enabled lists"),
+            ("  Arrow Keys", "Navigate within a list"),
+            ("  Space / Enter", "Enable/Disable selected mod"),
+            ("  Double-Click", "Quick enable/disable"),
+            ("", ""),
+            ("Mod Organization (Enabled List)", ""),
+            ("  W", "Move mod up one position"),
+            ("  S", "Move mod down one position"),
+            ("  Shift+W", "Move mod to top"),
+            ("  Shift+S", "Move mod to bottom"),
+            ("  Right-Click", "Context menu (Move Top/Bottom/Disable)"),
+            ("", ""),
+            ("Controller (Steam Deck)", ""),
+            ("  D-Pad / Left Stick", "Navigate menus and lists"),
+            ("  A Button (South)", "Confirm / Enable-Disable mod"),
+            ("  B Button (East)", "Back / Cancel"),
+            ("  L1/R1 Bumpers", "Move mods up/down in load order"),
+            ("  L2/R2 Triggers", "Switch between lists"),
+            ("  Start Button", "Launch game"),
+            ("  Select Button", "Open settings"),
+            ("", ""),
+            ("Tips", ""),
+            ("  • Touch screen works for all controls", ""),
+            ("  • Use trackpad for precise selection", ""),
+            ("  • Hold Steam button for on-screen keyboard", ""),
+        ]
+        
+        for shortcut, description in shortcuts:
+            if not shortcut and not description:
+                Frame(scrollable_frame, height=10).pack()
+                continue
+            if not description:
+                Label(scrollable_frame, text=shortcut, font=("Arial", 11, "bold"), 
+                      anchor="w").pack(fill="x", padx=20, pady=(10, 2))
+            else:
+                frame = Frame(scrollable_frame)
+                frame.pack(fill="x", padx=20, pady=1)
+                Label(frame, text=shortcut, font=("Courier", 10, "bold"), 
+                      width=20, anchor="w").pack(side="left")
+                Label(frame, text=description, font=("Arial", 10), 
+                      anchor="w").pack(side="left", padx=10)
+        
+        canvas.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+        scrollbar.pack(side="right", fill="y")
+        
+        # Close button
+        Button(help_win, text=t("messages.close", "Close"), command=help_win.destroy, 
+               width=25, height=2).pack(pady=10)
+
+    # HELP MENU - added after show_controller_help is defined
+    help_menu = Menu(menubar, tearoff=0)
+    help_menu.add_command(label=t("menu.help.controller", "Controller Guide"), 
+                          command=show_controller_help, accelerator="F1")
+    help_menu.add_command(label=t("menu.help.readme", "README"), 
+                          command=lambda: open_file_or_folder("README.md"))
+    menubar.add_cascade(label=t("menu.help.label", "Help"), menu=help_menu)
+    
     root.config(menu=menubar)
+
+    # Bind keyboard shortcuts
+    root.bind("<F1>", lambda e: show_controller_help())
+    root.bind("<F2>", lambda e: open_settings_window(
+        root, "config.json",
+        lambda new_cfg, changed: reload_ui_callback(new_cfg)
+    ))
+    root.bind("<F3>", lambda e: on_copy_launch_options())
+    root.bind("<F5>", lambda e: on_launch_game())
+    root.bind("<Control-q>", lambda e: root.quit())
 
     # =======================================================
     # Layout Frames
@@ -221,14 +424,16 @@ def build_ui(cfg, root, reload_ui_callback):
 
     Label(left_frame, text=t("ui.disabled_mods"), font=("Arial", 14, "bold")).pack()
 
-    Button(left_frame, text=t("ui.disable_all"), command=lambda: disable_all()).pack(pady=5)
+    # Larger button for touch/controller
+    Button(left_frame, text=t("ui.disable_all"), command=lambda: disable_all(), width=20, height=2).pack(pady=5)
 
     left_scroll = Scrollbar(left_frame, orient=VERTICAL)
     left_scroll.pack(side=RIGHT, fill=Y)
 
-    disabled_list = Listbox(left_frame, width=30, height=30,
+    # Increased font size for better readability on Steam Deck
+    disabled_list = Listbox(left_frame, width=30, height=20,
                             yscrollcommand=left_scroll.set,
-                            selectmode=SINGLE)
+                            selectmode=SINGLE, font=("Arial", 11))
     disabled_list.pack(side=LEFT, fill=BOTH, expand=True)
     left_scroll.config(command=disabled_list.yview)
 
@@ -259,7 +464,8 @@ def build_ui(cfg, root, reload_ui_callback):
             disabled_list.insert(END, item)
             save_mod_list(modlist_path, list(enabled_list.get(0, END)))
 
-    swap_btn = Button(center_frame, text="<--->", command=swap_selected, font=("Arial", 12, "bold"), width=4)
+    # Larger swap button for touch/controller
+    swap_btn = Button(center_frame, text="<--->", command=swap_selected, font=("Arial", 14, "bold"), width=6, height=3)
     swap_btn.pack()
 
     # =======================================================
@@ -271,14 +477,16 @@ def build_ui(cfg, root, reload_ui_callback):
 
     Label(right_frame, text=t("ui.enabled_mods"), font=("Arial", 14, "bold")).pack()
 
-    Button(right_frame, text=t("ui.enable_all"), command=lambda: enable_all()).pack(pady=5)
+    # Larger button for touch/controller
+    Button(right_frame, text=t("ui.enable_all"), command=lambda: enable_all(), width=20, height=2).pack(pady=5)
 
     right_scroll = Scrollbar(right_frame, orient=VERTICAL)
     right_scroll.pack(side=RIGHT, fill=Y)
 
-    enabled_list = Listbox(right_frame, width=30, height=30,
+    # Increased font size for better readability on Steam Deck
+    enabled_list = Listbox(right_frame, width=30, height=20,
                            yscrollcommand=right_scroll.set,
-                           selectmode=SINGLE)
+                           selectmode=SINGLE, font=("Arial", 11))
     enabled_list.pack(side=LEFT, fill=BOTH, expand=True)
     right_scroll.config(command=enabled_list.yview)
 
@@ -310,7 +518,18 @@ def build_ui(cfg, root, reload_ui_callback):
     # Refresh lists
     # -----------------------------------------------------
 
-    def refresh_lists():
+    def refresh_lists(preserve_selection=None):
+        """Refresh both lists, optionally preserving selection"""
+        # Store current selection if needed
+        if preserve_selection is None:
+            try:
+                if enabled_list.curselection():
+                    preserve_selection = ('enabled', enabled_list.get(enabled_list.curselection()[0]))
+                elif disabled_list.curselection():
+                    preserve_selection = ('disabled', disabled_list.get(disabled_list.curselection()[0]))
+            except:
+                preserve_selection = None
+        
         enabled_list.delete(0, END)
         disabled_list.delete(0, END)
 
@@ -324,6 +543,21 @@ def build_ui(cfg, root, reload_ui_callback):
                     enabled_list.itemconfig(END, {"fg": "red"})
             else:
                 disabled_list.insert(END, mod["name"])
+        
+        # Restore selection if requested
+        if preserve_selection:
+            list_type, item_name = preserve_selection
+            target_list = enabled_list if list_type == 'enabled' else disabled_list
+            try:
+                # Find the item in the list
+                for i in range(target_list.size()):
+                    if target_list.get(i) == item_name:
+                        target_list.selection_set(i)
+                        target_list.activate(i)
+                        target_list.see(i)
+                        break
+            except:
+                pass
 
 
 
@@ -407,6 +641,228 @@ def build_ui(cfg, root, reload_ui_callback):
     # Bind right-click
     enabled_list.bind("<Button-3>", lambda e: show_context_menu(e, enabled_list))
     disabled_list.bind("<Button-3>", lambda e: show_context_menu(e, disabled_list))
+
+    # Keyboard shortcuts for controller/keyboard navigation
+    def move_item_up(event):
+        widget = event.widget
+        if widget != enabled_list:
+            return "break"
+        selection = widget.curselection()
+        if not selection or selection[0] == 0:
+            return "break"
+        index = selection[0]
+        item = widget.get(index)
+        widget.delete(index)
+        widget.insert(index - 1, item)
+        widget.selection_clear(0, END)
+        widget.selection_set(index - 1)
+        widget.activate(index - 1)
+        widget.see(index - 1)
+        widget.focus_set()
+        save_mod_list(modlist_path, list(enabled_list.get(0, END)))
+        return "break"
+
+    def move_item_down(event):
+        widget = event.widget
+        if widget != enabled_list:
+            return "break"
+        selection = widget.curselection()
+        if not selection or selection[0] >= widget.size() - 1:
+            return "break"
+        index = selection[0]
+        item = widget.get(index)
+        widget.delete(index)
+        widget.insert(index + 1, item)
+        widget.selection_clear(0, END)
+        widget.selection_set(index + 1)
+        widget.activate(index + 1)
+        widget.see(index + 1)
+        widget.focus_set()
+        save_mod_list(modlist_path, list(enabled_list.get(0, END)))
+        return "break"
+
+    def toggle_item(event):
+        widget = event.widget
+        selection = widget.curselection()
+        if not selection:
+            return "break"
+        index = selection[0]
+        if widget == enabled_list:
+            disable_item(index)
+        else:
+            enable_item(index)
+        return "break"
+
+    def switch_list_focus(event, target_list):
+        """Switch focus between disabled and enabled lists"""
+        target_list.focus_set()
+        if target_list.size() > 0:
+            target_list.selection_clear(0, END)
+            target_list.selection_set(0)
+            target_list.see(0)
+        return "break"
+
+    # Keyboard shortcuts using W/S keys (WASD-style navigation)
+    def move_with_w(event):
+        """Move item up with W key"""
+        widget = enabled_list
+        selection = widget.curselection()
+        if not selection:
+            # If nothing selected, try to use the active item
+            try:
+                index = widget.index("active")
+                widget.selection_set(index)
+                selection = widget.curselection()
+            except:
+                return "break"
+        if not selection or selection[0] == 0:
+            return "break"
+        
+        # Store the old index
+        old_index = selection[0]
+        new_index = old_index - 1
+        
+        # Move item up
+        item = widget.get(old_index)
+        widget.delete(old_index)
+        widget.insert(new_index, item)
+        
+        # Save and preserve selection through any auto-refresh
+        save_mod_list(modlist_path, list(enabled_list.get(0, END)))
+        
+        # Set selection explicitly on the moved item
+        widget.selection_clear(0, END)
+        widget.selection_set(new_index)
+        widget.activate(new_index)
+        widget.see(new_index)
+        return "break"
+    
+    def move_with_s(event):
+        """Move item down with S key"""
+        widget = enabled_list
+        selection = widget.curselection()
+        if not selection:
+            # If nothing selected, try to use the active item
+            try:
+                index = widget.index("active")
+                widget.selection_set(index)
+                selection = widget.curselection()
+            except:
+                return "break"
+        if not selection or selection[0] >= widget.size() - 1:
+            return "break"
+        
+        # Store the old index
+        old_index = selection[0]
+        new_index = old_index + 1
+        
+        # Move item down
+        item = widget.get(old_index)
+        widget.delete(old_index)
+        widget.insert(new_index, item)
+        
+        # Save and preserve selection through any auto-refresh
+        save_mod_list(modlist_path, list(enabled_list.get(0, END)))
+        
+        # Set selection explicitly on the moved item
+        widget.selection_clear(0, END)
+        widget.selection_set(new_index)
+        widget.activate(new_index)
+        widget.see(new_index)
+        return "break"
+    
+    def move_to_top_shortcut(event):
+        """Move item to top with Shift+W"""
+        widget = enabled_list
+        selection = widget.curselection()
+        if not selection:
+            # If nothing selected, try to use the active item
+            try:
+                index = widget.index("active")
+                widget.selection_set(index)
+            except:
+                return "break"
+            selection = widget.curselection()
+        if not selection:
+            return "break"
+        index = selection[0]
+        move_to_top(index)
+        widget.selection_clear(0, END)
+        widget.selection_set(0)
+        widget.activate(0)
+        widget.see(0)
+        widget.focus_set()
+        return "break"
+    
+    def move_to_bottom_shortcut(event):
+        """Move item to bottom with Shift+S"""
+        widget = enabled_list
+        selection = widget.curselection()
+        if not selection:
+            # If nothing selected, try to use the active item
+            try:
+                index = widget.index("active")
+                widget.selection_set(index)
+            except:
+                return "break"
+            selection = widget.curselection()
+        if not selection:
+            return "break"
+        index = selection[0]
+        move_to_bottom(index)
+        last_index = widget.size() - 1
+        widget.selection_clear(0, END)
+        widget.selection_set(last_index)
+        widget.activate(last_index)
+        widget.see(last_index)
+        widget.focus_set()
+        return "break"
+    
+    # Fix arrow key navigation to properly select items
+    def fix_arrow_selection(event):
+        """Ensure arrow keys select items, not just activate them"""
+        widget = event.widget
+        # Allow default arrow behavior first
+        widget.after(1, lambda: _ensure_selection(widget))
+        return None
+    
+    def _ensure_selection(widget):
+        """Helper to convert active item to selected item"""
+        try:
+            active_index = widget.index("active")
+            if not widget.curselection() or widget.curselection()[0] != active_index:
+                widget.selection_clear(0, END)
+                widget.selection_set(active_index)
+        except:
+            pass
+    
+    # Bind arrow keys to ensure proper selection
+    enabled_list.bind("<Up>", fix_arrow_selection)
+    enabled_list.bind("<Down>", fix_arrow_selection)
+    disabled_list.bind("<Up>", fix_arrow_selection)
+    disabled_list.bind("<Down>", fix_arrow_selection)
+
+    # Bind W/S keys for moving up/down in enabled list
+    enabled_list.bind("<w>", move_with_w)
+    enabled_list.bind("<s>", move_with_s)
+    enabled_list.bind("<W>", move_to_top_shortcut)  # Shift+W
+    enabled_list.bind("<S>", move_to_bottom_shortcut)  # Shift+S
+    
+    enabled_list.bind("<Return>", toggle_item)
+    enabled_list.bind("<space>", toggle_item)
+    disabled_list.bind("<Return>", toggle_item)
+    disabled_list.bind("<space>", toggle_item)
+    
+    # Use bracket keys [ and ] OR Page Up/Page Down to switch between lists
+    # Bracket keys for keyboard users, Page Up/Down maps to L2/R2 triggers on controllers
+    enabled_list.bind("<bracketleft>", lambda e: switch_list_focus(e, disabled_list))
+    enabled_list.bind("<bracketright>", lambda e: switch_list_focus(e, disabled_list))
+    enabled_list.bind("<Prior>", lambda e: switch_list_focus(e, disabled_list))  # Page Up
+    enabled_list.bind("<Next>", lambda e: switch_list_focus(e, disabled_list))   # Page Down
+    disabled_list.bind("<bracketleft>", lambda e: switch_list_focus(e, enabled_list))
+    disabled_list.bind("<bracketright>", lambda e: switch_list_focus(e, enabled_list))
+    disabled_list.bind("<Prior>", lambda e: switch_list_focus(e, enabled_list))  # Page Up
+    disabled_list.bind("<Next>", lambda e: switch_list_focus(e, enabled_list))   # Page Down
 
 
     # -----------------------------------------------------
@@ -540,7 +996,7 @@ def build_ui(cfg, root, reload_ui_callback):
 
         if mtime != last_mtime:
             last_mtime = mtime
-            refresh_lists()
+            refresh_lists(preserve_selection=True)
             root._check_reload_id = root.after(1000, check_reload)
             return
 
@@ -552,7 +1008,7 @@ def build_ui(cfg, root, reload_ui_callback):
 
         if current_mod_folders != last_mod_folders:
             last_mod_folders = current_mod_folders
-            refresh_lists()
+            refresh_lists(preserve_selection=True)
             root._check_reload_id = root.after(1000, check_reload)
             return
 
@@ -584,5 +1040,17 @@ def build_ui(cfg, root, reload_ui_callback):
 
         launch_game(cfg["game_install_dir"], enabled_mod_paths)
 
-
-    TTKButton(footer, text=t("ui.launch_game"), command=on_launch_game).pack(pady=20)
+    # Add comprehensive keyboard/controller shortcut hints
+    hints_frame = Frame(footer)
+    hints_frame.pack(pady=(10, 5))
+    
+    hint_line1 = t("ui.shortcuts_line1", 
+                   default="Quick Keys: F1=Help • F2=Settings • F3=Steam Launch • F5=Launch Game • Ctrl+Q=Quit")
+    hint_line2 = t("ui.shortcuts_line2", 
+                   default="Mod Controls: [ ] PgUp/PgDn=Switch • Space/Enter=Toggle • W/S=Move • Shift+W/S=Top/Bottom")
+    
+    Label(hints_frame, text=hint_line1, font=("Arial", 9, "bold"), fg="#2563eb").pack()
+    Label(hints_frame, text=hint_line2, font=("Arial", 9), fg="gray").pack()
+    
+    # Larger launch button for touch/controller
+    TTKButton(footer, text=t("ui.launch_game"), command=on_launch_game, width=30).pack(pady=(5, 20))
