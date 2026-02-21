@@ -42,3 +42,27 @@ To submit translations, please open an issue or pull request on the repository, 
 pyinstaller Mewtator.spec
 ```
 
+## Running From Source
+
+1) Create and activate a virtual environment (recommended).
+
+```bash
+python -m venv .venv
+```
+
+```bash
+.venv\Scripts\activate
+```
+
+2) Install requirements.
+
+```bash
+pip install -r requirements.txt
+```
+
+3) Run the app.
+
+```bash
+python -m app.main
+```
+
