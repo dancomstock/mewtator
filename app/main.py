@@ -1,72 +1,111 @@
 import tkinter as tk
 from tkinter import messagebox
 
-from app.configloader import load_config, validate_config, save_config
-from app.settings_window import open_settings_window, show_language_selection_dialog
-from app.ui import build_ui, reload_ui
-from app.i18n import init_translator, t
+from app.infrastructure.config_repository import ConfigRepository
+from app.infrastructure.mod_repository import ModRepository
+from app.infrastructure.translation_repository import TranslationRepository
+from app.core.services.config_service import ConfigService
+from app.core.services.mod_service import ModService
+from app.core.services.game_launcher_service import GameLauncherService
+from app.core.services.translation_service import TranslationService
+from app.core.services.pack_service import PackService
+from app.core.services.modlist_io_service import ModListIOService
+from app.core.services.theme_service import ThemeService
+from app.ui.controllers.main_controller import MainController
+from app.ui.windows.settings_window import SettingsWindow
+
+
+def show_language_selection_dialog(root, translation_service):
+    from tkinter import Toplevel, Label, Button, StringVar
+    from tkinter import ttk
+    
+    win = Toplevel(root)
+    win.title(translation_service.get("window.please_wait"))
+    win.geometry("400x200")
+    win.resizable(False, False)
+    win.transient(root)
+    win.grab_set()
+    
+    def on_closing():
+        pass
+    win.protocol("WM_DELETE_WINDOW", on_closing)
+    
+    result = [None]
+    
+    Label(win, text=translation_service.get("settings.select_language_title", "Select Language"), font=("Arial", 14, "bold")).pack(pady=15)
+    Label(win, text=translation_service.get("settings.select_language_text", "Choose your preferred language:")).pack(pady=5)
+    
+    available_langs = translation_service.get_available_languages()
+    if not available_langs:
+        available_langs = ["English"]
+    
+    lang_var = StringVar(value=available_langs[0])
+    
+    lang_menu = ttk.Combobox(win, textvariable=lang_var, values=available_langs, state="readonly", width=30, height=15)
+    lang_menu.pack(pady=10)
+    
+    def confirm():
+        result[0] = lang_var.get()
+        win.destroy()
+    
+    confirm_btn = Button(win, text=translation_service.get("settings.confirm", "Confirm"), command=confirm, width=20, height=2)
+    confirm_btn.pack(pady=15)
+    
+    win.bind("<Return>", lambda e: confirm())
+    win.bind("<KP_Enter>", lambda e: confirm())
+    
+    lang_menu.focus_set()
+    
+    win.wait_window()
+    return result[0]
 
 
 def main():
-    cfg = load_config("config.json")
-    
     root = tk.Tk()
     
-    # Initialize translator with default language (before any UI)
-    init_translator("English")
+    config_repo = ConfigRepository("config.json")
+    translation_repo = TranslationRepository()
     
-    # =======================================================
-    # Create minimal config if needed
-    # =======================================================
-    if cfg is None:
-        cfg = {"game_install_dir": "", "mod_folder": "", "language": ""}
-        save_config("config.json", cfg)
+    config_service = ConfigService(config_repo)
+    translation_service = TranslationService(translation_repo)
     
-    # =======================================================
-    # Language Selection on First Startup
-    # =======================================================
-    if "language" not in cfg or not cfg.get("language"):
-        language = show_language_selection_dialog(root)
+    config = config_service.load_config()
+    
+    if not config.language:
+        language = show_language_selection_dialog(root, translation_service)
         if language:
-            cfg["language"] = language
-            save_config("config.json", cfg)
-            init_translator(language)
+            config.language = language
         else:
-            # User cancelled, default to English
-            cfg["language"] = "English"
-            save_config("config.json", cfg)
-            init_translator("English")
-    else:
-        # Initialize translator with saved language
-        language = cfg.get("language", "English")
-        init_translator(language)
+            config.language = "English"
+        config_service.save_config(config)
     
-    root.title(t("window.app_title"))
-
-    # =======================================================
-    # If config is missing or invalid → open settings
-    # =======================================================
-    if not validate_config(cfg):
-        messagebox.showinfo(
-            t("messages.setup_required_title"),
-            t("messages.setup_required_text")
-        )
-
-        def after_settings(new_cfg, changed):
-            reload_ui(root, new_cfg)
-
-        open_settings_window(root, "config.json", after_settings)
-        root.mainloop()
-        return
-
-    # -----------------------------------------------------
-    # Config is valid → load UI
-    # -----------------------------------------------------
-    def after_settings(new_cfg, changed=None):
-        reload_ui(root, new_cfg)
-
-    build_ui(cfg, root, after_settings)
-    root.mainloop()
+    translation_service.load_language(config.language)
+    root.title(translation_service.get("window.app_title"))
+    
+    mod_repo = ModRepository(config.mod_folder)
+    mod_service = ModService(mod_repo)
+    launcher_service = GameLauncherService()
+    pack_service = PackService()
+    modlist_io_service = ModListIOService()
+    theme_service = ThemeService(root)
+    
+    normalized_theme = theme_service.normalize_theme_name(config.theme)
+    config.theme = normalized_theme
+    config_service.save_config(config)
+    theme_service.set_theme(normalized_theme)
+    
+    controller = MainController(
+        root,
+        config_service,
+        mod_service,
+        launcher_service,
+        translation_service,
+        pack_service,
+        modlist_io_service,
+        theme_service
+    )
+    
+    controller.start()
 
 
 if __name__ == "__main__":

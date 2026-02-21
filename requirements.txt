@@ -1,2 +1,4 @@
 psutil
 Pillow
+sv-ttk
+pywinstyles

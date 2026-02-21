@@ -1,14 +1,10 @@
 import tkinter as tk
-from app.i18n import t
 
 
 class CheckingWindow:
-    def __init__(self, root, message=None):
-        if message is None:
-            message = t("window.checking")
-        
+    def __init__(self, root, title="Please wait...", message="Checking..."):
         self.win = tk.Toplevel(root)
-        self.win.title(t("window.please_wait"))
+        self.win.title(title)
         self.win.geometry("420x140")  # Larger for Steam Deck
         self.win.resizable(False, False)
 
