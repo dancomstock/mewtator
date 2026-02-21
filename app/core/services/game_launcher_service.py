@@ -3,6 +3,7 @@ from typing import List
 from app.core.strategies.platform_strategy import PlatformFactory
 from app.core.strategies.launch_strategy import LaunchStrategyFactory
 from app.core.strategies.path_strategy import PathStrategyFactory
+from app.utils.logging_utils import get_logger
 
 
 class GameLauncherService:
@@ -30,6 +31,10 @@ class GameLauncherService:
         
         reversed_paths = list(reversed(mod_paths))
         converted_paths = path_strategy.convert_mod_paths(reversed_paths, game_dir)
+        logger = get_logger()
+        logger.info("Launch executable: %s", exe_path)
+        for path in converted_paths:
+            logger.info("Launch mod path: %s", path)
         launch_strategy.launch(exe_path, converted_paths, game_dir)
     
     def get_launch_options(self, game_dir: str, mod_paths: List[str]) -> str:

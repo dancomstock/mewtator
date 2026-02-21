@@ -12,6 +12,7 @@ from app.core.services.theme_service import ThemeService
 from app.ui.windows.main_window import MainWindow
 from app.ui.windows.settings_window import SettingsWindow
 from app.ui.windows.progress_window import ProgressWindow
+from app.utils.logging_utils import get_logger
 from app.utils.platform_utils import open_file_or_folder
 
 
@@ -417,6 +418,11 @@ class MainController:
             return
         
         enabled_paths = self.mod_service.get_enabled_mod_paths(self.mod_list)
+        logger = get_logger()
+        enabled_mods = [(mod.name, mod.path) for mod in self.mod_list.enabled_mods]
+        logger.info("Launching game with %d enabled mods", len(enabled_mods))
+        for name, path in enabled_mods:
+            logger.info("Enabled mod: %s | %s", name, path)
         
         if self.launcher_service.should_warn_external_mods(self.config.game_install_dir, enabled_paths):
             result = messagebox.askyesno(
