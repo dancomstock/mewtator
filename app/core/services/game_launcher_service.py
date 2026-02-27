@@ -50,7 +50,7 @@ class GameLauncherService:
                     savefile_suffix = mod.savefile_suffix
                     break
         if savefile_suffix:
-            extra_args.extend(["-savefile_suffix", savefile_suffix])
+            extra_args.extend(["-savesuffix", savefile_suffix])
         
         inherit_save = config.inherit_save_override
         if not inherit_save and mod_list:
@@ -61,7 +61,7 @@ class GameLauncherService:
                     inherit_save = mod.inherit_save
                     break
         if inherit_save:
-            extra_args.extend(["-inherit_save", inherit_save])
+            extra_args.extend(["-inheritsave", inherit_save])
         
         return extra_args
     
