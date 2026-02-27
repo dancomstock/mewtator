@@ -48,7 +48,7 @@ class PreviewPanel(ttk.Frame):
         self.desc_scroll.config(command=self.desc_box.yview)
     
     def update_preview(self, title: str, author: str, version: str, description: str, preview_path: Optional[str], url: str = ""):
-        self.title_label.config(text=f"Title: {title}")
+        self.title_label.config(text=title)
         self.author_label.config(text=f"Author: {author}")
         self.version_label.config(text=f"Version: {version}")
         

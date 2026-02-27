@@ -18,7 +18,7 @@ class Mod:
     
     @property
     def title(self) -> str:
-        return self.metadata.get("title", self.name)
+        return self.metadata.get("title") or self.metadata.get("name") or self.name
     
     @property
     def author(self) -> str:
