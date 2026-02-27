@@ -5,9 +5,10 @@ import os
 
 
 class SettingsWindow:
-    def __init__(self, parent, config, translation_service, on_save: Callable):
+    def __init__(self, parent, config, translation_service, theme_service, on_save: Callable):
         self.config = config
         self.translation_service = translation_service
+        self.theme_service = theme_service
         self.on_save = on_save
         
         self.win = Toplevel(parent)
@@ -16,8 +17,20 @@ class SettingsWindow:
         self.win.resizable(False, False)
         self.win.grab_set()
         self.win.transient(parent)
+
+        self._apply_theme()
         
         self._build_ui()
+
+    def _apply_theme(self):
+        theme_name = self.theme_service.normalize_theme_name(self.config.theme)
+        colors = self.theme_service.get_color_scheme(theme_name)
+        self.win.configure(bg=colors["bg"])
+        self.theme_service.apply_titlebar(self.win, theme_name)
+
+        style = ttk.Style(self.win)
+        hint_color = "#9a9a9a" if theme_name == "dark" else "#666666"
+        style.configure("Hint.TLabel", foreground=hint_color, background=colors["bg"])
     
     def _build_ui(self):
         t = self.translation_service
@@ -72,7 +85,7 @@ class SettingsWindow:
             self.win,
             text=t.get("settings.shortcuts", "Shortcuts: Enter=Save • Esc=Cancel • Tab=Navigate"),
             font=("Arial", 9),
-            fg="gray"
+            style="Hint.TLabel"
         )
         hint_label.pack(pady=(0, 5))
         

@@ -33,7 +33,7 @@ class ThemeService:
             return "dark"
         return normalized
 
-    def _apply_titlebar_theme(self):
+    def _apply_titlebar_theme(self, window: tk.Misc):
         if sys.platform != "win32" or pywinstyles is None:
             return
 
@@ -42,12 +42,12 @@ class ThemeService:
             is_dark = self.current_theme == "dark"
 
             if version.major == 10 and version.build >= 22000:
-                pywinstyles.change_header_color(self.root, "#1c1c1c" if is_dark else "#fafafa")
-                pywinstyles.change_title_color(self.root, "#ffffff" if is_dark else "#000000")
+                pywinstyles.change_header_color(window, "#1c1c1c" if is_dark else "#fafafa")
+                pywinstyles.change_title_color(window, "#ffffff" if is_dark else "#000000")
             elif version.major == 10:
-                pywinstyles.apply_style(self.root, "dark" if is_dark else "normal")
-                self.root.wm_attributes("-alpha", 0.99)
-                self.root.wm_attributes("-alpha", 1)
+                pywinstyles.apply_style(window, "dark" if is_dark else "normal")
+                window.wm_attributes("-alpha", 0.99)
+                window.wm_attributes("-alpha", 1)
         except Exception:
             pass
     
@@ -59,14 +59,18 @@ class ThemeService:
         except Exception:
             pass
 
-        self._apply_titlebar_theme()
+        self._apply_titlebar_theme(self.root)
     
     def get_current_theme(self):
         return self.current_theme
 
     def bind_root(self, root: tk.Tk):
         self.root = root
-        self._apply_titlebar_theme()
+        self._apply_titlebar_theme(self.root)
+
+    def apply_titlebar(self, window: tk.Misc, theme_name: str):
+        self.current_theme = self.normalize_theme_name(theme_name)
+        self._apply_titlebar_theme(window)
 
     def get_color_scheme(self, theme_name: str) -> dict:
         normalized = self.normalize_theme_name(theme_name)

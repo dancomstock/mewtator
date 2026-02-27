@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 from tkinter import messagebox, Toplevel, Label, Text, Button, WORD, BOTH, filedialog, simpledialog
+from tkinter import ttk
 from app.core.models.mod_list import ModList
 from app.core.services.mod_service import ModService
 from app.core.services.config_service import ConfigService
@@ -49,7 +50,8 @@ class MainController:
     
     def start(self):
         if not self.config_service.validate_config(self.config):
-            messagebox.showinfo(
+            self.theme_service.set_theme(self.config.theme)
+            self._show_info_dialog(
                 self.translation_service.get("messages.setup_required_title"),
                 self.translation_service.get("messages.setup_required_text")
             )
@@ -616,7 +618,28 @@ class MainController:
             self.translation_service.load_language(new_config.language)
             self._reload_ui()
         
-        SettingsWindow(self.root, self.config, self.translation_service, on_save)
+        SettingsWindow(self.root, self.config, self.translation_service, self.theme_service, on_save)
+
+    def _show_info_dialog(self, title: str, message: str):
+        dialog = tk.Toplevel(self.root)
+        dialog.title(title)
+        dialog.geometry("500x220")
+        dialog.resizable(False, False)
+        dialog.transient(self.root)
+        dialog.grab_set()
+
+        theme_name = self.theme_service.normalize_theme_name(self.config.theme)
+        colors = self.theme_service.get_color_scheme(theme_name)
+        dialog.configure(bg=colors["bg"])
+        self.theme_service.apply_titlebar(dialog, theme_name)
+
+        container = ttk.Frame(dialog)
+        container.pack(fill="both", expand=True, padx=16, pady=16)
+
+        ttk.Label(container, text=title, font=("Arial", 14, "bold")).pack(anchor="w", pady=(0, 8))
+        ttk.Label(container, text=message, wraplength=460, justify="left").pack(anchor="w", pady=(0, 12))
+
+        ttk.Button(container, text=self.translation_service.get("settings.confirm", "OK"), command=dialog.destroy).pack(anchor="e")
     
     def _change_language(self, language: str):
         self.config.language = language

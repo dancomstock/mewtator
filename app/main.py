@@ -15,12 +15,12 @@ from app.ui.controllers.main_controller import MainController
 from app.ui.windows.settings_window import SettingsWindow
 
 
-def show_language_selection_dialog(root, translation_service):
-    from tkinter import Toplevel, Label, Button, StringVar
+def show_language_selection_dialog(root, translation_service, theme_service, theme_name: str):
+    from tkinter import Toplevel, StringVar
     from tkinter import ttk
     
     win = Toplevel(root)
-    win.title(translation_service.get("window.please_wait"))
+    win.title(translation_service.get("window.dont_panic", "Don't Panic"))
     win.geometry("400x200")
     win.resizable(False, False)
     win.transient(root)
@@ -31,9 +31,20 @@ def show_language_selection_dialog(root, translation_service):
     win.protocol("WM_DELETE_WINDOW", on_closing)
     
     result = [None]
-    
-    Label(win, text=translation_service.get("settings.select_language_title", "Select Language"), font=("Arial", 14, "bold")).pack(pady=15)
-    Label(win, text=translation_service.get("settings.select_language_text", "Choose your preferred language:")).pack(pady=5)
+
+    colors = theme_service.get_color_scheme(theme_name)
+    win.configure(bg=colors["bg"])
+    theme_service.apply_titlebar(win, theme_name)
+
+    ttk.Label(
+        win,
+        text=translation_service.get("settings.select_language_title", "Select Language"),
+        font=("Arial", 14, "bold")
+    ).pack(pady=15)
+    ttk.Label(
+        win,
+        text=translation_service.get("settings.select_language_text", "Choose your preferred language:")
+    ).pack(pady=5)
     
     available_langs = translation_service.get_available_languages()
     if not available_langs:
@@ -48,7 +59,7 @@ def show_language_selection_dialog(root, translation_service):
         result[0] = lang_var.get()
         win.destroy()
     
-    confirm_btn = Button(win, text=translation_service.get("settings.confirm", "Confirm"), command=confirm, width=20, height=2)
+    confirm_btn = ttk.Button(win, text=translation_service.get("settings.confirm", "Confirm"), command=confirm, width=20)
     confirm_btn.pack(pady=15)
     
     win.bind("<Return>", lambda e: confirm())
@@ -70,9 +81,15 @@ def main():
     translation_service = TranslationService(translation_repo)
     
     config = config_service.load_config()
+
+    theme_service = ThemeService(root)
+    normalized_theme = theme_service.normalize_theme_name(config.theme)
+    config.theme = normalized_theme
+    config_service.save_config(config)
+    theme_service.set_theme(normalized_theme)
     
     if not config.language:
-        language = show_language_selection_dialog(root, translation_service)
+        language = show_language_selection_dialog(root, translation_service, theme_service, normalized_theme)
         if language:
             config.language = language
         else:
@@ -87,12 +104,6 @@ def main():
     launcher_service = GameLauncherService()
     pack_service = PackService()
     modlist_io_service = ModListIOService()
-    theme_service = ThemeService(root)
-    
-    normalized_theme = theme_service.normalize_theme_name(config.theme)
-    config.theme = normalized_theme
-    config_service.save_config(config)
-    theme_service.set_theme(normalized_theme)
     
     controller = MainController(
         root,
