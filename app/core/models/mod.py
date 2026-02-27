@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 
 
 @dataclass
@@ -10,6 +10,7 @@ class Mod:
     missing: bool = False
     metadata: Optional[Dict[str, Any]] = None
     preview_path: Optional[str] = None
+    has_unmet_requirements: bool = False
     
     def __post_init__(self):
         if self.metadata is None:
@@ -30,6 +31,25 @@ class Mod:
     @property
     def description(self) -> str:
         return self.metadata.get("description", "")
+    
+    @property
+    def savefile_suffix(self) -> str:
+        return self.metadata.get("savefile_suffix", "")
+    
+    @property
+    def inherit_save(self) -> str:
+        return self.metadata.get("inherit_save", "")
+    
+    @property
+    def url(self) -> str:
+        return self.metadata.get("url", "")
+    
+    @property
+    def requirements(self) -> List[Dict[str, str]]:
+        reqs = self.metadata.get("requirements", [])
+        if not isinstance(reqs, list):
+            return []
+        return reqs
     
     def to_dict(self) -> Dict[str, Any]:
         return {

@@ -1,4 +1,4 @@
-from tkinter import Toplevel, END, StringVar, filedialog, messagebox
+from tkinter import Toplevel, END, StringVar, BooleanVar, filedialog, messagebox
 from tkinter import ttk
 from typing import Callable
 import os
@@ -13,7 +13,7 @@ class SettingsWindow:
         
         self.win = Toplevel(parent)
         self.win.title(translation_service.get("settings.title", "Settings"))
-        self.win.geometry("700x340")
+        self.win.geometry("700x700")
         self.win.resizable(False, False)
         self.win.grab_set()
         self.win.transient(parent)
@@ -73,6 +73,64 @@ class SettingsWindow:
         )
         lang_menu.pack(side="left", padx=5)
         
+        self._add_separator(t.get("settings.launch_options", "Launch Options"))
+        
+        self.custom_launch_entry, _ = self._make_row(t.get("settings.custom_launch_options", "Custom Launch Options"), has_button=False)
+        if self.config.custom_launch_options:
+            self.custom_launch_entry.insert(0, self.config.custom_launch_options)
+        
+        checkbox_frame = ttk.Frame(self.win)
+        checkbox_frame.pack(fill="x", padx=30, pady=5)
+        
+        self.dev_mode_var = BooleanVar(value=self.config.dev_mode_enabled)
+        dev_mode_check = ttk.Checkbutton(
+            checkbox_frame,
+            text=t.get("settings.dev_mode", "Enable Dev Mode (-dev_mode true)"),
+            variable=self.dev_mode_var
+        )
+        dev_mode_check.pack(anchor="w")
+        
+        self.debug_console_var = BooleanVar(value=self.config.debug_console_enabled)
+        debug_console_check = ttk.Checkbutton(
+            checkbox_frame,
+            text=t.get("settings.debug_console", "Enable Debug Console (-enable_debugconsole true)"),
+            variable=self.debug_console_var
+        )
+        debug_console_check.pack(anchor="w")
+        
+        # Mod Launch Settings Overrides Section
+        self._add_separator(t.get("settings.mod_overrides", "Mod Launch Settings Overrides"))
+        
+        self.savefile_suffix_entry, _ = self._make_row(t.get("settings.savefile_suffix_override", "Savefile Suffix Override"), has_button=False)
+        if self.config.savefile_suffix_override:
+            self.savefile_suffix_entry.insert(0, self.config.savefile_suffix_override)
+        
+        self.inherit_save_entry, _ = self._make_row(t.get("settings.inherit_save_override", "Inherit Save Override"), has_button=False)
+        if self.config.inherit_save_override:
+            self.inherit_save_entry.insert(0, self.config.inherit_save_override)
+        
+        # Advanced Section
+        self._add_separator(t.get("settings.advanced", "Advanced"))
+        
+        advanced_frame = ttk.Frame(self.win)
+        advanced_frame.pack(fill="x", padx=30, pady=5)
+        
+        self.use_original_order_var = BooleanVar(value=self.config.use_original_load_order)
+        use_original_order_check = ttk.Checkbutton(
+            advanced_frame,
+            text=t.get("settings.use_original_load_order", "Use Original Load Order (Top Priority)"),
+            variable=self.use_original_order_var
+        )
+        use_original_order_check.pack(anchor="w")
+        
+        self.close_on_launch_var = BooleanVar(value=self.config.close_on_launch)
+        close_on_launch_check = ttk.Checkbutton(
+            advanced_frame,
+            text=t.get("settings.close_on_launch", "Close Launcher When Game Launches"),
+            variable=self.close_on_launch_var
+        )
+        close_on_launch_check.pack(anchor="w")
+        
         save_btn = ttk.Button(
             self.win,
             text=t.get("settings.save", "Save Settings"),
@@ -95,7 +153,20 @@ class SettingsWindow:
         
         self.game_entry.focus_set()
     
-    def _make_row(self, label_text: str):
+    def _add_separator(self, text: str):
+        """Add a section separator with label."""
+        frame = ttk.Frame(self.win)
+        frame.pack(fill="x", padx=10, pady=(10, 5))
+        
+        ttk.Label(
+            frame,
+            text=text,
+            font=("Arial", 10, "bold")
+        ).pack(anchor="w")
+        
+        ttk.Separator(frame, orient="horizontal").pack(fill="x", pady=(2, 0))
+    
+    def _make_row(self, label_text: str, has_button: bool = True):
         row = ttk.Frame(self.win)
         row.pack(fill="x", padx=10, pady=5)
         
@@ -105,8 +176,10 @@ class SettingsWindow:
         entry = ttk.Entry(row, width=50, font=("Arial", 10))
         entry.pack(side="left", fill="x", expand=True, padx=5)
         
-        btn = ttk.Button(row, text=self.translation_service.get("settings.browse"), width=12)
-        btn.pack(side="right", padx=2)
+        btn = None
+        if has_button:
+            btn = ttk.Button(row, text=self.translation_service.get("settings.browse"), width=12)
+            btn.pack(side="right", padx=2)
         
         return entry, btn
     
@@ -185,6 +258,13 @@ class SettingsWindow:
         self.config.game_install_dir = game
         self.config.mod_folder = mod
         self.config.language = language
+        self.config.custom_launch_options = self.custom_launch_entry.get().strip()
+        self.config.dev_mode_enabled = self.dev_mode_var.get()
+        self.config.debug_console_enabled = self.debug_console_var.get()
+        self.config.savefile_suffix_override = self.savefile_suffix_entry.get().strip()
+        self.config.inherit_save_override = self.inherit_save_entry.get().strip()
+        self.config.use_original_load_order = self.use_original_order_var.get()
+        self.config.close_on_launch = self.close_on_launch_var.get()
         
         self.win.destroy()
         self.on_save(self.config)

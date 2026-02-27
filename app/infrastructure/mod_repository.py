@@ -48,10 +48,18 @@ class ModRepository:
         if not os.path.isdir(mod_path):
             return {}, None
         
-        desc_path = os.path.join(mod_path, "description.json")
+        desc_filenames = ["description.json", "info.json", "modinfo.json"]
+        desc_path = None
+        
+        for filename in desc_filenames:
+            potential_path = os.path.join(mod_path, filename)
+            if os.path.isfile(potential_path):
+                desc_path = potential_path
+                break
+        
         metadata = {}
         
-        if os.path.isfile(desc_path):
+        if desc_path:
             try:
                 with open(desc_path, "r", encoding="utf-8") as f:
                     metadata = json.load(f)

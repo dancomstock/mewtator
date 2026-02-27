@@ -13,12 +13,14 @@
         "file": {
             "label": "File",
             "settings": "Settings",
+            "import_modlist": "Import Modlist...",
+            "export_modlist": "Export Modlist...",
             "unpack": "Unpack Base Resources",
             "repack": "Repack Resources",
             "open_mods": "Open Mods Folder",
             "open_game": "Open Game Folder",
             "launch_game": "Launch Game",
-            "copy_launch_options": "Copy Launch Options (for Steam)",
+            "copy_launch_options": "Launch Options & Export",
             "exit": "Exit"
         },
         "language": "Language"
@@ -30,6 +32,12 @@
         "enable_all": "Enable All",
         "launch_game": "Launch Game",
         "no_preview": "No Preview Image"
+    },
+    "mod_list": {
+        "auto_sort": "Auto-Sort"
+    },
+    "preview": {
+        "url": "URL: {url}"
     },
     "context_menu": {
         "move_top": "Move to Top",
@@ -47,7 +55,17 @@
         "save": "Save Settings",
         "select_language_title": "Select Language",
         "select_language_text": "Choose your preferred language:",
-        "confirm": "Confirm"
+        "confirm": "Confirm",
+        "launch_options": "Launch Options",
+        "custom_launch_options": "Custom Launch Options",
+        "dev_mode": "Enable Dev Mode (-dev_mode true)",
+        "debug_console": "Enable Debug Console (-enable_debugconsole true)",
+        "mod_overrides": "Mod Launch Settings Overrides",
+        "savefile_suffix_override": "Savefile Suffix Override",
+        "inherit_save_override": "Inherit Save Override",
+        "advanced": "Advanced",
+        "use_original_load_order": "Use Original Load Order (Top Priority)",
+        "close_on_launch": "Close Launcher When Game Launches"
     },
     "messages": {
         "setup_required_title": "Setup Required",
@@ -71,7 +89,28 @@
         "launch_options_title": "Steam Launch Options",
         "launch_options_instructions": "Copy these launch options and paste them in Steam:\nRight-click game → Properties → Launch Options\n\nNote: On Linux/Proton/Steam Deck, keep mods in the game directory for best compatibility.",
         "copy_to_clipboard": "Copy to Clipboard",
-        "close": "Close"
+        "export_bat": "Export to .BAT File",
+        "export_bat_title": "Export Launch Script",
+        "export_bat_success_title": "Export Successful",
+        "export_bat_success": "Export Successful!",
+        "export_bat_instructions": "The launch script has been saved. To use it with Steam:\n\n1. Right-click Mewgenics in your Steam library\n2. Select Properties → Launch Options\n3. Paste the following line:",
+        "export_bat_note": "Note: The batch file contains all your current mod settings.\nRe-export if you change mods or settings.",
+        "close": "Close",
+        "no_mods_to_sort": "No mods are enabled to sort.",
+        "auto_sort_success": "Mods sorted successfully!",
+        "auto_sort_warnings": "Mods sorted with warnings:\n\n{warnings}",
+        "requirement_warnings_title": "Unmet Requirements",
+        "requirement_warnings_text": "Some mods have unmet requirements:\n\n{errors}\n\nContinue launching?",
+        "conflict_warnings_title": "Configuration Conflicts",
+        "conflict_warnings_text": "The following conflicts were detected:\n\n{warnings}\n\nContinue launching?",
+        "import_modlist": "Import Modlist",
+        "export_modlist": "Export Modlist",
+        "modlist_name_prompt": "Enter modlist name:"
+    },
+    "alerts": {
+        "requirement_conflict": "Requirement Conflicts",
+        "requirement_conflict_text": "The following requirement conflicts were found:\n\n{errors}\n\nLaunch anyway?",
+        "savefile_conflict": "Launch Settings Info"
     },
     "progress": {
         "unpacking": "Unpacking Resources",

@@ -3,6 +3,7 @@ from tkinter import Text, BOTH, RIGHT, Y, END, WORD
 from tkinter import ttk
 from PIL import Image, ImageTk
 from typing import Optional
+import webbrowser
 
 
 class PreviewPanel(ttk.Frame):
@@ -22,6 +23,17 @@ class PreviewPanel(ttk.Frame):
         self.version_label = ttk.Label(self, font=("Arial", 12))
         self.version_label.pack(anchor="w", padx=10)
         
+        self.url_label = tk.Label(
+            self,
+            font=("Arial", 10, "underline"),
+            fg="#3399FF",
+            cursor="hand2",
+            text=""
+        )
+        self.url_label.pack(anchor="w", padx=10)
+        self.url_label.bind("<Button-1>", self._on_url_click)
+        self.current_url = ""
+        
         self.desc_scroll = ttk.Scrollbar(self, orient="vertical")
         self.desc_scroll.pack(side=RIGHT, fill=Y)
         
@@ -35,10 +47,17 @@ class PreviewPanel(ttk.Frame):
         self.desc_box.pack(fill=BOTH, expand=True, padx=10, pady=10)
         self.desc_scroll.config(command=self.desc_box.yview)
     
-    def update_preview(self, title: str, author: str, version: str, description: str, preview_path: Optional[str]):
+    def update_preview(self, title: str, author: str, version: str, description: str, preview_path: Optional[str], url: str = ""):
         self.title_label.config(text=f"Title: {title}")
         self.author_label.config(text=f"Author: {author}")
         self.version_label.config(text=f"Version: {version}")
+        
+        self.current_url = url
+        if url:
+            url_text = self.translation_service.get("preview.url", "URL: {url}").format(url=url)
+            self.url_label.config(text=url_text)
+        else:
+            self.url_label.config(text="")
         
         self.desc_box.config(state="normal")
         self.desc_box.delete("1.0", END)
@@ -61,10 +80,20 @@ class PreviewPanel(ttk.Frame):
         self.title_label.config(text="")
         self.author_label.config(text="")
         self.version_label.config(text="")
+        self.url_label.config(text="")
+        self.current_url = ""
         self.desc_box.config(state="normal")
         self.desc_box.delete("1.0", END)
         self.desc_box.config(state="disabled")
         self.img_label.config(image="", text="")
+    
+    def _on_url_click(self, event):
+        """Open the URL in a web browser."""
+        if self.current_url:
+            try:
+                webbrowser.open(self.current_url)
+            except Exception:
+                pass 
 
     def apply_theme(self, theme_service, theme_name: str):
         colors = theme_service.get_color_scheme(theme_name)

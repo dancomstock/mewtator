@@ -59,6 +59,18 @@ class MainWindow:
         )
         self.enabled_list_widget.pack(side=LEFT, fill=BOTH, padx=10)
         
+        self.right_controls = ttk.Frame(self.lists_area)
+        self.right_controls.pack(side=LEFT, fill=Y, padx=5)
+        
+        ttk.Label(self.right_controls, text=" ").pack(expand=True)
+        
+        self.auto_sort_button = ttk.Button(
+            self.right_controls,
+            text=translation_service.get("mod_list.auto_sort", "Auto-Sort"),
+            width=12
+        )
+        self.auto_sort_button.pack(pady=10)
+        
         self.preview_panel = PreviewPanel(self.preview_frame, translation_service)
         self.preview_panel.pack(fill=BOTH, expand=True)
         
@@ -84,6 +96,9 @@ class MainWindow:
     
     def set_swap_action(self, command):
         self.swap_button.config(command=command)
+    
+    def set_auto_sort_action(self, command):
+        self.auto_sort_button.config(command=command)
     
     def set_launch_action(self, command):
         self.launch_button.config(command=command)

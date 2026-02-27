@@ -73,12 +73,15 @@ class MainController:
         self.window.set_disabled_list_action(self._disable_all)
         self.window.set_enabled_list_action(self._enable_all)
         self.window.set_swap_action(self._swap_selected)
+        self.window.set_auto_sort_action(self._auto_sort)
         self.window.set_launch_action(self._launch_game)
         
         self._setup_menu_bar()
         self._setup_list_bindings()
         self._setup_keyboard_shortcuts()
-        
+
+        # Validate requirements before first refresh
+        self.mod_service.validate_requirements(self.mod_list)
         self._refresh_lists()
         self.window.apply_theme(self.theme_service, self.config.theme)
     
@@ -172,7 +175,12 @@ class MainController:
         
         for mod in self.mod_list.all_mods:
             if mod.enabled:
-                color = "red" if mod.missing else None
+                if mod.missing:
+                    color = "red"
+                elif mod.has_unmet_requirements:
+                    color = "orange"
+                else:
+                    color = None
                 enabled_widget.add_item(mod.name, color)
             else:
                 disabled_widget.add_item(mod.name)
@@ -185,6 +193,7 @@ class MainController:
                 target_widget.select_item(items.index(item_name))
     
     def _on_mod_list_changed(self):
+        self.mod_service.validate_requirements(self.mod_list)
         self.mod_service.save_mod_order(self.mod_list)
         self._refresh_lists()
     
@@ -195,7 +204,7 @@ class MainController:
             mod = self.mod_list.get_mod_by_name(name)
             if mod:
                 self.window.preview_panel.update_preview(
-                    mod.title, mod.author, mod.version, mod.description, mod.preview_path
+                    mod.title, mod.author, mod.version, mod.description, mod.preview_path, mod.url
                 )
     
     def _update_preview_from_enabled(self):
@@ -205,7 +214,7 @@ class MainController:
             mod = self.mod_list.get_mod_by_name(name)
             if mod:
                 self.window.preview_panel.update_preview(
-                    mod.title, mod.author, mod.version, mod.description, mod.preview_path
+                    mod.title, mod.author, mod.version, mod.description, mod.preview_path, mod.url
                 )
     
     def _enable_all(self):
@@ -419,6 +428,25 @@ class MainController:
             )
             return
         
+        req_errors = self.mod_service.validate_requirements(self.mod_list)
+        if req_errors:
+            error_msg = "\n".join(req_errors)
+            result = messagebox.askyesno(
+                self.translation_service.get("alerts.requirement_conflict", "Requirement Conflicts"),
+                self.translation_service.get("alerts.requirement_conflict_text", "The following requirement conflicts were found:\n\n{errors}\n\nLaunch anyway?").format(errors=error_msg)
+            )
+            if not result:
+                return
+        
+        # Check for conflicts in savefile_suffix and inherit_save
+        conflicts = self.mod_service.detect_conflicts(self.mod_list, self.config)
+        if conflicts:
+            conflict_msg = "\n".join(conflicts)
+            messagebox.showinfo(
+                self.translation_service.get("alerts.savefile_conflict", "Launch Settings Info"),
+                conflict_msg
+            )
+        
         enabled_paths = self.mod_service.get_enabled_mod_paths(self.mod_list)
         logger = get_logger()
         enabled_mods = [(mod.name, mod.path) for mod in self.mod_list.enabled_mods]
@@ -435,7 +463,17 @@ class MainController:
                 return
         
         try:
-            self.launcher_service.launch_game(self.config.game_install_dir, enabled_paths)
+            self.launcher_service.launch_game(
+                self.config.game_install_dir,
+                enabled_paths,
+                self.config,
+                self.mod_list
+            )
+            
+            # Close launcher if option is enabled
+            if self.config.close_on_launch:
+                self.root.destroy()
+                
         except FileNotFoundError as e:
             messagebox.showerror(
                 self.translation_service.get("messages.launch_error"),
@@ -458,14 +496,12 @@ class MainController:
         
         enabled_paths = self.mod_service.get_enabled_mod_paths(self.mod_list)
         
-        if not enabled_paths:
-            messagebox.showinfo(
-                self.translation_service.get("messages.no_mods_title", "No Mods Enabled"),
-                self.translation_service.get("messages.no_mods_text", "No mods are enabled. Enable some mods first.")
-            )
-            return
-        
-        launch_opts = self.launcher_service.get_launch_options(self.config.game_install_dir, enabled_paths)
+        launch_opts = self.launcher_service.get_launch_options(
+            self.config.game_install_dir,
+            enabled_paths,
+            self.config,
+            self.mod_list
+        )
         
         self.root.clipboard_clear()
         self.root.clipboard_append(launch_opts)
@@ -473,7 +509,7 @@ class MainController:
         
         dialog = Toplevel(self.root)
         dialog.title(self.translation_service.get("messages.launch_options_title", "Steam Launch Options"))
-        dialog.geometry("700x400")
+        dialog.geometry("700x550")
         dialog.transient(self.root)
         
         Label(
@@ -484,7 +520,7 @@ class MainController:
             pady=10
         ).pack()
         
-        text_widget = Text(dialog, wrap=WORD, height=15, font=("Consolas", 9))
+        text_widget = Text(dialog, wrap=WORD, height=12, font=("Consolas", 9))
         text_widget.pack(fill=BOTH, expand=True, padx=10, pady=5)
         text_widget.insert("1.0", launch_opts)
         text_widget.config(state="normal")
@@ -496,6 +532,14 @@ class MainController:
             width=30,
             height=2
         ).pack(pady=5)
+
+        Button(
+            dialog,
+            text=self.translation_service.get("messages.export_bat", "Export to .BAT File"),
+            command=lambda: self._export_bat_file(enabled_paths, dialog),
+            width=30,
+            height=2
+        ).pack(pady=5)
         
         Button(
             dialog,
@@ -504,6 +548,130 @@ class MainController:
             width=30,
             height=2
         ).pack(pady=5)
+    
+    def _export_bat_file(self, enabled_paths, parent_dialog=None):
+        """Export launch configuration to a .bat file."""
+        from app.utils.platform_utils import get_executable_dir
+        
+        default_name = "launch_mewgenics_mods.bat"
+        default_path = os.path.join(self.config.game_install_dir, default_name)
+        
+        filepath = filedialog.asksaveasfilename(
+            parent=parent_dialog or self.root,
+            title=self.translation_service.get("messages.export_bat_title", "Export Launch Script"),
+            initialfile=default_name,
+            initialdir=self.config.game_install_dir,
+            defaultextension=".bat",
+            filetypes=[("Batch files", "*.bat"), ("All files", "*.*")]
+        )
+        
+        if not filepath:
+            return
+        
+        try:
+            steam_launch_option = self.launcher_service.export_bat_file(
+                self.config.game_install_dir,
+                enabled_paths,
+                filepath,
+                self.config,
+                self.mod_list
+            )
+            
+            info_dialog = Toplevel(parent_dialog or self.root)
+            info_dialog.title(self.translation_service.get("messages.export_bat_success_title", "Export Successful"))
+            info_dialog.geometry("650x400")
+            info_dialog.transient(parent_dialog or self.root)
+            
+            Label(
+                info_dialog,
+                text=self.translation_service.get("messages.export_bat_success", "Export Successful!"),
+                font=("Arial", 12, "bold"),
+                pady=10
+            ).pack()
+            
+            Label(
+                info_dialog,
+                text=self.translation_service.get(
+                    "messages.export_bat_instructions",
+                    "The launch script has been saved. To use it with Steam:\n\n"
+                    "1. Right-click Mewgenics in your Steam library\n"
+                    "2. Select Properties → Launch Options\n"
+                    "3. Paste the following line:\n"
+                ),
+                wraplength=600,
+                justify="left",
+                pady=5
+            ).pack()
+            
+            steam_text = Text(info_dialog, wrap=WORD, height=3, font=("Consolas", 9))
+            steam_text.pack(fill="x", padx=20, pady=10)
+            steam_text.insert("1.0", steam_launch_option)
+            steam_text.config(state="disabled")
+            
+            Label(
+                info_dialog,
+                text=self.translation_service.get(
+                    "messages.export_bat_note",
+                    "Note: The batch file contains all your current mod settings.\n"
+                    "Re-export if you change mods or settings."
+                ),
+                wraplength=600,
+                justify="left",
+                pady=5,
+                fg="gray"
+            ).pack()
+            
+            Button(
+                info_dialog,
+                text=self.translation_service.get("messages.copy_to_clipboard", "Copy to Clipboard"),
+                command=lambda: [
+                    self.root.clipboard_clear(),
+                    self.root.clipboard_append(steam_launch_option),
+                    self.root.update()
+                ],
+                width=30,
+                height=2
+            ).pack(pady=5)
+            
+            Button(
+                info_dialog,
+                text=self.translation_service.get("messages.close", "Close"),
+                command=info_dialog.destroy,
+                width=30,
+                height=2
+            ).pack(pady=5)
+            
+        except Exception as e:
+            messagebox.showerror(
+                self.translation_service.get("messages.error", "Error"),
+                f"Failed to export launch script:\n{str(e)}"
+            )
+    
+    def _auto_sort(self):
+        """Auto-sort enabled mods alphabetically and by requirements."""
+        if not self.mod_list.enabled_mods:
+            messagebox.showinfo(
+                self.translation_service.get("mod_list.auto_sort", "Auto-Sort"),
+                self.translation_service.get("messages.no_mods_to_sort", "No mods are enabled to sort.")
+            )
+            return
+        
+        sorted_names, warnings = self.mod_service.auto_sort(self.mod_list)
+        
+        if sorted_names:
+            self.mod_list.set_order(sorted_names)
+            
+            if warnings:
+                warning_msg = "\n".join(warnings)
+                messagebox.showwarning(
+                    self.translation_service.get("mod_list.auto_sort", "Auto-Sort"),
+                    self.translation_service.get("messages.auto_sort_warnings", "Mods sorted with warnings:\n\n{warnings}").format(warnings=warning_msg)
+                )
+            else:
+                messagebox.showinfo(
+                    self.translation_service.get("mod_list.auto_sort", "Auto-Sort"),
+                    self.translation_service.get("messages.auto_sort_success", "Mods sorted successfully!")
+                )
     
     def _unpack(self):
         output_dir = os.path.join(self.config.mod_folder, "_unpacked")
@@ -704,6 +872,7 @@ class MainController:
             self.last_mtime = mtime
             self.mod_list = self.mod_service.load_mods()
             self.mod_list.add_observer(self._on_mod_list_changed)
+            self.mod_service.validate_requirements(self.mod_list)
             self._refresh_lists()
         
         current_mod_folders = set(repo.get_mod_folders())
@@ -711,6 +880,7 @@ class MainController:
             self.last_mod_folders = current_mod_folders
             self.mod_list = self.mod_service.load_mods()
             self.mod_list.add_observer(self._on_mod_list_changed)
+            self.mod_service.validate_requirements(self.mod_list)
             self._refresh_lists()
         
         self._check_reload_id = self.root.after(1000, self._check_reload)
