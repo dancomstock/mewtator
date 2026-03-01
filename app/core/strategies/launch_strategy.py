@@ -53,11 +53,9 @@ class ProtonLaunchStrategy(LaunchStrategy):
         return detect_steam_app_id(self.game_dir)
     
     def launch(self, executable_path: str, mod_paths: List[str], game_dir: str, extra_args: List[str] = None):
-        # On Linux, we need to launch through Steam instead of running the .exe directly
         if sys.platform.startswith('linux'):
             self._launch_via_steam(executable_path, mod_paths, game_dir, extra_args)
         else:
-            # Fallback to direct launch on other platforms
             self._launch_direct(executable_path, mod_paths, game_dir, extra_args)
     
     def _launch_via_steam(self, executable_path: str, mod_paths: List[str], game_dir: str, extra_args: List[str] = None):
@@ -72,28 +70,22 @@ class ProtonLaunchStrategy(LaunchStrategy):
                 "3. Launch the game from Steam"
             )
         
-        # Build the launch options that Steam should pass to the game
         launch_options = []
         
         if extra_args:
             launch_options.extend(extra_args)
         
         if mod_paths:
-            converted_paths = [self.path_converter(p) for p in mod_paths]
             launch_options.append("-modpaths")
-            launch_options.extend(converted_paths)
+            launch_options.extend(mod_paths)
         
-        # Try to launch via Steam command with arguments
-        # Note: Steam may not pass these arguments unless they're also set in Steam's Launch Options
         try:
-            # Try steam command first
             cmd = ['steam', '-applaunch', self.app_id]
             if launch_options:
                 cmd.extend(launch_options)
             subprocess.Popen(cmd, start_new_session=True)
         except FileNotFoundError:
             try:
-                # Fallback to xdg-open with steam:// protocol
                 steam_uri = f"steam://rungameid/{self.app_id}"
                 subprocess.Popen(['xdg-open', steam_uri], start_new_session=True)
             except FileNotFoundError:
@@ -104,16 +96,14 @@ class ProtonLaunchStrategy(LaunchStrategy):
     
     def _launch_direct(self, executable_path: str, mod_paths: List[str], game_dir: str, extra_args: List[str] = None):
         """Direct launch (fallback for non-Linux platforms)."""
-        converted_paths = [self.path_converter(p) for p in mod_paths]
-        
         args = [executable_path]
         
         if extra_args:
             args.extend(extra_args)
         
-        if converted_paths:
+        if mod_paths:
             args.append("-modpaths")
-            args.extend(converted_paths)
+            args.extend(mod_paths)
         
         subprocess.Popen(args, cwd=game_dir)
     
@@ -124,9 +114,8 @@ class ProtonLaunchStrategy(LaunchStrategy):
             parts.extend(extra_args)
         
         if mod_paths:
-            converted_paths = [self.path_converter(p) for p in mod_paths]
             parts.append("-modpaths")
-            parts.extend(f'"{p}"' for p in converted_paths)
+            parts.extend(f'"{p}"' for p in mod_paths)
         
         return " ".join(parts)
 

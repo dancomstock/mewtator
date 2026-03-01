@@ -13,7 +13,8 @@ except Exception:
 class ThemeService:
     def __init__(self, root: tk.Tk):
         self.root = root
-        self.current_theme = "dark"
+        # Default to light theme on Linux to avoid file dialog visibility issues
+        self.current_theme = "light" if sys.platform.startswith('linux') else "dark"
         self.available_themes = ["light", "dark"]
     
     def get_available_themes(self):
@@ -21,17 +22,18 @@ class ThemeService:
 
     def normalize_theme_name(self, theme_name: str) -> str:
         if not theme_name:
-            return "dark"
+            # Default to light theme on Linux to avoid file dialog visibility issues
+            return "light" if sys.platform.startswith('linux') else "dark"
 
         name = theme_name.strip().lower()
         aliases = {
             "sun-valley-dark": "dark",
             "sun-valley-light": "light",
-            "default": "dark"
+            "default": "light" if sys.platform.startswith('linux') else "dark"
         }
         normalized = aliases.get(name, name)
         if normalized not in self.available_themes:
-            return "dark"
+            return "light" if sys.platform.startswith('linux') else "dark"
         return normalized
 
     def _apply_titlebar_theme(self, window: tk.Misc):
@@ -104,8 +106,8 @@ class ThemeService:
     @contextmanager
     def file_dialog_safe_theme(self):
         """
-        Context manager that temporarily switches to light theme on Linux
-        when in dark mode to fix file dialog text visibility issues.
+        Context manager for file dialogs. On Linux with dark theme,
+        temporarily switches to light theme to avoid text visibility issues.
         
         Usage:
             with theme_service.file_dialog_safe_theme():

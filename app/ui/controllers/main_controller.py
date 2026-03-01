@@ -841,13 +841,18 @@ class MainController:
         
         self.root.destroy()
         
+        from app.infrastructure.mod_repository import ModRepository
+        mod_repo = ModRepository(self.config.mod_folder)
+        from app.core.services.mod_service import ModService
+        new_mod_service = ModService(mod_repo)
+        
         new_root = tk.Tk()
         self.theme_service.bind_root(new_root)
         self.theme_service.set_theme(self.config.theme)
         new_controller = MainController(
             new_root,
             self.config_service,
-            self.mod_service,
+            new_mod_service,
             self.launcher_service,
             self.translation_service,
             self.pack_service,
