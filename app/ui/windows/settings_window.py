@@ -205,7 +205,9 @@ class SettingsWindow:
     def _browse_game(self):
         from app.utils.platform_utils import get_executable_dir
         
-        path = filedialog.askdirectory(parent=self.win)
+        with self.theme_service.file_dialog_safe_theme():
+            path = filedialog.askdirectory(parent=self.win)
+        
         if path:
             self.game_entry.delete(0, END)
             self.game_entry.insert(0, path)
@@ -215,7 +217,9 @@ class SettingsWindow:
             self.mod_entry.insert(0, os.path.join(exe_dir, "mods"))
     
     def _browse_mod(self):
-        path = filedialog.askdirectory(parent=self.win)
+        with self.theme_service.file_dialog_safe_theme():
+            path = filedialog.askdirectory(parent=self.win)
+        
         if path:
             self.mod_entry.delete(0, END)
             self.mod_entry.insert(0, path)

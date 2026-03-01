@@ -1,5 +1,6 @@
 import tkinter as tk
 import sys
+from contextlib import contextmanager
 
 import sv_ttk
 
@@ -99,3 +100,24 @@ class ThemeService:
             "menu_active_bg": "#e0e0e0",
             "menu_active_fg": "#000000"
         }
+    
+    @contextmanager
+    def file_dialog_safe_theme(self):
+        """
+        Context manager that temporarily switches to light theme on Linux
+        when in dark mode to fix file dialog text visibility issues.
+        
+        Usage:
+            with theme_service.file_dialog_safe_theme():
+                filepath = filedialog.askopenfilename(...)
+        """
+        needs_workaround = sys.platform.startswith('linux') and self.current_theme == 'dark'
+        
+        if needs_workaround:
+            sv_ttk.set_theme('light')
+        
+        try:
+            yield
+        finally:
+            if needs_workaround:
+                sv_ttk.set_theme('dark')

@@ -556,14 +556,15 @@ class MainController:
         default_name = "launch_mewgenics_mods.bat"
         default_path = os.path.join(self.config.game_install_dir, default_name)
         
-        filepath = filedialog.asksaveasfilename(
-            parent=parent_dialog or self.root,
-            title=self.translation_service.get("messages.export_bat_title", "Export Launch Script"),
-            initialfile=default_name,
-            initialdir=self.config.game_install_dir,
-            defaultextension=".bat",
-            filetypes=[("Batch files", "*.bat"), ("All files", "*.*")]
-        )
+        with self.theme_service.file_dialog_safe_theme():
+            filepath = filedialog.asksaveasfilename(
+                parent=parent_dialog or self.root,
+                title=self.translation_service.get("messages.export_bat_title", "Export Launch Script"),
+                initialfile=default_name,
+                initialdir=self.config.game_install_dir,
+                defaultextension=".bat",
+                filetypes=[("Batch files", "*.bat"), ("All files", "*.*")]
+            )
         
         if not filepath:
             return
@@ -708,15 +709,16 @@ class MainController:
             messagebox.showerror("Error", str(e))
     
     def _import_modlist(self):
-        filepath = filedialog.askopenfilename(
-            parent=self.root,
-            title=self.translation_service.get("messages.import_modlist", "Import Modlist"),
-            filetypes=[
-                ("JSON files", "*.json"),
-                ("Text files", "*.txt"),
-                ("All files", "*.*")
-            ]
-        )
+        with self.theme_service.file_dialog_safe_theme():
+            filepath = filedialog.askopenfilename(
+                parent=self.root,
+                title=self.translation_service.get("messages.import_modlist", "Import Modlist"),
+                filetypes=[
+                    ("JSON files", "*.json"),
+                    ("Text files", "*.txt"),
+                    ("All files", "*.*")
+                ]
+            )
         
         if not filepath:
             return
@@ -743,16 +745,17 @@ class MainController:
             messagebox.showerror("Error", f"Failed to import modlist: {str(e)}")
     
     def _export_modlist(self):
-        filepath = filedialog.asksaveasfilename(
-            parent=self.root,
-            title=self.translation_service.get("messages.export_modlist", "Export Modlist"),
-            defaultextension=".json",
-            filetypes=[
-                ("JSON files", "*.json"),
-                ("Text files", "*.txt"),
-                ("All files", "*.*")
-            ]
-        )
+        with self.theme_service.file_dialog_safe_theme():
+            filepath = filedialog.asksaveasfilename(
+                parent=self.root,
+                title=self.translation_service.get("messages.export_modlist", "Export Modlist"),
+                defaultextension=".json",
+                filetypes=[
+                    ("JSON files", "*.json"),
+                    ("Text files", "*.txt"),
+                    ("All files", "*.*")
+                ]
+            )
         
         if not filepath:
             return
