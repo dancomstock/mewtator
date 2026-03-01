@@ -41,27 +41,28 @@ class GameLauncherService:
         if config.debug_console_enabled:
             extra_args.extend(["-enable_debugconsole", "true"])
         
-        savefile_suffix = config.savefile_suffix_override
-        if not savefile_suffix and mod_list:
-            enabled_mods = mod_list.enabled_mods
-            mod_iter = enabled_mods if config.use_original_load_order else reversed(enabled_mods)
-            for mod in mod_iter:
-                if mod.savefile_suffix:
-                    savefile_suffix = mod.savefile_suffix
-                    break
-        if savefile_suffix:
-            extra_args.extend(["-savesuffix", savefile_suffix])
-        
-        inherit_save = config.inherit_save_override
-        if not inherit_save and mod_list:
-            enabled_mods = mod_list.enabled_mods
-            mod_iter = enabled_mods if config.use_original_load_order else reversed(enabled_mods)
-            for mod in mod_iter:
-                if mod.inherit_save:
-                    inherit_save = mod.inherit_save
-                    break
-        if inherit_save:
-            extra_args.extend(["-inheritsave", inherit_save])
+        # TEMPORARILY DISABLED: These features are not yet functional in the game
+        # savefile_suffix = config.savefile_suffix_override
+        # if not savefile_suffix and mod_list:
+        #     enabled_mods = mod_list.enabled_mods
+        #     mod_iter = enabled_mods if config.use_original_load_order else reversed(enabled_mods)
+        #     for mod in mod_iter:
+        #         if mod.savefile_suffix:
+        #             savefile_suffix = mod.savefile_suffix
+        #             break
+        # if savefile_suffix:
+        #     extra_args.extend(["-savesuffix", savefile_suffix])
+        # 
+        # inherit_save = config.inherit_save_override
+        # if not inherit_save and mod_list:
+        #     enabled_mods = mod_list.enabled_mods
+        #     mod_iter = enabled_mods if config.use_original_load_order else reversed(enabled_mods)
+        #     for mod in mod_iter:
+        #         if mod.inherit_save:
+        #             inherit_save = mod.inherit_save
+        #             break
+        # if inherit_save:
+        #     extra_args.extend(["-inheritsave", inherit_save])
         
         return extra_args
     

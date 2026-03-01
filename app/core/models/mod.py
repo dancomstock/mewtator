@@ -32,13 +32,14 @@ class Mod:
     def description(self) -> str:
         return self.metadata.get("description", "")
     
-    @property
-    def savefile_suffix(self) -> str:
-        return self.metadata.get("savefile_suffix", "")
-    
-    @property
-    def inherit_save(self) -> str:
-        return self.metadata.get("inherit_save", "")
+    # TEMPORARILY DISABLED: Not functional in game yet
+    # @property
+    # def savefile_suffix(self) -> str:
+    #     return self.metadata.get("savefile_suffix", "")
+    # 
+    # @property
+    # def inherit_save(self) -> str:
+    #     return self.metadata.get("inherit_save", "")
     
     @property
     def url(self) -> str:

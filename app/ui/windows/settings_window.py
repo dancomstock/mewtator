@@ -98,16 +98,17 @@ class SettingsWindow:
         )
         debug_console_check.pack(anchor="w")
         
-        # Mod Launch Settings Overrides Section
-        self._add_separator(t.get("settings.mod_overrides", "Mod Launch Settings Overrides"))
-        
-        self.savefile_suffix_entry, _ = self._make_row(t.get("settings.savefile_suffix_override", "Savefile Suffix Override"), has_button=False)
-        if self.config.savefile_suffix_override:
-            self.savefile_suffix_entry.insert(0, self.config.savefile_suffix_override)
-        
-        self.inherit_save_entry, _ = self._make_row(t.get("settings.inherit_save_override", "Inherit Save Override"), has_button=False)
-        if self.config.inherit_save_override:
-            self.inherit_save_entry.insert(0, self.config.inherit_save_override)
+        # TEMPORARILY DISABLED: These features are not yet functional in the game
+        # # Mod Launch Settings Overrides Section
+        # self._add_separator(t.get("settings.mod_overrides", "Mod Launch Settings Overrides"))
+        # 
+        # self.savefile_suffix_entry, _ = self._make_row(t.get("settings.savefile_suffix_override", "Savefile Suffix Override"), has_button=False)
+        # if self.config.savefile_suffix_override:
+        #     self.savefile_suffix_entry.insert(0, self.config.savefile_suffix_override)
+        # 
+        # self.inherit_save_entry, _ = self._make_row(t.get("settings.inherit_save_override", "Inherit Save Override"), has_button=False)
+        # if self.config.inherit_save_override:
+        #     self.inherit_save_entry.insert(0, self.config.inherit_save_override)
         
         # Advanced Section
         self._add_separator(t.get("settings.advanced", "Advanced"))
@@ -261,8 +262,9 @@ class SettingsWindow:
         self.config.custom_launch_options = self.custom_launch_entry.get().strip()
         self.config.dev_mode_enabled = self.dev_mode_var.get()
         self.config.debug_console_enabled = self.debug_console_var.get()
-        self.config.savefile_suffix_override = self.savefile_suffix_entry.get().strip()
-        self.config.inherit_save_override = self.inherit_save_entry.get().strip()
+        # TEMPORARILY DISABLED: These features are not yet functional in the game
+        # self.config.savefile_suffix_override = self.savefile_suffix_entry.get().strip()
+        # self.config.inherit_save_override = self.inherit_save_entry.get().strip()
         self.config.use_original_load_order = self.use_original_order_var.get()
         self.config.close_on_launch = self.close_on_launch_var.get()
         

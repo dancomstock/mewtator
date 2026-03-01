@@ -11,8 +11,8 @@ class Config:
     custom_launch_options: str = ""
     dev_mode_enabled: bool = False
     debug_console_enabled: bool = False
-    savefile_suffix_override: str = ""
-    inherit_save_override: str = ""
+    # TEMPORARILY DISABLED: savefile_suffix_override: str = ""
+    # TEMPORARILY DISABLED: inherit_save_override: str = ""
     close_on_launch: bool = False
     use_original_load_order: bool = False
     
@@ -38,8 +38,8 @@ class Config:
             "custom_launch_options": self.custom_launch_options,
             "dev_mode_enabled": self.dev_mode_enabled,
             "debug_console_enabled": self.debug_console_enabled,
-            "savefile_suffix_override": self.savefile_suffix_override,
-            "inherit_save_override": self.inherit_save_override,
+            # TEMPORARILY DISABLED: "savefile_suffix_override": self.savefile_suffix_override,
+            # TEMPORARILY DISABLED: "inherit_save_override": self.inherit_save_override,
             "close_on_launch": self.close_on_launch,
             "use_original_load_order": self.use_original_load_order,
         }
@@ -54,8 +54,8 @@ class Config:
             custom_launch_options=data.get("custom_launch_options", ""),
             dev_mode_enabled=data.get("dev_mode_enabled", False),
             debug_console_enabled=data.get("debug_console_enabled", False),
-            savefile_suffix_override=data.get("savefile_suffix_override", ""),
-            inherit_save_override=data.get("inherit_save_override", ""),
+            # TEMPORARILY DISABLED: savefile_suffix_override=data.get("savefile_suffix_override", ""),
+            # TEMPORARILY DISABLED: inherit_save_override=data.get("inherit_save_override", ""),
             close_on_launch=data.get("close_on_launch", False),
             use_original_load_order=data.get("use_original_load_order", False),
         )

@@ -122,29 +122,31 @@ class ModService:
         """
         Detect conflicts in savefile_suffix and inherit_save settings.
         
+        TEMPORARILY DISABLED: These features are not yet functional in the game.
+        
         Returns:
             List of warning messages about conflicts.
         """
         warnings = []
-        enabled_mods = mod_list.enabled_mods
-        
-        savefile_mods = [mod for mod in enabled_mods if mod.savefile_suffix]
-        if len(savefile_mods) > 1:
-            mod_names = [mod.name for mod in savefile_mods]
-            if config.savefile_suffix_override:
-                warnings.append(f"Multiple mods specify savefile_suffix: {', '.join(mod_names)}. Using settings override: '{config.savefile_suffix_override}'")
-            else:
-                winner = savefile_mods[0] if config.use_original_load_order else savefile_mods[-1]
-                warnings.append(f"Multiple mods specify savefile_suffix: {', '.join(mod_names)}. Using '{winner.name}': '{winner.savefile_suffix}'")
-        
-        inherit_mods = [mod for mod in enabled_mods if mod.inherit_save]
-        if len(inherit_mods) > 1:
-            mod_names = [mod.name for mod in inherit_mods]
-            if config.inherit_save_override:
-                warnings.append(f"Multiple mods specify inherit_save: {', '.join(mod_names)}. Using settings override: '{config.inherit_save_override}'")
-            else:
-                winner = inherit_mods[0] if config.use_original_load_order else inherit_mods[-1]
-                warnings.append(f"Multiple mods specify inherit_save: {', '.join(mod_names)}. Using '{winner.name}': '{winner.inherit_save}'")
+        # enabled_mods = mod_list.enabled_mods
+        # 
+        # savefile_mods = [mod for mod in enabled_mods if mod.savefile_suffix]
+        # if len(savefile_mods) > 1:
+        #     mod_names = [mod.name for mod in savefile_mods]
+        #     if config.savefile_suffix_override:
+        #         warnings.append(f"Multiple mods specify savefile_suffix: {', '.join(mod_names)}. Using settings override: '{config.savefile_suffix_override}'")
+        #     else:
+        #         winner = savefile_mods[0] if config.use_original_load_order else savefile_mods[-1]
+        #         warnings.append(f"Multiple mods specify savefile_suffix: {', '.join(mod_names)}. Using '{winner.name}': '{winner.savefile_suffix}'")
+        # 
+        # inherit_mods = [mod for mod in enabled_mods if mod.inherit_save]
+        # if len(inherit_mods) > 1:
+        #     mod_names = [mod.name for mod in inherit_mods]
+        #     if config.inherit_save_override:
+        #         warnings.append(f"Multiple mods specify inherit_save: {', '.join(mod_names)}. Using settings override: '{config.inherit_save_override}'")
+        #     else:
+        #         winner = inherit_mods[0] if config.use_original_load_order else inherit_mods[-1]
+        #         warnings.append(f"Multiple mods specify inherit_save: {', '.join(mod_names)}. Using '{winner.name}': '{winner.inherit_save}'")
         
         return warnings
     

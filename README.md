@@ -9,9 +9,15 @@ Download here:
 
 - Manage and organize mods
 - Enable/disable mods with a simple interface
+- **Mod requirements and dependency system** - See [MOD_REQUIREMENTS.md](MOD_REQUIREMENTS.md)
+- **Auto-sort mods by dependencies** - Automatically arrange mods in correct load order
+- Version constraints and validation
 - Launch game with mod configurations
+- Customizable launch options (dev mode, debug console, custom arguments)
+- Export launch scripts (.BAT files for easy launching)
 - Unpack and repack game resources
 - Multi-language support
+- Import/export modlists
 
 ## Translations
 
@@ -35,6 +41,61 @@ Mewtator supports multiple languages. Currently available:
 Translation files are JSON format. See `locales/English.json` for the base structure.
 
 To submit translations, please open an issue or pull request on the repository, or contact the developer.
+
+## For Mod Authors
+
+Mewtator supports advanced modding features to help you create better mods.
+
+### Documentation
+
+- **[MOD_AUTHOR_GUIDE.md](MOD_AUTHOR_GUIDE.md)** - Complete guide on creating mods, including all available `description.json` fields and best practices
+- **[MOD_REQUIREMENTS.md](MOD_REQUIREMENTS.md)** - Detailed documentation on the requirements and dependency system
+
+### Quick Example
+
+```json
+{
+  "title": "My Awesome Mod",
+  "author": "YourName",
+  "version": "1.0.0",
+  "description": "Does something cool.",
+  "requirements": [
+    "CoreFramework>=1.5.0"
+  ]
+}
+```
+
+**Note:** The mod's folder name (e.g., `MyMod`) serves as its identifier - not a field in the JSON.
+
+## Using Auto-Sort
+
+Mewtator can automatically arrange your mods in the correct load order based on their requirements:
+
+**Features:**
+- Alphabetically sorts mods by name
+- Applies topological sorting based on requirements
+- Ensures dependencies load before dependents
+- Detects circular dependencies
+
+**How to use:**
+- Click "Auto-Sort" button in main window
+- Or: File menu → Auto-Sort
+
+**Example:**
+```
+Before:                After Auto-Sort:
+- MyMod               - CoreFramework
+- Utils               - UILibrary  
+- CoreFramework       - MyMod
+- UILibrary           - Utils
+```
+
+**Circular dependency detection:**
+If ModA requires ModB and ModB requires ModA, you'll see:
+```
+Circular dependency detected: ModA → ModB → ModA
+```
+To fix: Remove one of the requirement links so dependencies flow in one direction.
 
 ## Building
 

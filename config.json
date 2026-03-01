@@ -6,8 +6,6 @@
     "custom_launch_options": "",
     "dev_mode_enabled": false,
     "debug_console_enabled": false,
-    "savefile_suffix_override": "",
-    "inherit_save_override": "",
     "close_on_launch": true,
     "use_original_load_order": false
 }
