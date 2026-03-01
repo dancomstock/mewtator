@@ -158,36 +158,6 @@ MyMod: Required mod 'CoreFramework' version 1.0.0 does not satisfy >=1.5.0
 ```
 **Fix:** Update CoreFramework to version 1.5.0 or higher
 
-## Auto-Sort
-
-Mewtator can automatically arrange your mods in dependency order:
-
-**Features:**
-1. Alphabetically sorts mods by name
-2. Applies topological sorting based on requirements
-3. Ensures dependencies load before dependents
-4. Detects circular dependencies
-
-**How to use:**
-- Click "Auto-Sort" button in main window
-- Or: File menu → Auto-Sort
-
-**Example:**
-```
-Before:                After Auto-Sort:
-- MyMod               - CoreFramework
-- Utils               - UILibrary  
-- CoreFramework       - MyMod
-- UILibrary           - Utils
-```
-
-**Circular dependency detection:**
-If ModA requires ModB and ModB requires ModA, you'll get:
-```
-Circular dependency detected: ModA → ModB → ModA
-```
-**Fix:** Remove one of the requirement links.
-
 ## Best Practices
 
 ### 1. Always Specify Version

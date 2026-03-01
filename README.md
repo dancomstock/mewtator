@@ -69,26 +69,11 @@ Mewtator supports advanced modding features to help you create better mods.
 
 ## Using Auto-Sort
 
-Mewtator can automatically arrange your mods in the correct load order based on their requirements:
-
-**Features:**
-- Alphabetically sorts mods by name
-- Applies topological sorting based on requirements
-- Ensures dependencies load before dependents
-- Detects circular dependencies
+Mewtator can automatically arrange your mods in the correct load order based on their requirements.
+Currently it sorts alphetically and then applies requirements.  I plan to update this if better logic is needed in the future (like checking for merege conflics or whole file overwrites.)
 
 **How to use:**
 - Click "Auto-Sort" button in main window
-- Or: File menu → Auto-Sort
-
-**Example:**
-```
-Before:                After Auto-Sort:
-- MyMod               - CoreFramework
-- Utils               - UILibrary  
-- CoreFramework       - MyMod
-- UILibrary           - Utils
-```
 
 **Circular dependency detection:**
 If ModA requires ModB and ModB requires ModA, you'll see:
