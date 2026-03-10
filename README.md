@@ -32,6 +32,7 @@ Mewtator supports multiple languages. Currently available:
 - Português (Portuguese - Brazil)
 - 中文 (Chinese)
 - 日本語 (Japanese)
+- Polish
 
 **Note:** Most standard translations are machine-generated. If you would like to contribute a better translation, please submit:
 

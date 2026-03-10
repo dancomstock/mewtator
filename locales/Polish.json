@@ -1,0 +1,123 @@
+{
+    "_metadata": {
+        "language_name": "Polish",
+        "machine_translated": false,
+        "note": "Tłumaczenie JerrYisDeaD666"
+    },
+    "window": {
+        "app_title": "Mewtator: Menadżer Modów do Mewgenics",
+        "please_wait": "Proszę czekać",
+        "checking": "Sprawdzanie..."
+    },
+    "menu": {
+        "file": {
+            "label": "Plik",
+            "settings": "Ustawienia",
+            "import_modlist": "Importuj listę modów...",
+            "export_modlist": "Eksportuj listę modów...",
+            "unpack": "Rozpakuj zasoby podstawowe",
+            "repack": "Przepakuj zasoby",
+            "open_mods": "Otwórz folder modów",
+            "open_game": "Otwórz folder gry",
+            "launch_game": "Uruchom grę",
+            "copy_launch_options": "Opcje uruchamiania i eksport",
+            "exit": "Wyjście"
+        },
+        "language": "Język"
+    },
+    "ui": {
+        "disabled_mods": "Wyłączone mody",
+        "enabled_mods": "Włączone mody",
+        "disable_all": "Wyłącz wszystkie",
+        "enable_all": "Włącz wszystkie",
+        "launch_game": "Uruchom grę",
+        "no_preview": "Brak podglądu"
+    },
+    "mod_list": {
+        "auto_sort": "Auto-sortowanie"
+    },
+    "preview": {
+        "url": "URL: {url}"
+    },
+    "context_menu": {
+        "move_top": "Przenieś na górę",
+        "move_bottom": "Przenieś na dół",
+        "disable": "Wyłącz",
+        "enable": "Włącz"
+    },
+    "settings": {
+        "title": "Ustawienia",
+        "auto_detect": "Automatycznie wykryj instalację gry",
+        "game_install_dir": "Katalog instalacyjny gry",
+        "mods_folder": "Folder modów",
+        "language": "Język",
+        "browse": "Przeglądaj",
+        "save": "Zapisz ustawienia",
+        "select_language_title": "Wybierz język",
+        "select_language_text": "Wybierz preferowany język:",
+        "confirm": "Potwierdź",
+        "launch_options": "Opcje uruchamiania",
+        "custom_launch_options": "Własne opcje uruchamiania",
+        "dev_mode": "Włącz tryb deweloperski (-dev_mode true)",
+        "debug_console": "Włącz konsolę debugowania (-enable_debugconsole true)",
+        "mod_overrides": "Nadpisanie ustawień uruchamiania modów",
+        "savefile_suffix_override": "Nadpisanie sufiksu zapisu (Savefile Suffix)",
+        "inherit_save_override": "Dziedziczenie nadpisania zapisu",
+        "advanced": "Zaawansowane",
+        "use_original_load_order": "Użyj oryginalnej kolejności wczytywania (Priorytet góra)",
+        "close_on_launch": "Zamknij launcher po uruchomieniu gry"
+    },
+    "messages": {
+        "setup_required_title": "Wymagana konfiguracja",
+        "setup_required_text": "Ścieżki gry nie zostały jeszcze skonfigurowane.\nProszę wprowadzić ustawienia.",
+        "error": "Błąd",
+        "game_dir_required": "Katalog instalacyjny gry jest wymagany.",
+        "game_dir_invalid": "Katalog instalacyjny gry jest nieprawidłowy.",
+        "game_dir_not_found": "Nie znaleziono",
+        "game_dir_not_detected": "Nie udało się wykryć instalacji Mewgenics.",
+        "missing_mods_title": "Brakujące mody",
+        "missing_mods_text": "Następujące włączone mody nie znajdują się w folderze modów:\n\n{missing}\n\nProszę usuń je z listy włączonych lub przywróć foldery.",
+        "exe_not_found": "Nie znaleziono pliku Mewgenics.exe w wybranym folderze gry.",
+        "launch_error": "Błąd",
+        "launch_failed": "Nie udało się uruchomić Mewgenics:\n{error}",
+        "permission_denied_modlist": "Brak uprawnień: Nie można zapisać pliku modlist.txt.\nUpewnij się, że folder posiada uprawnienia do zapisu.",
+        "save_error": "Błąd podczas zapisywania listy modów:\n{error}",
+        "proton_warning_title": "Ostrzeżenie Proton/Steam Deck",
+        "proton_warning_text": "Uruchamiasz program na systemie Linux poprzez plik .exe (Proton).\n\nMody znajdujące się poza katalogiem gry mogą nie działać poprawnie.\nNa systemach Linux/Steam Deck zaleca się trzymanie modów w folderze gry.\n\nKontynuować mimo to?",
+        "no_mods_title": "Brak włączonych modów",
+        "no_mods_text": "Żadne mody nie są włączone. Najpierw włącz jakieś mody.",
+        "launch_options_title": "Opcje uruchamiania Steam",
+        "launch_options_instructions": "Skopiuj poniższe opcje i wklej je w Steam:\nPrawy klik na grę → Właściwości → Opcje uruchamiania\n\nUwaga: Na Linux/Proton/Steam Deck trzymaj mody w folderze gry dla najlepszej kompatybilności.",
+        "copy_to_clipboard": "Kopiuj do schowka",
+        "export_bat": "Eksportuj do pliku .BAT",
+        "export_bat_title": "Eksportuj skrypt uruchamiający",
+        "export_bat_success_title": "Eksport zakończony sukcesem",
+        "export_bat_success": "Eksport zakończony pomyślnie!",
+        "export_bat_instructions": "Skrypt uruchamiający został zapisany. Aby użyć go ze Steam:\n\n1. Kliknij prawym przyciskiem myszy na Mewgenics w bibliotece Steam\n2. Wybierz Właściwości → Opcje uruchamiania\n3. Wklej poniższą linię:",
+        "export_bat_note": "Uwaga: Plik wsadowy (.bat) zawiera wszystkie aktualne ustawienia modów.\nWyeksportuj go ponownie, jeśli zmienisz mody lub ustawienia.",
+        "close": "Zamknij",
+        "no_mods_to_sort": "Brak włączonych modów do posortowania.",
+        "auto_sort_success": "Mody posortowane pomyślnie!",
+        "auto_sort_warnings": "Mody posortowane z ostrzeżeniami:\n\n{warnings}",
+        "requirement_warnings_title": "Niespełnione wymagania",
+        "requirement_warnings_text": "Niektóre mody mają niespełnione wymagania:\n\n{errors}\n\nUruchomić grę mimo to?",
+        "conflict_warnings_title": "Konflikty konfiguracji",
+        "conflict_warnings_text": "Wykryto następujące konflikty:\n\n{warnings}\n\nUruchomić grę mimo to?",
+        "import_modlist": "Importuj listę modów",
+        "export_modlist": "Eksportuj listę modów",
+        "modlist_name_prompt": "Wprowadź nazwę listy modów:"
+    },
+    "alerts": {
+        "requirement_conflict": "Konflikty wymagań",
+        "requirement_conflict_text": "Znaleziono następujące konflikty wymagań:\n\n{errors}\n\nUruchomić mimo to?",
+        "savefile_conflict": "Informacja o ustawieniach uruchamiania"
+    },
+    "progress": {
+        "unpacking": "Rozpakowywanie zasobów",
+        "repacking": "Przepakowywanie zasobów"
+    },
+    "auto": {
+        "string": " ",
+        "___": "<--->"
+    }
+}
