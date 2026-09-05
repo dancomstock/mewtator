@@ -22,6 +22,7 @@
       "open_game": "Open th' Game Bay",
       "launch_game": "Set Sail!",
       "copy_launch_options": "Launch Orders & Export",
+      "stop_game": "Land Ahoy!",
       "cleanup_dlls": "Scrub DLL Riggin'",
       "exit": "Abandon Ship"
     },
@@ -38,6 +39,8 @@
     "disable_all": "Maroon All",
     "enable_all": "Crew Up All",
     "launch_game": "Set Sail!",
+    "stop_game": "Land Ahoy!",
+    "stopping": "Landing...",
     "no_preview": "No Portrait Available",
     "app_name": "Mewtator",
     "app_subtitle": "Mewgenics Mod Quartermaster",
@@ -105,7 +108,9 @@
     "linux_proton_path": "Wine Hold",
     "linux_allow_undefined_steam_runtime_or_proton": "Allow sailing without Steam Linux Runtime or Proton",
     "linux_steam_gameoverlayrenderer_disabled": "Disable Steam helm",
-    "linux_compatdata_override_dir": "compatdata mutiny"
+    "linux_compatdata_override_dir": "compatdata mutiny",
+    "concurrent_launches_enabled": "Allow launching multiple vessels at once",
+    "always_ungraceful_stop_enabled": "Scuttle the ship when landing"
   },
   "messages": {
     "setup_required_title": "Riggin' Required",
@@ -190,7 +195,9 @@
     "path_required": "Th' path to {name} be required.",
     "path_invalid": "Th' path to {name} be invalid.",
     "proton_missing_compatdata_error": "Thar be no Mewgenics save data (Wine Hold compatdata).\n\nMake sure ye have launched th' game through Steam at least once, so this data be initialized.",
-    "copy_launch_options_advice": "If Mewtator's launch button be givin' ye trouble, try an alternative launch procedure:\n1. Use 'Launch Orders & Export' from th' File menu\n2. Paste 'em in Steam: Right-click Mewgenics → Properties → Launch Options\n3. Launch th' game from Steam\n"
+    "copy_launch_options_advice": "If Mewtator's launch button be givin' ye trouble, try an alternative launch procedure:\n1. Use 'Launch Orders & Export' from th' File menu\n2. Paste 'em in Steam: Right-click Mewgenics → Properties → Launch Options\n3. Launch th' game from Steam\n",
+    "stop_game_title": "Land?",
+    "stop_game_text": "Some treasure may remain unplundered.\n(Cap'n Steven may be furious...)"
   },
   "dialog": {
     "yes": "Aye!",

@@ -22,6 +22,7 @@
       "open_game": "Abrir Pasta do Jogo",
       "launch_game": "Iniciar Jogo",
       "copy_launch_options": "Opções de inicialização e exportação",
+      "stop_game": "Parar o Jogo",
       "cleanup_dlls": "Limpar Injeção de DLL",
       "exit": "Sair"
     },
@@ -38,6 +39,8 @@
     "disable_all": "Desativar Todos",
     "enable_all": "Ativar Todos",
     "launch_game": "Iniciar Jogo",
+    "stop_game": "Parar o Jogo",
+    "stopping": "A parar...",
     "no_preview": "Sem Imagem de Visualização",
     "app_name": "Mewtator",
     "app_subtitle": "Gerenciador de Mods do Mewgenics",
@@ -105,7 +108,9 @@
     "linux_proton_path": "Proton",
     "linux_allow_undefined_steam_runtime_or_proton": "Permitir o arranque sem o Steam Linux Runtime ou o Proton",
     "linux_steam_gameoverlayrenderer_disabled": "Desativar a sobreposição de jogos do Steam",
-    "linux_compatdata_override_dir": "directório de substituição do compatdata"
+    "linux_compatdata_override_dir": "directório de substituição do compatdata",
+    "concurrent_launches_enabled": "Permitir o lançamento de instâncias simultâneas do jogo",
+    "always_ungraceful_stop_enabled": "Parar o jogo de forma não controlada"
   },
   "messages": {
     "setup_required_title": "Configuração Necessária",
@@ -190,7 +195,9 @@
     "path_required": "É necessário indicar o caminho para {name}.",
     "path_invalid": "O caminho para {name} é inválido.",
     "proton_missing_compatdata_error": "Não foi possível detetar os dados guardados do Mewgenics (Proton compatdata).\n\nCertifique-se de que o jogo já foi iniciado anteriormente através do Steam, para que estes dados sejam inicializados.",
-    "copy_launch_options_advice": "Se estiver a ter problemas com o botão de lançamento do Mewtator, experimente um procedimento alternativo de lançamento:\n1. Utilize a opção «Copiar Opções de Lançamento» no menu Ficheiro\n2. Cole-as no Steam: clique com o botão direito do rato em Mewgenics → Propriedades → Opções de Lançamento\n3. Inicie o jogo a partir do Steam"
+    "copy_launch_options_advice": "Se estiver a ter problemas com o botão de lançamento do Mewtator, experimente um procedimento alternativo de lançamento:\n1. Utilize a opção «Copiar Opções de Lançamento» no menu Ficheiro\n2. Cole-as no Steam: clique com o botão direito do rato em Mewgenics → Propriedades → Opções de Lançamento\n3. Inicie o jogo a partir do Steam",
+    "stop_game_title": "Parar o jogo?",
+    "stop_game_text": "Os dados do jogo que não foram guardados podem perder-se.\n(O Steven pode ficar zangado...)"
   },
   "dialog": {
     "yes": "Sim",

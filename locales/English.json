@@ -22,6 +22,7 @@
       "open_game": "Open Game Folder",
       "launch_game": "Launch Game",
       "copy_launch_options": "Launch Options & Export",
+      "stop_game": "Stop Game",
       "cleanup_dlls": "Clean Up DLL Injection",
       "exit": "Exit"
     },
@@ -38,6 +39,8 @@
     "disable_all": "Disable All",
     "enable_all": "Enable All",
     "launch_game": "Launch Game",
+    "stop_game": "Stop Game",
+    "stopping": "Stopping...",
     "no_preview": "No Preview Image",
     "app_name": "Mewtator",
     "app_subtitle": "Mewgenics Mod Manager",
@@ -105,7 +108,9 @@
     "linux_proton_path": "Proton",
     "linux_allow_undefined_steam_runtime_or_proton": "Allow launch without Steam Linux Runtime or Proton",
     "linux_steam_gameoverlayrenderer_disabled": "Disable Steam game overlay",
-    "linux_compatdata_override_dir": "compatdata override"
+    "linux_compatdata_override_dir": "compatdata override",
+    "concurrent_launches_enabled": "Allow launching concurrent game instances",
+    "always_ungraceful_stop_enabled": "Stop game ungracefully"
   },
   "messages": {
     "setup_required_title": "Setup Required",
@@ -190,7 +195,9 @@
     "path_required": "The path to {name} is required.",
     "path_invalid": "The path to {name} is invalid.",
     "proton_missing_compatdata_error": "Could not detect Mewgenics save data (Proton compatdata).\n\nPlease ensure the game has been launched before through Steam, in order to initialize this data.",
-    "copy_launch_options_advice": "If you are having issues with Mewtator's launch button, try an alternative launch procedure:\n1. Use 'Copy Launch Options' from the File menu\n2. Paste them in Steam: Right-click Mewgenics → Properties → Launch Options\n3. Launch the game from Steam\n"
+    "copy_launch_options_advice": "If you are having issues with Mewtator's launch button, try an alternative launch procedure:\n1. Use 'Copy Launch Options' from the File menu\n2. Paste them in Steam: Right-click Mewgenics → Properties → Launch Options\n3. Launch the game from Steam",
+    "stop_game_title": "Stop game?",
+    "stop_game_text": "Unsaved game data may be lost.\n(Steven may be angered...)"
   },
   "dialog": {
     "yes": "Yes",

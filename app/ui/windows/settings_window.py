@@ -478,6 +478,26 @@ class SettingsWindow:
         )
         # End Linux launch options
 
+        # Allow concurrent game launches
+        self.concurrent_launches_enabled_var = BooleanVar(value=self.config.concurrent_launches_enabled)
+        concurrent_launches_enabled_check = ttk.Checkbutton(
+            advanced_frame,
+            text=t.get("settings.concurrent_launches_enabled", "Allow concurrent game launches"),
+            variable=self.concurrent_launches_enabled_var,
+            cursor="hand2"
+        )
+        concurrent_launches_enabled_check.pack(anchor="w")
+
+        # Stop game by process kill instead of graceful exit
+        self.always_ungraceful_stop_enabled_var = BooleanVar(value=self.config.always_ungraceful_stop_enabled)
+        always_ungraceful_stop_enabled_check = ttk.Checkbutton(
+            advanced_frame,
+            text=t.get("settings.always_ungraceful_stop_enabled", "Stop game ungracefully"),
+            variable=self.always_ungraceful_stop_enabled_var,
+            cursor="hand2"
+        )
+        always_ungraceful_stop_enabled_check.pack(anchor="w")
+
         # Save Settings
         self._save_button = ttk.Button(
             self.win,
@@ -750,6 +770,8 @@ class SettingsWindow:
         self.config.linux_steam_runtime_path = linux_steam_runtime_path
         self.config.linux_proton_path = linux_proton_path
         self.config.linux_compatdata_override_dir = linux_compatdata_override_dir
+        self.config.concurrent_launches_enabled = self.concurrent_launches_enabled_var.get()
+        self.config.always_ungraceful_stop_enabled = self.always_ungraceful_stop_enabled_var.get()
         
         self.win.destroy()
         self.on_save(self.config)

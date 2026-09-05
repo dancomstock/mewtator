@@ -22,6 +22,8 @@ class Config:
     linux_steam_runtime_path: str = ""
     linux_proton_path: str = ""
     linux_compatdata_override_dir: str = ""
+    concurrent_launches_enabled: bool = False
+    always_ungraceful_stop_enabled: bool = False
     
     def is_valid(self) -> bool:
         """Return whether Mewtator has enough configuration to open its main UI...
@@ -64,7 +66,9 @@ class Config:
             'linux_steam_gameoverlayrenderer_disabled': self.linux_steam_gameoverlayrenderer_disabled,
             "linux_steam_runtime_path": self.linux_steam_runtime_path,
             "linux_proton_path": self.linux_proton_path,
-            "linux_compatdata_override_dir": self.linux_compatdata_override_dir
+            "linux_compatdata_override_dir": self.linux_compatdata_override_dir,
+            "concurrent_launches_enabled": self.concurrent_launches_enabled,
+            "always_ungraceful_stop_enabled": self.always_ungraceful_stop_enabled
         }
     
     @classmethod
@@ -87,5 +91,7 @@ class Config:
             linux_steam_gameoverlayrenderer_disabled=data.get("linux_steam_gameoverlayrenderer_disabled", False),
             linux_steam_runtime_path=data.get("linux_steam_runtime_path", ""),
             linux_proton_path=data.get("linux_proton_path", ""),
-            linux_compatdata_override_dir=data.get("linux_compatdata_override_dir", "")
+            linux_compatdata_override_dir=data.get("linux_compatdata_override_dir", ""),
+            concurrent_launches_enabled=data.get("concurrent_launches_enabled", False),
+            always_ungraceful_stop_enabled=data.get("always_ungraceful_stop_enabled", False)
         )

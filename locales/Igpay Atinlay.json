@@ -22,6 +22,7 @@
       "open_game": "Open-ay Ame-Gay Older-Fay",
       "launch_game": "Aunch-Lay Ame-Gay",
       "copy_launch_options": "Aunch-Lay Options-ay & Export-ay",
+      "stop_game": "Op-Stay Ame-Gay",
       "cleanup_dlls": "Ean-Clay Up-ay DLL-ay Injection-ay",
       "exit": "Exit-ay"
     },
@@ -38,6 +39,8 @@
     "disable_all": "Isable-Day All-ay",
     "enable_all": "Enable-ay All-ay",
     "launch_game": "Aunch-Lay Ame-Gay",
+    "stop_game": "Op-Stay Ame-Gay",
+    "stopping": "Opping-Stay...",
     "no_preview": "O-Nay Eview-Pray Image-ay",
     "app_name": "Ewtator-May",
     "app_subtitle": "Ewgenics-May Od-May Anager-May",
@@ -105,7 +108,9 @@
     "linux_proton_path": "Oton-pray",
     "linux_allow_undefined_steam_runtime_or_proton": "allow-way aunch-lay ithout-way Eam-stay Inux-lay Untime-ray or-way Oton-pray",
     "linux_steam_gameoverlayrenderer_disabled": "Isable-day Eam-stay Ame-gay Overlay-way",
-    "linux_compatdata_override_dir": "ompatdata-cay override-way"
+    "linux_compatdata_override_dir": "ompatdata-cay override-way",
+    "concurrent_launches_enabled": "Allow-way aunching-lay oncurrent-cay ame-gay instances-way",
+    "always_ungraceful_stop_enabled": "Op-stay ame-gay ungracefully-way"
   },
   "messages": {
     "setup_required_title": "Etup-Say Equired-Ray",
@@ -190,7 +195,9 @@
     "path_required": "E-thay ath-pay o-tay {name} is-way equired-ray.",
     "path_invalid": "E-thay ath-pay o-tay {name} is-way invalid-way.",
     "proton_missing_compatdata_error": "Ould-cay ot-nay etect-day Ewgenics-may ave-say ata-day (Oton-pray ompatdata-cay).\n\nEase-play ensure-way e-thay ame-gay as-hay een-bay aunched-lay efore-bay ough-thray Eam-stay, in-way order-way o-tay initialize-way is-thay ata-day.",
-    "copy_launch_options_advice": "If-way ou-yay are-way aving-hay issues-way ith-way Ewtator's-may aunch-lay utton-bay, y-tray an-way alternative-way aunch-lay ocedure-pray:\n1. Use-way 'Opy-cay Aunch-lay Options-way' om-fray e-thay Ile-fay enu-may\n2. Aste-pay em-thay in-way Eam-stay: ight-ray-ick-clay Ewgenics-may → Operties-pray → Aunch-lay Options-way\n3. Aunch-lay e-thay ame-gay om-fray Eam-stay"
+    "copy_launch_options_advice": "If-way ou-yay are-way aving-hay issues-way ith-way Ewtator's-may aunch-lay utton-bay, y-tray an-way alternative-way aunch-lay ocedure-pray:\n1. Use-way 'Opy-cay Aunch-lay Options-way' om-fray e-thay Ile-fay enu-may\n2. Aste-pay em-thay in-way Eam-stay: ight-ray-ick-clay Ewgenics-may → Operties-pray → Aunch-lay Options-way\n3. Aunch-lay e-thay ame-gay om-fray Eam-stay",
+    "stop_game_title": "Op-stay ame-gay?",
+    "stop_game_text": "Unsaved-way ame-gay ata-day ay-may e-bay ost-lay.\n(Even-stay ay-may e-bay angered-way...)"
   },
   "dialog": {
     "yes": "Es-Yay",

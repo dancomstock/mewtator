@@ -22,6 +22,7 @@
       "open_game": "打开游戏文件夹",
       "launch_game": "启动游戏",
       "copy_launch_options": "启动选项与导出",
+      "stop_game": "停止游戏",
       "cleanup_dlls": "清理 DLL 注入",
       "exit": "退出"
     },
@@ -38,6 +39,8 @@
     "disable_all": "全部禁用",
     "enable_all": "全部启用",
     "launch_game": "启动游戏",
+    "stop_game": "停止游戏",
+    "stopping": "正在停止...",
     "no_preview": "无预览图片",
     "app_name": "Mewtator",
     "app_subtitle": "Mewgenics 模组管理器",
@@ -105,7 +108,9 @@
     "linux_proton_path": "Proton",
     "linux_allow_undefined_steam_runtime_or_proton": "允许在未安装 Steam Linux 运行时或 Proton 的情况下启动游戏",
     "linux_steam_gameoverlayrenderer_disabled": "禁用 Steam 游戏叠加层",
-    "linux_compatdata_override_dir": "compatdata 覆盖目录"
+    "linux_compatdata_override_dir": "compatdata 覆盖目录",
+    "concurrent_launches_enabled": "允许同时启动多个游戏实例",
+    "always_ungraceful_stop_enabled": "强制停止游戏"
   },
   "messages": {
     "setup_required_title": "需要设置",
@@ -190,7 +195,9 @@
     "path_required": "必须提供 {name} 的路径。",
     "path_invalid": "{name} 的路径无效。",
     "proton_missing_compatdata_error": "检测到 Mewgenics 的存档数据（Proton compatdata）。\n\n请确保此前已通过 Steam 启动过该游戏，以便初始化此数据。",
-    "copy_launch_options_advice": "如果您在使用 Mewtator 的启动按钮时遇到问题，请尝试以下替代启动方法：\n1. 从‘文件’菜单中选择‘复制启动选项’\n2. 将其粘贴到 Steam 中：右键点击 Mewgenics → 属性 → 启动选项\n3. 通过 Steam 启动游戏"
+    "copy_launch_options_advice": "如果您在使用 Mewtator 的启动按钮时遇到问题，请尝试以下替代启动方法：\n1. 从‘文件’菜单中选择‘复制启动选项’\n2. 将其粘贴到 Steam 中：右键点击 Mewgenics → 属性 → 启动选项\n3. 通过 Steam 启动游戏",
+    "stop_game_title": "停止游戏？",
+    "stop_game_text": "未保存的游戏数据可能会丢失。\n(Steven 可能会生气……)"
   },
   "dialog": {
     "yes": "是",

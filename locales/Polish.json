@@ -22,6 +22,7 @@
       "open_game": "Otwórz folder gry",
       "launch_game": "Uruchom grę",
       "copy_launch_options": "Opcje uruchamiania i eksport",
+      "stop_game": "Zatrzymaj grę",
       "cleanup_dlls": "Wyczyść wstrzykiwanie DLL",
       "exit": "Wyjście"
     },
@@ -38,6 +39,8 @@
     "disable_all": "Wyłącz wszystkie",
     "enable_all": "Włącz wszystkie",
     "launch_game": "Uruchom grę",
+    "stop_game": "Zatrzymaj grę",
+    "stopping": "Zatrzymywanie...",
     "no_preview": "Brak podglądu",
     "app_name": "Mewtator",
     "app_subtitle": "Menedżer modów Mewgenics",
@@ -105,7 +108,9 @@
     "linux_proton_path": "Proton",
     "linux_allow_undefined_steam_runtime_or_proton": "Zezwól na uruchamianie bez środowiska uruchomieniowego Steam Linux lub Proton",
     "linux_steam_gameoverlayrenderer_disabled": "Wyłącz nakładkę gry Steam",
-    "linux_compatdata_override_dir": "Katalog nadpisywania danych compatdata"
+    "linux_compatdata_override_dir": "Katalog nadpisywania danych compatdata",
+    "concurrent_launches_enabled": "Zezwól na uruchamianie równoczesnych instancji gry",
+    "always_ungraceful_stop_enabled": "Zatrzymaj grę w sposób niekontrolowany"
   },
   "messages": {
     "setup_required_title": "Wymagana konfiguracja",
@@ -190,7 +195,9 @@
     "path_required": "Wymagana jest ścieżka do {name}.",
     "path_invalid": "Ścieżka do {name} jest nieprawidłowa.",
     "proton_missing_compatdata_error": "Nie udało się wykryć danych zapisu Mewgenics (Proton compatdata).\n\nUpewnij się, że gra została wcześniej uruchomiona przez Steam, aby zainicjować te dane.",
-    "copy_launch_options_advice": "Jeśli masz problemy z przyciskiem uruchamiania w Mewtatorze, spróbuj alternatywnej procedury uruchamiania:\n1. Użyj opcji „Kopiuj opcje uruchamiania” z menu Plik\n2. Wklej je w Steamie: kliknij prawym przyciskiem myszy Mewgenics → Właściwości → Opcje uruchamiania\n3. Uruchom grę z poziomu Steam"
+    "copy_launch_options_advice": "Jeśli masz problemy z przyciskiem uruchamiania w Mewtatorze, spróbuj alternatywnej procedury uruchamiania:\n1. Użyj opcji „Kopiuj opcje uruchamiania” z menu Plik\n2. Wklej je w Steamie: kliknij prawym przyciskiem myszy Mewgenics → Właściwości → Opcje uruchamiania\n3. Uruchom grę z poziomu Steam",
+    "stop_game_title": "Zakończyć grę?",
+    "stop_game_text": "Niezapisane dane gry mogą zostać utracone.\n(Steven może się zdenerwować...)"
   },
   "dialog": {
     "yes": "Tak",

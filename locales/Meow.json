@@ -22,6 +22,7 @@
       "open_game": "Meow",
       "launch_game": "Meow",
       "copy_launch_options": "Meow",
+      "stop_game": "Meow",
       "cleanup_dlls": "Meow .dll Meow",
       "exit": "Meow"
     },
@@ -38,6 +39,8 @@
     "disable_all": "Meow",
     "enable_all": "Meow",
     "launch_game": "Meow",
+    "stop_game": "Meow",
+    "stopping": "Meow...",
     "no_preview": "Meow",
     "app_name": "Meow",
     "app_subtitle": "Meow",
@@ -105,7 +108,9 @@
     "linux_proton_path": "Meow",
     "linux_allow_undefined_steam_runtime_or_proton": "Meow",
     "linux_steam_gameoverlayrenderer_disabled": "Meow",
-    "linux_compatdata_override_dir": "compatdata meow"
+    "linux_compatdata_override_dir": "compatdata meow",
+    "concurrent_launches_enabled": "Meow",
+    "always_ungraceful_stop_enabled": "Meow"
   },
   "messages": {
     "setup_required_title": "Meow",
@@ -190,7 +195,9 @@
     "path_required": "Meow {name}",
     "path_invalid": "Meow {name}",
     "proton_missing_compatdata_error": "Meow (Meow compatdata).\n\nMeow.",
-    "copy_launch_options_advice": "Meow:\n1. Meow 'Meow' meow\n2. Meow: Meow Meow → Meow → Meow\n3. Meow"
+    "copy_launch_options_advice": "Meow:\n1. Meow 'Meow' meow\n2. Meow: Meow Meow → Meow → Meow\n3. Meow",
+    "stop_game_title": "Meow?",
+    "stop_game_text": "Meow.\n(Steven meow...)"
   },
   "dialog": {
     "yes": "Meow",

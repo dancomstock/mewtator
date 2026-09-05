@@ -22,6 +22,7 @@
       "open_game": "ゲームフォルダを開く",
       "launch_game": "ゲームを起動",
       "copy_launch_options": "起動オプションとエクスポート",
+      "stop_game": "ゲームを停止",
       "cleanup_dlls": "DLL インジェクションをクリーンアップ",
       "exit": "終了"
     },
@@ -38,6 +39,8 @@
     "disable_all": "すべて無効",
     "enable_all": "すべて有効",
     "launch_game": "ゲームを起動",
+    "stop_game": "ゲームを停止",
+    "stopping": "停止中...",
     "no_preview": "プレビュー画像なし",
     "app_name": "Mewtator",
     "app_subtitle": "Mewgenics Mod マネージャー",
@@ -105,7 +108,9 @@
     "linux_proton_path": "Proton",
     "linux_allow_undefined_steam_runtime_or_proton": "Steam Linux Runtime または Proton がない場合でも起動を許可する",
     "linux_steam_gameoverlayrenderer_disabled": "Steam ゲームオーバーレイを無効にする",
-    "linux_compatdata_override_dir": "compatdata の上書きディレクトリ"
+    "linux_compatdata_override_dir": "compatdata の上書きディレクトリ",
+    "concurrent_launches_enabled": "ゲームインスタンスの同時起動を許可",
+    "always_ungraceful_stop_enabled": "ゲームを非正常終了"
   },
   "messages": {
     "setup_required_title": "設定が必要です",
@@ -190,7 +195,9 @@
     "path_required": "{name} へのパスが必要です。",
     "path_invalid": "{name} へのパスが無効です。",
     "proton_missing_compatdata_error": "Mewgenics のセーブデータ (Proton compatdata) を検出できませんでした。\n\nこのデータを初期化するには、Steam 経由でゲームを一度起動していることを確認してください。",
-    "copy_launch_options_advice": "Mewtatorの起動ボタンに問題がある場合は、別の起動手順をお試しください:\n1. [ファイル] メニューから「起動オプションをコピー」を選択してください\n2. Steamに貼り付けてください：Mewgenicsを右クリック → [プロパティ] → [起動オプション]\n3. Steamからゲームを起動してください"
+    "copy_launch_options_advice": "Mewtatorの起動ボタンに問題がある場合は、別の起動手順をお試しください:\n1. [ファイル] メニューから「起動オプションをコピー」を選択してください\n2. Steamに貼り付けてください：Mewgenicsを右クリック → [プロパティ] → [起動オプション]\n3. Steamからゲームを起動してください",
+    "stop_game_title": "ゲームを終了しますか？",
+    "stop_game_text": "保存されていないゲームデータが失われる可能性があります。\n(Steven が怒るかもしれません...)"
   },
   "dialog": {
     "yes": "はい",
