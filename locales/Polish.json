@@ -197,7 +197,9 @@
     "proton_missing_compatdata_error": "Nie udało się wykryć danych zapisu Mewgenics (Proton compatdata).\n\nUpewnij się, że gra została wcześniej uruchomiona przez Steam, aby zainicjować te dane.",
     "copy_launch_options_advice": "Jeśli masz problemy z przyciskiem uruchamiania w Mewtatorze, spróbuj alternatywnej procedury uruchamiania:\n1. Użyj opcji „Kopiuj opcje uruchamiania” z menu Plik\n2. Wklej je w Steamie: kliknij prawym przyciskiem myszy Mewgenics → Właściwości → Opcje uruchamiania\n3. Uruchom grę z poziomu Steam",
     "stop_game_title": "Zakończyć grę?",
-    "stop_game_text": "Niezapisane dane gry mogą zostać utracone.\n(Steven może się zdenerwować...)"
+    "stop_game_text": "Niezapisane dane gry mogą zostać utracone.\n(Steven może się zdenerwować...)",
+    "not_running": "Gra nie jest uruchomiona.",
+    "already_running": "Gra jest już uruchomiona."
   },
   "dialog": {
     "yes": "Tak",

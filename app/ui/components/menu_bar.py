@@ -237,6 +237,7 @@ class MenuBarComponent:
         on_open_game: Callable,
         on_launch: Callable,
         on_copy_launch: Callable,
+        on_stop: Callable,
         on_cleanup_dlls: Callable,
         on_exit: Callable
     ):
@@ -299,7 +300,11 @@ class MenuBarComponent:
             command=lambda: self._invoke_menu_command(on_copy_launch),
             accelerator="F3"
         )
-        
+        file_menu.add_command(
+            label=self.t.get("menu.file.stop_game", "Stop Game"),
+            command=lambda: self._invoke_menu_command(on_stop),
+        )
+
         file_menu.add_separator()
         
         file_menu.add_command(

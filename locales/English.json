@@ -197,7 +197,9 @@
     "proton_missing_compatdata_error": "Could not detect Mewgenics save data (Proton compatdata).\n\nPlease ensure the game has been launched before through Steam, in order to initialize this data.",
     "copy_launch_options_advice": "If you are having issues with Mewtator's launch button, try an alternative launch procedure:\n1. Use 'Copy Launch Options' from the File menu\n2. Paste them in Steam: Right-click Mewgenics → Properties → Launch Options\n3. Launch the game from Steam",
     "stop_game_title": "Stop game?",
-    "stop_game_text": "Unsaved game data may be lost.\n(Steven may be angered...)"
+    "stop_game_text": "Unsaved game data may be lost.\n(Steven may be angered...)",
+    "not_running": "The game is not running.",
+    "already_running": "The game is already running."
   },
   "dialog": {
     "yes": "Yes",

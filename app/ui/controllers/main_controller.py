@@ -95,6 +95,7 @@ class MainController:
             self._move_down,
         )
         self.window.set_launch_action(self._launch_game)
+        self.window.set_stop_action(self._stop_game)
         self.window.set_settings_action(self._show_settings)
 
         self._setup_menu_bar()
@@ -120,6 +121,7 @@ class MainController:
             on_open_game=lambda: open_file_or_folder(self.config.game_install_dir),
             on_launch=self._launch_game,
             on_copy_launch=self._copy_launch_options,
+            on_stop=self._stop_game,
             on_cleanup_dlls=self._cleanup_dll_injection,
             on_exit=self.root.quit
         )
@@ -548,6 +550,16 @@ class MainController:
             )
 
     def _launch_game(self):
+        # Check for another game instance before launching
+        if not self.config.concurrent_launches_enabled:
+            if self.launcher_service.collect_launched_processes(self.config.game_install_dir):
+                self._show_notification(
+                    self.translation_service.get("messages.launch_error"),
+                    self.translation_service.get("messages.already_running"),
+                    kind="error",
+                )
+                return
+
         # Re-read mods once at launch time so edits made after startup cannot bypass validation.
         # This is deliberately only when Launch is invoked, but could probably also be used in a background filesystem watcher... - Tim
         req_errors = self._reload_mods_from_disk()
@@ -660,6 +672,37 @@ class MainController:
             launch_opts,
             on_export=lambda parent: self._export_bat_file(enabled_paths, parent),
         )
+
+    def _stop_game(self):
+        # Check for another game instance before presenting confirmation
+        if not self.launcher_service.collect_launched_processes(self.config.game_install_dir):
+            self._show_notification(
+                self.translation_service.get("messages.launch_error"),
+                self.translation_service.get("messages.not_running"),
+                kind="error",
+            )
+            return
+
+        # Ask for confirmation
+        result = self._ask_confirmation(
+            self.translation_service.get("messages.stop_game_title"),
+            self.translation_service.get("messages.stop_game_text")
+        )
+        if not result:
+            return
+
+        try:
+            self.launcher_service.stop_game(
+                self.config.game_install_dir,
+                self.config,
+                self.translation_service
+            )
+        except Exception as e:
+            self._show_notification(
+                self.translation_service.get("messages.launch_error"),
+                str(e),
+                kind="error",
+            )
 
     def _export_bat_file(self, enabled_paths, parent_dialog=None):
         """Export launch configuration to a .bat file."""

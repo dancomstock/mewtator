@@ -197,7 +197,9 @@
     "proton_missing_compatdata_error": "Mewgenics-Speicherdaten (Proton compatdata) konnten nicht erkannt werden.\n\nBitte stelle sicher, dass das Spiel zuvor über Steam gestartet wurde, um diese Daten zu initialisieren.",
     "copy_launch_options_advice": "Wenn du Probleme mit der Startschaltfläche von Mewtator hast, versuche es mit einem alternativen Startvorgang:\n1. Wähle im Menü „Datei“ die Option „Startoptionen kopieren“\n2. Füge sie in Steam ein: Rechtsklick auf Mewgenics → Eigenschaften → Startoptionen\n3. Starte das Spiel über Steam",
     "stop_game_title": "Spiel beenden?",
-    "stop_game_text": "Ungespeicherte Spieldaten gehen möglicherweise verloren.\n(Steven könnte sich darüber ärgern...)"
+    "stop_game_text": "Ungespeicherte Spieldaten gehen möglicherweise verloren.\n(Steven könnte sich darüber ärgern...)",
+    "not_running": "Das Spiel läuft nicht.",
+    "already_running": "Das Spiel läuft bereits."
   },
   "dialog": {
     "yes": "Ja",

@@ -8,6 +8,15 @@ from app.core.models.config import Config
 from app.utils.logging_utils import get_logger
 from app.utils.resource_utils import resource_path
 from app.core.services.translation_service import TranslationService
+import psutil
+import getpass
+import time
+import sys
+if sys.platform == "win32":
+    import win32con
+    import win32api
+    import win32gui
+    import win32process
 
 MEWGENICS_STEAM_APP_ID = "686060"
 
@@ -18,6 +27,19 @@ def _steam_game_env():
     env["SteamGameId"] = MEWGENICS_STEAM_APP_ID
     return env
 
+def _poll_processes_for_stop(processes: set(psutil.Process), recheck_period_sec: float, max_retries: int):
+    """Repeatedly poll a psutil Process set and remove dead processes until the set is emptied or maximum retries have elapsed."""
+    while True:
+        for proc in processes.copy():
+            if not proc.is_running() or proc.status() == psutil.STATUS_ZOMBIE:
+                processes.remove(proc)
+        if processes:
+            max_retries -= 1
+            if max_retries <= 0:
+                return False
+            time.sleep(recheck_period_sec)
+        else:
+            return True
 
 class LaunchStrategy(ABC):
     @abstractmethod
@@ -28,6 +50,13 @@ class LaunchStrategy(ABC):
     def get_launch_options(self, mod_paths: List[str], game_dir: str, config: Config, extra_args: List[str]) -> str:
         pass
 
+    @abstractmethod
+    def collect_launched_processes(self, executable_path: str, game_dir: str) -> set(psutil.Process):
+        pass
+
+    @abstractmethod
+    def stop(self, executable_path: str, game_dir: str, config: Config, translation_service: TranslationService):
+        pass
 
 class DirectLaunchStrategy(LaunchStrategy):
     def launch(self, executable_path: str, mod_paths: List[str], game_dir: str, config: Config, extra_args: List[str], translation_service: TranslationService):
@@ -54,6 +83,77 @@ class DirectLaunchStrategy(LaunchStrategy):
         
         return " ".join(parts)
 
+    def collect_launched_processes(self, executable_path: str, game_dir: str) -> set(psutil.Process):
+        logger = get_logger()
+
+        processes = set()
+
+        # Try to fetch the current user's handle
+        try:
+            current_user = getpass.getuser()
+        except:
+            # May fail in some unusual environments
+            logger.warn("Failed to get current user's username!")
+            current_user = None
+
+        # Collect processes
+        for proc in psutil.process_iter(['pid', 'username', 'exe']):
+            # Filter processes by the current user if their identity is known
+            if current_user is not None:
+                if proc.info['username'] != current_user:
+                    continue
+
+            # Exclude dead and zombie processes
+            if not proc.is_running() or proc.status() == psutil.STATUS_ZOMBIE:
+                continue
+
+            # Collect processes that are instances of the game executable
+            if Path(executable_path).samefile(proc.info['exe']):
+                processes.append(proc)
+
+        return processes
+
+    def stop(self, executable_path: str, game_dir: str, config: Config, translation_service: TranslationService):
+        logger = get_logger()
+
+        processes_to_kill = self.collect_launched_processes(executable_path, game_dir)
+
+        if not config.always_ungraceful_stop_enabled:
+            # Try to gracefully exit (SDL_EVENT_QUIT?) in order to allow savescumming to be flagged.
+            if sys.platform == "win32":
+                # On Windows, the game gracefully exits after receiving a WM_CLOSE message.
+                # https://stackoverflow.com/a/56310557
+                # https://github.com/wine-mirror/wine/blob/9ce1651515d93d9760e2438a53bf2c117238bc2b/programs/taskkill/taskkill.c#L119-L134
+                def __win32_enum_windows_proc_wm_close(hwnd, l_param):
+                    if l_param == win32process.GetWindowThreadProcessId(hwnd)[1]:
+                        win32api.SendMessage(hwnd, win32con.WM_CLOSE)
+                def __win32_taskkill(pid: int):
+                    win32gui.EnumWindows(__win32_enum_windows_proc_wm_close, pid)
+                for proc in processes_to_kill:
+                    logger.info(f"WM_CLOSE {proc.info['pid']}")
+                    __win32_taskkill(pid)
+            else:
+                # Presumably on Linux/macOS, SIGTERM would trigger a graceful exit.
+                # However, a native Mewgenics build has not been released for Linux/macOS when this code was written.
+                for proc in processes_to_kill:
+                    logger.info(f"Terminate {proc.info['pid']}")
+                    proc.terminate()
+
+            # 10 sec
+            if _poll_processes_for_stop(processes_to_kill, 0.5, 20):
+                return
+
+        # TerminateProcess on Windows, SIGKILL on Linux/macOS
+        for proc in processes_to_kill:
+            logger.info(f"Kill {proc.info['pid']}")
+            proc.kill()
+
+        # 5 sec
+        if _poll_processes_for_stop(processes_to_kill, 0.5, 10):
+            return
+
+        for proc in processes_to_kill:
+            logger.warn(f"Failed to kill {proc.info['pid']}")
 
 class ProtonLaunchStrategy(LaunchStrategy):
     def __init__(self, game_dir: str):
@@ -206,6 +306,137 @@ class ProtonLaunchStrategy(LaunchStrategy):
 
         return " ".join(parts)
 
+    def collect_launched_processes(self, executable_path: str, game_dir: str) -> set(psutil.Process):
+        logger = get_logger()
+
+        # Process tracker
+        processes = set()
+        wineserver_process = None
+
+        # Try to fetch the current user's handle
+        try:
+            current_user = getpass.getuser()
+        except:
+            # May fail in some unusual environments
+            logger.warn("Failed to get current user's username!")
+            current_user = None
+
+        # Collect processes
+        for proc in psutil.process_iter(['pid', 'username', 'exe']):
+            # Filter processes by the current user if their identity is known
+            if current_user is not None:
+                if proc.info['username'] != current_user:
+                    continue
+
+            # Exclude dead and zombie processes
+            if not proc.is_running() or proc.status() == psutil.STATUS_ZOMBIE:
+                continue
+
+            # We need to collect multiple processes related to Mewgenics.exe
+            # SteamAppId/SteamGameId env vars are specific to the game, and
+            # set by both the Steam client and Mewtator.
+            try:
+                environ = proc.environ()
+            except:
+                # usually fails if the process is owned by another user
+                # and if the requesting user is not root
+                continue
+            if environ.get('SteamAppId') == MEWGENICS_STEAM_APP_ID or environ.get('SteamGameId') == MEWGENICS_STEAM_APP_ID:
+                processes.add(proc)
+
+        return processes
+
+    def stop(self, executable_path: str, game_dir: str, config: Config, translation_service: TranslationService):
+        logger = get_logger()
+
+        processes_to_kill = self.collect_launched_processes(executable_path, game_dir)
+        wineserver_process = None
+
+        # Paths for running taskkill
+        path_steam_client_root = Path.home() / '.steam/root'
+        path_game_dir = Path(game_dir)
+        path_steam_linux_runtime = Path(config.linux_steam_runtime_path) if config.linux_steam_runtime_path else None
+        path_proton = Path(config.linux_proton_path) if config.linux_proton_path else None
+
+        steam_linux_runtime_exists = path_steam_linux_runtime is not None and path_steam_linux_runtime.is_file()
+        proton_exists = path_proton is not None and path_proton.is_file()
+
+        if not config.always_ungraceful_stop_enabled:
+            # Try to gracefully exit (SDL_EVENT_QUIT?) in order to allow savescumming to be flagged.
+            def __proton_taskkill_mewgenics():
+                # On Windows, the game gracefully exits after receiving a WM_CLOSE message.
+                # We descend into the Wine prefix and run taskkill to signal WM_CLOSE.
+                # (there doesn't appear to be a way to initiate WM_CLOSE through Unix signalling)
+                if not config.linux_allow_undefined_steam_runtime_or_proton:
+                    if not steam_linux_runtime_exists:
+                        return
+                if not proton_exists:
+                    return
+
+                wineserver_environ = wineserver_process.environ()
+                env = os.environ.copy()
+
+                # prescribed Steam Linux Runtime/Proton configuration variables
+                # https://gitlab.steamos.cloud/steamrt/steam-runtime-tools/-/blob/main/docs/slr-for-game-developers.md#running-a-game-under-proton-in-the-steam-linux-runtime-environment
+                env['STEAM_COMPAT_CLIENT_INSTALL_PATH'] = wineserver_environ['STEAM_COMPAT_CLIENT_INSTALL_PATH']
+                env['STEAM_COMPAT_DATA_PATH'] = wineserver_environ['STEAM_COMPAT_DATA_PATH']
+                env['STEAM_COMPAT_INSTALL_PATH'] = wineserver_environ['STEAM_COMPAT_INSTALL_PATH']
+                env['STEAM_COMPAT_LIBRARY_PATHS'] = wineserver_environ['STEAM_COMPAT_LIBRARY_PATHS']
+
+                args = []
+                # Steam Linux Runtime is not necessarily required if the user's system has the right
+                # libraries to support the chosen Proton version.
+                if steam_linux_runtime_exists:
+                    args.extend([config.linux_steam_runtime_path, '--'])
+
+                # We checked that Proton exists earlier
+                args.extend([config.linux_proton_path, 'run'])
+
+                args.extend(['taskkill', '/IM', 'Mewgenics.exe'])
+
+                process = subprocess.Popen(args, cwd=game_dir, env=env)
+                process.wait()
+
+            wineserver_process = None
+            # Try to find a wineserver instance corresponding to our Proton launcher
+            # If the user has multiple prefixes running multiple instances of
+            # Mewgenics.exe, we'll execute taskkill in one prefix only.
+            for proc in processes_to_kill:
+                if proton_exists:
+                    exe = proc.info['exe']
+                    if exe.startswith(str(path_proton.parent)) and exe.endswith('wineserver'):
+                        wineserver_process = proc
+                        break
+
+            if wineserver_process is not None:
+                logger.info("WM_CLOSE Mewgenics.exe")
+                __proton_taskkill_mewgenics()
+
+            # 10 sec
+            if _poll_processes_for_stop(processes_to_kill, 0.5, 20):
+                return
+
+        # SIGTERM any remaining processes
+        # Wine converts SIGTERM to TerminateProcess, not WM_CLOSE
+        for proc in processes_to_kill:
+            logger.info(f"SIGTERM {proc.info['pid']}")
+            proc.terminate()
+
+        # 5 sec
+        if _poll_processes_for_stop(processes_to_kill, 0.5, 10):
+            return
+
+        # SIGKILL any remaining processes
+        for proc in processes_to_kill:
+            logger.info(f"SIGKILL {proc.info['pid']}")
+            proc.kill()
+
+        # 5 sec
+        if _poll_processes_for_stop(processes_to_kill, 0.5, 10):
+            return
+
+        for proc in processes_to_kill:
+            logger.warn(f"Failed to kill {proc.info['pid']}")
 
 class LaunchStrategyFactory:
     @staticmethod

@@ -197,7 +197,9 @@
     "proton_missing_compatdata_error": "Meow (Meow compatdata).\n\nMeow.",
     "copy_launch_options_advice": "Meow:\n1. Meow 'Meow' meow\n2. Meow: Meow Meow → Meow → Meow\n3. Meow",
     "stop_game_title": "Meow?",
-    "stop_game_text": "Meow.\n(Steven meow...)"
+    "stop_game_text": "Meow.\n(Steven meow...)",
+    "not_running": "Meow",
+    "already_running": "Meow"
   },
   "dialog": {
     "yes": "Meow",

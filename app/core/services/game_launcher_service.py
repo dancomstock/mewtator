@@ -115,7 +115,19 @@ class GameLauncherService:
         converted_paths = path_strategy.convert_mod_paths(mod_paths, game_dir)
         
         return launch_strategy.get_launch_options(converted_paths, game_dir, config, extra_args)
-    
+
+    def collect_launched_processes(self, game_dir: str) -> set:
+        launch_strategy = LaunchStrategyFactory.create(game_dir)
+        exe_path = self.find_executable(game_dir)
+
+        return launch_strategy.collect_launched_processes(exe_path, game_dir)
+
+    def stop_game(self, game_dir: str, config: Config, translation_service: TranslationService):
+        launch_strategy = LaunchStrategyFactory.create(game_dir)
+        exe_path = self.find_executable(game_dir)
+
+        launch_strategy.stop(exe_path, game_dir, config, translation_service)
+
     def export_bat_file(self, game_dir: str, mod_paths: List[str], output_path: str, config=None, mod_list=None) -> str:
         """
         Export launch options to a .bat file.

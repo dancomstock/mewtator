@@ -92,6 +92,15 @@ class MainWindow:
         )
         self.summary_label.grid(row=0, column=0, sticky="w")
 
+        self.stop_button = RoundedButton(
+            self.footer,
+            text=t.get("ui.stop_game", "Stop Game"),
+            font="MewtatorHeading",
+            width=340,
+            height=56,
+        )
+        self.stop_button.grid(row=0, column=1, sticky="ew", padx=(20, 0))
+
         self.launch_button = RoundedButton(
             self.footer,
             text=t.get("ui.launch_game", "Launch Game"),
@@ -99,7 +108,7 @@ class MainWindow:
             width=340,
             height=56,
         )
-        self.launch_button.grid(row=0, column=1, sticky="ew", padx=(20, 0))
+        self.launch_button.grid(row=0, column=2, sticky="ew", padx=(20, 0))
 
     def _build_content(self):
         t = self.translation_service
@@ -180,6 +189,7 @@ class MainWindow:
             self.icons.get("arrow-down-disabled", theme_name),
         )
         self.launch_button.config(image=self.icons.get("play", theme_name))
+        self.stop_button.config(image=self.icons.get("stop", theme_name))
 
     def apply_theme(self, theme_service, theme_name: str):
         self.menu_bar.apply_theme(theme_service, theme_name)
@@ -211,6 +221,17 @@ class MainWindow:
 
     def set_launch_action(self, command):
         self.launch_button.config(command=command)
+
+    def set_stop_action(self, command):
+        def command_with_button_lockout():
+            t = self.translation_service
+            self.stop_button.config(state="disabled", text=t.get("ui.stopping", "Stopping..."))
+            # TODO command() can take multiple seconds to complete, especially with Proton.
+            # It should be spun onto a new thread to prevent UI freeze.
+            self.root.update()
+            command()
+            self.stop_button.config(state="normal", text=t.get("ui.stop_game", "Stop Game"))
+        self.stop_button.config(command=command_with_button_lockout)
 
     def set_settings_action(self, command):
         self.menu_bar.set_settings_action(command)

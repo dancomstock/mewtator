@@ -197,7 +197,9 @@
     "proton_missing_compatdata_error": "Não foi possível detetar os dados guardados do Mewgenics (Proton compatdata).\n\nCertifique-se de que o jogo já foi iniciado anteriormente através do Steam, para que estes dados sejam inicializados.",
     "copy_launch_options_advice": "Se estiver a ter problemas com o botão de lançamento do Mewtator, experimente um procedimento alternativo de lançamento:\n1. Utilize a opção «Copiar Opções de Lançamento» no menu Ficheiro\n2. Cole-as no Steam: clique com o botão direito do rato em Mewgenics → Propriedades → Opções de Lançamento\n3. Inicie o jogo a partir do Steam",
     "stop_game_title": "Parar o jogo?",
-    "stop_game_text": "Os dados do jogo que não foram guardados podem perder-se.\n(O Steven pode ficar zangado...)"
+    "stop_game_text": "Os dados do jogo que não foram guardados podem perder-se.\n(O Steven pode ficar zangado...)",
+    "not_running": "O jogo não está a ser executado.",
+    "already_running": "O jogo já está a ser executado."
   },
   "dialog": {
     "yes": "Sim",

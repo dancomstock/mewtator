@@ -197,7 +197,9 @@
     "proton_missing_compatdata_error": "Ould-cay ot-nay etect-day Ewgenics-may ave-say ata-day (Oton-pray ompatdata-cay).\n\nEase-play ensure-way e-thay ame-gay as-hay een-bay aunched-lay efore-bay ough-thray Eam-stay, in-way order-way o-tay initialize-way is-thay ata-day.",
     "copy_launch_options_advice": "If-way ou-yay are-way aving-hay issues-way ith-way Ewtator's-may aunch-lay utton-bay, y-tray an-way alternative-way aunch-lay ocedure-pray:\n1. Use-way 'Opy-cay Aunch-lay Options-way' om-fray e-thay Ile-fay enu-may\n2. Aste-pay em-thay in-way Eam-stay: ight-ray-ick-clay Ewgenics-may → Operties-pray → Aunch-lay Options-way\n3. Aunch-lay e-thay ame-gay om-fray Eam-stay",
     "stop_game_title": "Op-stay ame-gay?",
-    "stop_game_text": "Unsaved-way ame-gay ata-day ay-may e-bay ost-lay.\n(Even-stay ay-may e-bay angered-way...)"
+    "stop_game_text": "Unsaved-way ame-gay ata-day ay-may e-bay ost-lay.\n(Even-stay ay-may e-bay angered-way...)",
+    "not_running": "E-thay ame-gay is-way ot-nay unning-ray.",
+    "already_running": "E-thay ame-gay is-way already-way unning-ray."
   },
   "dialog": {
     "yes": "Es-Yay",

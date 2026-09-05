@@ -54,7 +54,7 @@ When checked, appends `-enable_debugconsole true` to the game's launch command, 
 
 The debug console may be accessed by pressing the backtick key (`` ` ``) on a compatible keyboard.
 
-## Enable Mewtator custom game intro (`mewtator_intro_enabled`)
+### Enable Mewtator custom game intro (`mewtator_intro_enabled`)
 When checked, Mewtator will load a built-in mod that customizes the game's start sequence.
 
 ### Enable DLL Mod Support (`dll_injection_enabled`)
@@ -96,10 +96,11 @@ This option may be useful for advanced users who wish to run multiple instances 
 ### Stop game ungracefully (`always_ungraceful_stop_enabled`)
 When checked, the "Stop Game" button will ungracefully stop Mewgenics by terminating the game's process.
 
-This bears the side effect of defeating Steven's savescum checks.
+An ungraceful stop bears the side effect of defeating Steven's savescum checks.
 
 When unchecked, "Stop Game" will first attempt to gracefully stop the game by closing the game's window, before resorting to process termination.
 
+It may take a long time (several seconds) to gracefully stop the game on Linux through Mewtator.
 
 ## Hidden
 

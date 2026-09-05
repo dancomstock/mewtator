@@ -197,7 +197,9 @@
     "proton_missing_compatdata_error": "Mewgenics のセーブデータ (Proton compatdata) を検出できませんでした。\n\nこのデータを初期化するには、Steam 経由でゲームを一度起動していることを確認してください。",
     "copy_launch_options_advice": "Mewtatorの起動ボタンに問題がある場合は、別の起動手順をお試しください:\n1. [ファイル] メニューから「起動オプションをコピー」を選択してください\n2. Steamに貼り付けてください：Mewgenicsを右クリック → [プロパティ] → [起動オプション]\n3. Steamからゲームを起動してください",
     "stop_game_title": "ゲームを終了しますか？",
-    "stop_game_text": "保存されていないゲームデータが失われる可能性があります。\n(Steven が怒るかもしれません...)"
+    "stop_game_text": "保存されていないゲームデータが失われる可能性があります。\n(Steven が怒るかもしれません...)",
+    "not_running": "ゲームは実行されていません。",
+    "already_running": "ゲームはすでに実行されています。"
   },
   "dialog": {
     "yes": "はい",

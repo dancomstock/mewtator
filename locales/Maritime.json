@@ -197,7 +197,9 @@
     "proton_missing_compatdata_error": "Thar be no Mewgenics save data (Wine Hold compatdata).\n\nMake sure ye have launched th' game through Steam at least once, so this data be initialized.",
     "copy_launch_options_advice": "If Mewtator's launch button be givin' ye trouble, try an alternative launch procedure:\n1. Use 'Launch Orders & Export' from th' File menu\n2. Paste 'em in Steam: Right-click Mewgenics → Properties → Launch Options\n3. Launch th' game from Steam\n",
     "stop_game_title": "Land?",
-    "stop_game_text": "Some treasure may remain unplundered.\n(Cap'n Steven may be furious...)"
+    "stop_game_text": "Some treasure may remain unplundered.\n(Cap'n Steven may be furious...)",
+    "not_running": "The ship already be landed.",
+    "already_running": "The ship already be at sea."
   },
   "dialog": {
     "yes": "Aye!",

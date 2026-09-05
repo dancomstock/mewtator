@@ -197,7 +197,9 @@
     "proton_missing_compatdata_error": "检测到 Mewgenics 的存档数据（Proton compatdata）。\n\n请确保此前已通过 Steam 启动过该游戏，以便初始化此数据。",
     "copy_launch_options_advice": "如果您在使用 Mewtator 的启动按钮时遇到问题，请尝试以下替代启动方法：\n1. 从‘文件’菜单中选择‘复制启动选项’\n2. 将其粘贴到 Steam 中：右键点击 Mewgenics → 属性 → 启动选项\n3. 通过 Steam 启动游戏",
     "stop_game_title": "停止游戏？",
-    "stop_game_text": "未保存的游戏数据可能会丢失。\n(Steven 可能会生气……)"
+    "stop_game_text": "未保存的游戏数据可能会丢失。\n(Steven 可能会生气……)",
+    "not_running": "游戏未运行。",
+    "already_running": "游戏正在运行。"
   },
   "dialog": {
     "yes": "是",
