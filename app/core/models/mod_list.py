@@ -124,6 +124,37 @@ class ModList:
         
         self._mods = new_enabled + disabled_mods
         self._notify_observers()
+
+    def apply_enabled_names(self, enabled_names: List[str]):
+        """Enable exactly the named mods and apply their supplied load order...
+        """
+        mods_by_name = {mod.name: mod for mod in self._mods}
+        requested_names = []
+        seen = set()
+
+        for name in enabled_names:
+            if name in seen or name not in mods_by_name:
+                continue
+            seen.add(name)
+            requested_names.append(name)
+
+        requested_set = set(requested_names)
+        enabled_mods = []
+        disabled_mods = []
+
+        for name in requested_names:
+            mod = mods_by_name[name]
+            mod.enabled = True
+            enabled_mods.append(mod)
+
+        for mod in self._mods:
+            if mod.name in requested_set:
+                continue
+            mod.enabled = False
+            disabled_mods.append(mod)
+
+        self._mods = enabled_mods + disabled_mods
+        self._notify_observers()
     
     def replace_mods(self, mods: List[Mod]):
         self._mods = mods

@@ -11,6 +11,7 @@ class Mod:
     metadata: Optional[Dict[str, Any]] = None
     preview_path: Optional[str] = None
     has_unmet_requirements: bool = False
+    requirement_status: Optional[str] = None
     
     def __post_init__(self):
         if self.metadata is None:
@@ -18,7 +19,15 @@ class Mod:
     
     @property
     def title(self) -> str:
-        return self.metadata.get("title") or self.metadata.get("name") or self.name
+        # Metadata controls the user-facing label, while name remains the
+        # folder/mod ID used by modlist.txt and all mod operations... Blank or
+        # missing metadata (including an empty folder) falls back to the folder
+        # name so the row always has a useful label... - Tim
+        for key in ("title", "name"):
+            value = self.metadata.get(key)
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+        return self.name
     
     @property
     def author(self) -> str:

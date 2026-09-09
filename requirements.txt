@@ -1,4 +1,6 @@
 psutil
 Pillow
-sv-ttk
-pywinstyles
+sv-ttk>=2.6.1,<3
+pywinstyles; sys_platform == "win32"
+pyinstaller
+pywin32; sys_platform == "win32"

@@ -4,7 +4,7 @@ import re
 from pathlib import Path
 
 
-def auto_detect_game_install() -> str:
+def auto_detect_game_install(app_name: str) -> str:
     if sys.platform == "win32":
         try:
             import winreg
@@ -15,7 +15,7 @@ def auto_detect_game_install() -> str:
             steam_path, _ = winreg.QueryValueEx(key, "InstallPath")
             key.Close()
             
-            return _check_steam_libraries(steam_path)
+            return _check_steam_libraries(steam_path, app_name)
         except Exception:
             pass
     
@@ -27,7 +27,7 @@ def auto_detect_game_install() -> str:
         
         for steam_path in steam_paths:
             if steam_path.exists():
-                result = _check_steam_libraries(str(steam_path))
+                result = _check_steam_libraries(str(steam_path), app_name)
                 if result:
                     return result
     
@@ -36,22 +36,23 @@ def auto_detect_game_install() -> str:
         steam_paths = [
             Path.home() / ".local" / "share" / "Steam",  # Common Linux / Steam Deck default
             Path.home() / ".steam" / "steam",
-            Path("~/.steam/steam").expanduser(),
+            Path.home() / ".steam" / "debian-installation",
+            Path.home() / ".var" / "app" / "com.valvesoftware.Steam" / ".local" / "share" / "Steam",  # Flatpak
             Path("/home/deck/.local/share/Steam"),  # Steam Deck specific
         ]
         
         for steam_path in steam_paths:
             if steam_path.exists():
-                result = _check_steam_libraries(str(steam_path))
+                result = _check_steam_libraries(str(steam_path), app_name)
                 if result:
                     return result
     
     return ""
 
 
-def _check_steam_libraries(steam_path: str) -> str:
+def _check_steam_libraries(steam_path: str, app_name: str) -> str:
     candidates = [
-        os.path.join(steam_path, "steamapps", "common", "Mewgenics"),
+        os.path.join(steam_path, "steamapps", "common", app_name),
     ]
     
     lib_vdf = os.path.join(steam_path, "steamapps", "libraryfolders.vdf")
@@ -68,7 +69,7 @@ def _check_steam_libraries(steam_path: str) -> str:
                             part = parts[i].strip()
                             if part and (part.startswith('/') or part.startswith('\\') or (':' in part and len(part) > 2)):
                                 path = os.path.normpath(part)
-                                candidates.append(os.path.join(path, "steamapps", "common", "Mewgenics"))
+                                candidates.append(os.path.join(path, "steamapps", "common", app_name))
                                 break
         except Exception:
             pass

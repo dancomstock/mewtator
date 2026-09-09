@@ -6,8 +6,8 @@ name = "pypi"
 [packages]
 psutil = "*"
 pillow = "*"
-sv-ttk = "*"
-pywinstyles = "*"
+sv-ttk = ">=2.6.1,<3"
+pywinstyles = {version = "*", markers = "sys_platform == 'win32'"}
 
 [dev-packages]
 

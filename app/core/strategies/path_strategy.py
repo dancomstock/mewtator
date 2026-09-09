@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 import os
 import sys
+from pathlib import Path, PureWindowsPath
 
 
 class PathStrategy(ABC):
@@ -24,14 +25,16 @@ class NativePathStrategy(PathStrategy):
 
 class ProtonPathStrategy(PathStrategy):
     def convert_mod_paths(self, paths: List[str], game_dir: str) -> List[str]:
-        return [self._convert_to_proton_path(p) for p in paths]
+        return [str(self._convert_to_proton_path(Path(p))) for p in paths]
     
     def should_warn_about_external_mods(self, mod_paths: List[str], game_dir: str) -> bool:
-        return any(not p.startswith(game_dir) for p in mod_paths)
+        # STEAM_COMPAT_MOUNTS allow arbitrary paths to be visible under Wine
+        # return any(not p.startswith(game_dir) for p in mod_paths)
+        return False
     
     @staticmethod
-    def _convert_to_proton_path(path: str) -> str:
-        return f"Z:{path.replace(os.sep, '/')}"
+    def _convert_to_proton_path(path: Path) -> PureWindowsPath:
+        return PureWindowsPath('Z:', path.resolve())
 
 
 class PathStrategyFactory:

@@ -7,6 +7,7 @@ that the chainloader (external DLL loader) can read.
 import os
 from typing import List, Tuple
 from pathlib import Path
+from app.core.strategies.path_strategy import PathStrategyFactory
 
 
 class DllInjectionService:
@@ -97,8 +98,8 @@ class DllInjectionService:
         # Search recursively for .dll files
         for dll_file in mod_path.rglob("*.dll"):
             if dll_file.is_file():
-                # Use forward slashes for cross-platform compatibility (Windows/Proton)
-                dll_files.append(dll_file.absolute().as_posix())
+                # Record absolute path
+                dll_files.append(dll_file.absolute())
         
         # Sort DLLs: use dll_order from metadata if available, otherwise alphabetical
         if mod.dll_order:
@@ -143,12 +144,14 @@ class DllInjectionService:
             return False
         
         try:
+            # Convert paths for cross-platform compatibility (Windows/Proton)
+            path_strategy = PathStrategyFactory.create(game_dir)
+
             # Create manifest file with DLL paths in mod folder
             with open(manifest_path, 'w', encoding='utf-8') as f:
                 for mod_name, dll_paths in dll_mods:
                     for dll_path in dll_paths:
-                        # Write absolute path
-                        f.write(f"{dll_path}\n")
+                        f.write(f"{path_strategy.convert_mod_paths([dll_path], game_dir)[0]}\n")
             
             # Update chainloader.ini by manually editing the MewtatorManifest line
             # This preserves comments and formatting
@@ -158,8 +161,7 @@ class DllInjectionService:
             # Find and update MewtatorManifest line
             in_chainloader_section = False
             manifest_found = False
-            # Use forward slashes for cross-platform compatibility (Windows/Proton)
-            manifest_line = f"MewtatorManifest={manifest_path.absolute().as_posix()}\n"
+            manifest_line = f"MewtatorManifest={path_strategy.convert_mod_paths([manifest_path], game_dir)[0]}\n"
             
             for i, line in enumerate(lines):
                 stripped = line.strip()

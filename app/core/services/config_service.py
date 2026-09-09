@@ -14,7 +14,8 @@ class ConfigService:
         
         if not config.mod_folder:
             import os
-            config.mod_folder = os.path.join(os.getcwd(), "mods")
+            from app.utils.platform_utils import get_executable_dir
+            config.mod_folder = os.path.join(get_executable_dir(), "mods")
         
         config.normalize_paths()
         return config

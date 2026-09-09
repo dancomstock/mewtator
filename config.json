@@ -6,5 +6,15 @@
     "custom_launch_options": "",
     "dev_mode_enabled": false,
     "debug_console_enabled": false,
-    "close_on_launch": true
+    "close_on_launch": false,
+    "dll_injection_enabled": true,
+    "mewtator_intro_enabled": true,
+    "use_generic_font": false,
+    "linux_allow_undefined_steam_runtime_or_proton": false,
+    "linux_steam_gameoverlayrenderer_disabled": false,
+    "linux_steam_runtime_path": "",
+    "linux_proton_path": "",
+    "linux_compatdata_override_dir": "",
+    "concurrent_launches_enabled": false,
+    "always_ungraceful_stop_enabled": false
 }
