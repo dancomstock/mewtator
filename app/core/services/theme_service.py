@@ -21,6 +21,7 @@ class ThemeService:
         self.app_fonts = {}
         self.current_theme = "dark"
         self.available_themes = ["dark"]
+        self._linux_iconlist_theme_patched = False
     
     def get_available_themes(self):
         return self.available_themes
@@ -546,6 +547,155 @@ class ThemeService:
             "button_fg": "#ffffff",
         }
 
+    def _install_linux_iconlist_theme_patch(self):
+        """Patch Tk's Unix IconList...
+        """
+        if not sys.platform.startswith("linux"):
+            return
+        if self._linux_iconlist_theme_patched:
+            return
+
+        colors = self.get_color_scheme(self.current_theme)
+        tkapp = self.root.tk
+
+        try:
+            # IconList is normally autoloaded only when the first Unix file
+            # dialog opens. Load the class now so we can alter its factory... - Tim
+            tkapp.call("auto_load", "::tk::IconList")
+
+            definition = tkapp.call(
+                "info", "class", "definition", "::tk::IconList", "Create"
+            )
+
+            if isinstance(definition, tuple):
+                arglist, body = definition
+            else:
+                arglist, body = tkapp.splitlist(definition)
+
+            original_body = body
+
+            body = body.replace(
+                "-background white",
+                f"-background {colors['text_bg']}",
+            )
+
+            body = body.replace(
+                "set fill black",
+                f"set fill {colors['text_fg']}",
+            )
+
+            # Only mark this installed if we actually found the Tk defaults we intended to replace... - Tim
+            if body != original_body:
+                tkapp.call(
+                    "oo::define",
+                    "::tk::IconList",
+                    "method",
+                    "Create",
+                    arglist,
+                    body,
+                )
+
+                self._linux_iconlist_theme_patched = True
+        except Exception:
+            # Keep the file dialog usable even on a Tk build whose internal implementation differs... - Tim
+            pass
+
+    def _theme_legacy_tk_file_dialogs(self):
+        """Dark-theme Tk's Unix/X11 file and directory dialogs...
+        """
+        colors = self.get_color_scheme(self.current_theme)
+        tkapp = self.root.tk
+
+        def children_of(path):
+            try:
+                return tkapp.splitlist(tkapp.call("winfo", "children", path))
+            except Exception:
+                return ()
+
+        def descendants(path):
+            for child in children_of(path):
+                yield child
+                yield from descendants(child)
+
+        def widget_class(path):
+            try:
+                return tkapp.call("winfo", "class", path)
+            except Exception:
+                return ""
+
+        def theme_dialog(dialog):
+            # Do NOT assume IconList Canvas has a fixed Tcl widget path... - Tim
+            for widget in descendants(dialog):
+                if widget_class(widget) != "Canvas":
+                    continue
+
+                try:
+                    tkapp.call(
+                        widget,
+                        "configure",
+                        "-background", colors["text_bg"],
+                        "-highlightbackground", colors["text_bg"],
+                        "-highlightcolor", colors["select_bg"],
+                    )
+                except Exception:
+                    pass
+
+                # Existing IconList labels carry "text" canvas tag... - Tim
+                try:
+                    tkapp.call(
+                        widget,
+                        "itemconfigure",
+                        "text",
+                        "-fill", colors["text_fg"],
+                    )
+                except Exception:
+                    pass
+
+            # Update IconList's internal fill variable as well... - Tim
+            icons = f"{dialog}.contents.icons"
+            try:
+                object_ns = tkapp.call("info", "object", "namespace", icons)
+
+                tkapp.call(
+                    "set",
+                    f"{object_ns}::fill",
+                    colors["text_fg"],
+                )
+            except Exception:
+                pass
+
+        for widget in descendants("."):
+            if widget_class(widget) in ("TkChooseDir", "TkFDialog"):
+                theme_dialog(widget)
+
     @contextmanager
     def file_dialog_safe_theme(self):
-        yield
+        """Keep Tk's legacy file chooser dark while its nested loop runs..."""
+        self._install_linux_iconlist_theme_patch()
+
+        state = {"running": True, "after_id": None}
+
+        def refresh():
+            if not state["running"]:
+                return
+            self._theme_legacy_tk_file_dialogs()
+            try:
+                state["after_id"] = self.root.after(75, refresh)
+            except Exception:
+                state["after_id"] = None
+
+        try:
+            state["after_id"] = self.root.after(0, refresh)
+        except Exception:
+            state["after_id"] = None
+
+        try:
+            yield
+        finally:
+            state["running"] = False
+            after_id = state.get("after_id")
+            if after_id is not None:
+                try:
+                    self.root.after_cancel(after_id)
+                except Exception:
+                    pass
