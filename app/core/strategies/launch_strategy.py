@@ -173,11 +173,25 @@ class ProtonLaunchStrategy(LaunchStrategy):
         path_library_steam_linux_runtime = Path(config.linux_steam_runtime_path).parent.parent.parent if path_steam_linux_runtime else None
         path_library_proton = Path(config.linux_proton_path).parent.parent.parent if path_proton else None
 
-        path_compat_data = (
-            Path(config.linux_compatdata_override_dir)
-            if config.linux_compatdata_override_dir
-            else path_library_game / 'compatdata' / MEWGENICS_STEAM_APP_ID
-        )
+        # These paths are different if Mewgenics is installed on an external Steam library
+        path_compat_data_in_steamlibrary = path_library_game / 'compatdata' / MEWGENICS_STEAM_APP_ID
+        path_compat_data_in_steamroot = path_steam_client_root / 'steamapps' / 'compatdata' / MEWGENICS_STEAM_APP_ID
+
+        # Path to Proton compatdata (where the Wine prefix and Mewgenics saves are stored)
+        path_compat_data = None
+        if config.linux_compatdata_override_dir:
+            # Override was specified. Do not attempt to check the default Steam paths.
+            path_compat_data_override_dir = Path(config.linux_compatdata_override_dir)
+            if path_compat_data_override_dir.is_dir():
+                path_compat_data = path_compat_data_override_dir
+        else:
+            # Check the default Steam paths
+            if path_compat_data_in_steamlibrary.is_dir():
+                # Non-Steam Deck will place compatdata in the same Steam library as the game's installation
+                path_compat_data = path_compat_data_in_steamlibrary
+            elif path_compat_data_in_steamroot.is_dir():
+                # Steam Deck places compatdata in the root Steam library instead of an external SD card
+                path_compat_data = path_compat_data_in_steamroot
 
         mod_folder_in_game_dir = path_mod_folder.resolve().is_relative_to(path_game_dir.resolve())
         bundled_mods_dir_in_game_dir = path_bundled_mods_dir.resolve().is_relative_to(path_game_dir.resolve())
@@ -185,7 +199,6 @@ class ProtonLaunchStrategy(LaunchStrategy):
         steam_gameoverlayrenderer64_exists = path_steam_gameoverlayrenderer64.is_file()
         steam_linux_runtime_exists = path_steam_linux_runtime is not None and path_steam_linux_runtime.is_file()
         proton_exists = path_proton is not None and path_proton.is_file()
-        path_compat_data_exists = path_compat_data.is_dir()
 
         if not config.linux_allow_undefined_steam_runtime_or_proton:
             missing_launchers = []
@@ -203,7 +216,7 @@ class ProtonLaunchStrategy(LaunchStrategy):
         # We avoid blindly initializing Steam-managed compatdata (by making a directory that does not
         # already exist under steamapps/compatdata), because we'd potentially bypass first-time Steam Cloud
         # sync performed by the Steam client. Doing so could overwrite existing save data stored on the Steam Cloud.
-        if not path_compat_data_exists:
+        if path_compat_data is None:
             raise RuntimeError(
                 translation_service.get("messages.proton_missing_compatdata_error") + 
                 "\n\n" +
