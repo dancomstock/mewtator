@@ -16,6 +16,9 @@ class PreviewPanel(ttk.Frame):
     EMPTY_PREVIEW_HEIGHT = 150
     LIVE_PREVIEW_MAX_SIZE = (1600, 600)
     PREVIEW_CORNER_RADIUS = 8
+    CONTENT_SIDE_PADDING = 16
+    CONTENT_ROW_PADDING = 4
+    DESCRIPTION_TEXT_PADDING = 4
 
     def __init__(self, parent, translation_service):
         super().__init__(parent)
@@ -97,7 +100,10 @@ class PreviewPanel(ttk.Frame):
         self.panel_scroll.grid(row=1, column=1, sticky="ns")
         self.panel_canvas.configure(yscrollcommand=self.panel_scroll.set)
 
-        self.content = ttk.Frame(self.panel_canvas, padding=(16, 4, 16, 14))
+        self.content = ttk.Frame(
+            self.panel_canvas,
+            padding=(self.CONTENT_SIDE_PADDING, 4, self.CONTENT_SIDE_PADDING, 14),
+        )
         self.content.columnconfigure(0, weight=1)
 
         self._content_window = self.panel_canvas.create_window(
@@ -147,13 +153,22 @@ class PreviewPanel(ttk.Frame):
         self.image_stage.grid(row=4, column=0, sticky="ew", padx=4)
         self.image_stage.bind("<Configure>", self._schedule_image_render)
 
-        # Description text follows the preview directly... - Tim
-        desc_frame = ttk.Frame(self.content)
-        desc_frame.grid(row=5, column=0, sticky="ew", padx=4, pady=(12, 0))
-        desc_frame.columnconfigure(0, weight=1)
+        # The description is sized from the preview viewport, not from its
+        # own requested width. This avoids a issue where a
+        # long line can make the description frame wider than the canvas
+        # and get clipped instead of wrapping... - Tim
+        self.desc_frame = ttk.Frame(self.content)
+        self.desc_frame.grid(
+            row=5,
+            column=0,
+            sticky="ew",
+            padx=self.CONTENT_ROW_PADDING,
+            pady=(12, 0),
+        )
+        self.desc_frame.columnconfigure(0, weight=1)
 
         self.desc_label = tk.Label(
-            desc_frame,
+            self.desc_frame,
             text="",
             font="TkTextFont",
             anchor="nw",
@@ -161,12 +176,11 @@ class PreviewPanel(ttk.Frame):
             borderwidth=0,
             highlightthickness=0,
             relief="flat",
-            padx=4,
+            padx=self.DESCRIPTION_TEXT_PADDING,
             pady=0,
         )
 
         self.desc_label.grid(row=0, column=0, sticky="ew")
-        desc_frame.bind("<Configure>", self._resize_description_wrap)
 
         for widget in (
             self.header,
@@ -180,18 +194,39 @@ class PreviewPanel(ttk.Frame):
             self.dll_info_label,
             self.url_label,
             self.image_stage,
-            desc_frame,
+            self.desc_frame,
             self.desc_label,
         ):
             self._bind_panel_wheel(widget)
         self._show_empty_state()
 
-    def _resize_description_wrap(self, event):
-        # Account for the label's 4 px internal padding on both sides 
-        # so requested height matches the text users actually see... - Tim
-        wrap_width = max(1, event.width - 8)
-        if int(float(self.desc_label.cget("wraplength") or 0)) != wrap_width:
+    def _resize_description_wrap(self, canvas_width: Optional[int] = None):
+        """Keep description wrapping tied to the visible panel width..."""
+        if canvas_width is None:
+            canvas_width = self.panel_canvas.winfo_width()
+
+        # Canvas width minus content padding, the row's grid padding, and the
+        # classic label's internal padding. Keeping this independent from the
+        # preview image dimensions makes the description use the 
+        # same usable width for every mod now... - Tim
+        wrap_width = max(
+            1,
+            int(canvas_width)
+            - (self.CONTENT_SIDE_PADDING * 2)
+            - (self.CONTENT_ROW_PADDING * 2)
+            - (self.DESCRIPTION_TEXT_PADDING * 2),
+        )
+
+        try:
+            current_wrap = int(float(self.desc_label.cget("wraplength") or 0))
+        except (TypeError, ValueError, tk.TclError):
+            current_wrap = 0
+
+        if current_wrap != wrap_width:
             self.desc_label.configure(wraplength=wrap_width)
+            # wraplength changes label's requested height,
+            # refresh scroll region after Tk has completed that geometry pass... - Tim
+            self.after_idle(self._update_scroll_region)
 
     def _show_empty_state(self):
         self.panel_canvas.grid_remove()
@@ -218,6 +253,7 @@ class PreviewPanel(ttk.Frame):
 
     def _resize_content(self, event):
         self.panel_canvas.itemconfigure(self._content_window, width=event.width)
+        self._resize_description_wrap(event.width)
 
     def _panel_has_vertical_overflow(self):
         bbox = self.panel_canvas.bbox("all")
@@ -292,6 +328,9 @@ class PreviewPanel(ttk.Frame):
             self.url_label.config(text="")
 
         self.desc_label.config(text=description or "")
+        # update_preview can run before another <Configure> occurs, 
+        # synchronize wrapping immediately during window resizes... - Tim
+        self._resize_description_wrap()
 
         self.source_image = None
         self.live_source_image = None
@@ -310,6 +349,7 @@ class PreviewPanel(ttk.Frame):
                 self.source_image = None
                 self.live_source_image = None
         self._render_image()
+        self.after_idle(self._update_scroll_region)
 
     def _schedule_image_render(self, _event=None):
         # Throttle live updates instead of debouncing them. Debouncing caused
@@ -345,6 +385,7 @@ class PreviewPanel(ttk.Frame):
                 font="TkDefaultFont",
                 fill=self._stage_text_color,
             )
+            self.after_idle(self._update_scroll_region)
             return
 
         # The canvas used to stay at a fixed 330 px height even when a wide
@@ -376,6 +417,7 @@ class PreviewPanel(ttk.Frame):
             stage_height // 2,
             image=self.tk_image,
         )
+        self.after_idle(self._update_scroll_region)
 
     def _round_preview_corners(self, image: Image.Image) -> Image.Image:
         """Return an RGBA preview with transparent rounded corners."""
