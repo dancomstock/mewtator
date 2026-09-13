@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Dict, Tuple, Set
 import os
 import subprocess
 from pathlib import Path
@@ -19,14 +19,14 @@ if sys.platform == "win32":
 
 MEWGENICS_STEAM_APP_ID = "686060"
 
-def _steam_game_env():
-    """Return child-process environment identifying Mewgenics to Steamworks!"""
-    env = os.environ.copy()
+def _steam_game_env() -> Dict[str, str]:
+    """Return environment variables identifying Mewgenics to Steamworks!"""
+    env = {}
     env["SteamAppId"] = MEWGENICS_STEAM_APP_ID
     env["SteamGameId"] = MEWGENICS_STEAM_APP_ID
     return env
 
-def _poll_processes_for_stop(processes: set[psutil.Process], recheck_period_sec: float, max_retries: int):
+def _poll_processes_for_stop(processes: Set[psutil.Process], recheck_period_sec: float, max_retries: int) -> bool:
     """Repeatedly poll a psutil Process set and remove dead processes until the set is emptied or maximum retries have elapsed."""
     while True:
         for proc in processes.copy():
@@ -50,11 +50,15 @@ class LaunchStrategy(ABC):
         pass
 
     @abstractmethod
-    def collect_launched_processes(self, executable_path: str, game_dir: str) -> set[psutil.Process]:
+    def collect_launched_processes(self, executable_path: str, game_dir: str) -> Set[psutil.Process]:
         pass
 
     @abstractmethod
     def stop(self, executable_path: str, game_dir: str, config: Config, translation_service: TranslationService):
+        pass
+
+    @abstractmethod
+    def generate_launch_script(self, executable_path: str, mod_paths: List[str], game_dir: str, config: Config, extra_args: List[str], translation_service: TranslationService) -> str:
         pass
 
 class DirectLaunchStrategy(LaunchStrategy):
@@ -68,7 +72,10 @@ class DirectLaunchStrategy(LaunchStrategy):
             args.append("-modpaths")
             args.extend(mod_paths)
         
-        subprocess.Popen(args, cwd=game_dir, env=_steam_game_env())
+        env = os.environ.copy()
+        env.update(_steam_game_env())
+
+        subprocess.Popen(args, cwd=game_dir, env=env)
     
     def get_launch_options(self, mod_paths: List[str], game_dir: str, config: Config, extra_args: List[str]) -> str:
         parts = []
@@ -78,13 +85,15 @@ class DirectLaunchStrategy(LaunchStrategy):
         
         if mod_paths:
             parts.append("-modpaths")
-            parts.extend(f'"{p}"' for p in mod_paths)
-        
-        return " ".join(parts)
+            parts.extend(mod_paths)
 
-    def collect_launched_processes(self, executable_path: str, game_dir: str) -> set[psutil.Process]:
-        logger = get_logger()
+        if sys.platform == "win32":
+            return subprocess.list2cmdline(parts)
+        else:
+            # Currently unreachable as Mewgenics does not have a native Linux or macOS release
+            return " ".join(shlex.quote(arg) for arg in parts)
 
+    def collect_launched_processes(self, executable_path: str, game_dir: str) -> Set[psutil.Process]:
         processes = set()
 
         # Fetch the current user's handle
@@ -131,7 +140,7 @@ class DirectLaunchStrategy(LaunchStrategy):
                     __win32_taskkill(proc.info['pid'])
             else:
                 # Presumably on Linux/macOS, SIGTERM would trigger a graceful exit.
-                # However, a native Mewgenics build has not been released for Linux/macOS when this code was written.
+                # Currently unreachable as Mewgenics does not have a native Linux or macOS release
                 for proc in processes_to_kill:
                     logger.info(f"Terminate {proc.info['pid']}")
                     proc.terminate()
@@ -152,11 +161,60 @@ class DirectLaunchStrategy(LaunchStrategy):
         for proc in processes_to_kill:
             logger.warning(f"Failed to kill {proc.info['pid']}")
 
+    def generate_launch_script(self, executable_path: str, mod_paths: List[str], game_dir: str, config: Config, extra_args: List[str], translation_service: TranslationService) -> str:
+        if sys.platform == "win32":
+            # BAT script
+            parts = ["start", "", executable_path]
+            if extra_args:
+                parts.extend(extra_args)
+            if mod_paths:
+                parts.append("-modpaths")
+                parts.extend(mod_paths)
+            cmd = subprocess.list2cmdline(parts)
+            env_standalone = "\n".join([f'    set "{k}={v}"' for k, v in _steam_game_env().items()])
+
+            script_content = f'''@echo off
+REM Mewtator Auto-Generated Launch Script
+REM This script launches Mewgenics with mods
+
+if "%~1"=="" (
+{env_standalone}
+)
+
+{cmd}
+exit
+'''
+
+        else:
+            # Bourne shell script
+            # Currently unreachable as Mewgenics does not have a native Linux or macOS release
+            parts = ["exec", executable_path]
+            if extra_args:
+                parts.extend(extra_args)
+            if mod_paths:
+                parts.append("-modpaths")
+                parts.extend(mod_paths)
+            cmd = " ".join(shlex.quote(arg) for arg in parts)
+            env_standalone = "\n".join([f'    export {k}={shlex.quote(v)}' for k, v in _steam_game_env().items()])
+
+            script_content = f'''#!/bin/sh
+# Mewtator Auto-Generated Launch Script
+# This script launches Mewgenics with mods
+
+if [ "$#" -eq 0 ]; then
+{env_standalone}
+fi
+
+{cmd}
+'''
+
+        return script_content
+
 class ProtonLaunchStrategy(LaunchStrategy):
     def __init__(self, game_dir: str):
         self.game_dir = game_dir
 
-    def launch(self, executable_path: str, mod_paths: List[str], game_dir: str, config: Config, extra_args: List[str], translation_service: TranslationService):
+    def _launch_env_cmd_standalone(self, executable_path: str, mod_paths: List[str], game_dir: str, config: Config, extra_args: List[str], translation_service: TranslationService) -> Tuple[Dict[str, str], List[str]]:
         # Launch Mewgenics.exe directly rather than through the Steam client...
         env = _steam_game_env()
 
@@ -164,10 +222,8 @@ class ProtonLaunchStrategy(LaunchStrategy):
         path_steam_gameoverlayrenderer64 = path_steam_client_root / 'ubuntu12_64/gameoverlayrenderer.so'
 
         path_game_dir = Path(game_dir)
-        path_mod_folder = Path(config.mod_folder)
         path_steam_linux_runtime = Path(config.linux_steam_runtime_path) if config.linux_steam_runtime_path else None
         path_proton = Path(config.linux_proton_path) if config.linux_proton_path else None
-        path_bundled_mods_dir = Path(resource_path("bundled_mods"))
 
         path_library_game = path_game_dir.parent.parent
         path_library_steam_linux_runtime = Path(config.linux_steam_runtime_path).parent.parent.parent if path_steam_linux_runtime else None
@@ -192,9 +248,6 @@ class ProtonLaunchStrategy(LaunchStrategy):
             elif path_compat_data_in_steamroot.is_dir():
                 # Steam Deck places compatdata in the root Steam library instead of an external SD card
                 path_compat_data = path_compat_data_in_steamroot
-
-        mod_folder_in_game_dir = path_mod_folder.resolve().is_relative_to(path_game_dir.resolve())
-        bundled_mods_dir_in_game_dir = path_bundled_mods_dir.resolve().is_relative_to(path_game_dir.resolve())
 
         steam_gameoverlayrenderer64_exists = path_steam_gameoverlayrenderer64.is_file()
         steam_linux_runtime_exists = path_steam_linux_runtime is not None and path_steam_linux_runtime.is_file()
@@ -232,57 +285,38 @@ class ProtonLaunchStrategy(LaunchStrategy):
         if not config.linux_steam_gameoverlayrenderer_disabled and steam_gameoverlayrenderer64_exists:
             if 'LD_PRELOAD' not in env:
                 env['LD_PRELOAD'] = ''
+            # This clobbers because we don't operate on the full env dict cloned from the parent process
             env['LD_PRELOAD'] += ':' + str(path_steam_gameoverlayrenderer64.resolve())
 
         # prescribed Steam Linux Runtime/Proton configuration variables
         # https://gitlab.steamos.cloud/steamrt/steam-runtime-tools/-/blob/main/docs/slr-for-game-developers.md#running-a-game-under-proton-in-the-steam-linux-runtime-environment
-        env['STEAM_COMPAT_CLIENT_INSTALL_PATH'] = path_steam_client_root.resolve()
-        env['STEAM_COMPAT_DATA_PATH'] = path_compat_data.resolve()
-        env['STEAM_COMPAT_INSTALL_PATH'] = path_game_dir.resolve()
+        env['STEAM_COMPAT_CLIENT_INSTALL_PATH'] = str(path_steam_client_root.resolve())
+        env['STEAM_COMPAT_DATA_PATH'] = str(path_compat_data.resolve())
+        env['STEAM_COMPAT_INSTALL_PATH'] = str(path_game_dir.resolve())
         env['STEAM_COMPAT_LIBRARY_PATHS'] = ':'.join(list(dict.fromkeys(str(x.resolve()) for x in [
             path_library_game,
             path_library_steam_linux_runtime,
             path_library_proton
         ] if x is not None)))
 
-        # expose the mod directory under Z:\, in case it was not placed within Mewgenics' directory
-        # https://gitlab.steamos.cloud/steamrt/steam-runtime-tools/-/blob/main/docs/slr-for-game-developers.md#making-more-files-available-in-the-container
-        env['STEAM_COMPAT_MOUNTS'] = ':'.join(list(dict.fromkeys(str(x.resolve()) for x in [
-            path_mod_folder if not mod_folder_in_game_dir else None,
-            path_bundled_mods_dir if not bundled_mods_dir_in_game_dir else None
-        ] if x is not None)))
-
-        # set WINEDLLOVERRIDES to enable loading Mewjector, which shadows version.dll
-        if config.dll_injection_enabled:
-            env['WINEDLLOVERRIDES'] = 'version=n,b'
-
-        args = []
+        cmd = []
         # Steam Linux Runtime is not necessarily required if the user's system has the right
         # libraries to support the chosen Proton version.
         if steam_linux_runtime_exists:
-            args.extend([config.linux_steam_runtime_path, '--'])
+            cmd.extend([config.linux_steam_runtime_path, '--'])
 
         # There probably isn't a good reason to launch without Proton, but if so, the system
         # will try to dispatch the exe file via binfmt, possibly using a native Wine installation.
         if proton_exists:
-            args.extend([config.linux_proton_path, 'run'])
+            cmd.extend([config.linux_proton_path, 'run'])
 
-        args.append(executable_path)
+        cmd.append(executable_path)
 
-        if extra_args:
-            args.extend(extra_args)
+        return env, cmd
 
-        if mod_paths:
-            args.append("-modpaths")
-            args.extend(mod_paths)
-
-        subprocess.Popen(args, cwd=game_dir, env=env)
-
-    def get_launch_options(self, mod_paths: List[str], game_dir: str, config: Config, extra_args: List[str]) -> str:
-        parts = []
-
-        parts_has_prefix = False
-
+    def _launch_env_args_common(self, mod_paths: List[str], game_dir: str, config: Config, extra_args: List[str]) -> Tuple[Dict[str, str], List[str]]:
+        env = {}
+        
         path_game_dir = Path(game_dir)
         path_mod_folder = Path(config.mod_folder)
         path_bundled_mods_dir = Path(resource_path("bundled_mods"))
@@ -291,37 +325,58 @@ class ProtonLaunchStrategy(LaunchStrategy):
 
         # expose the mod directory under Z:\, in case it was not placed within Mewgenics' directory
         # https://gitlab.steamos.cloud/steamrt/steam-runtime-tools/-/blob/main/docs/slr-for-game-developers.md#making-more-files-available-in-the-container
-        compat_mounts = ':'.join(list(dict.fromkeys(str(x.resolve()) for x in [
+        steam_compat_mounts = ':'.join(list(dict.fromkeys(str(x.resolve()) for x in [
             path_mod_folder if not mod_folder_in_game_dir else None,
             path_bundled_mods_dir if not bundled_mods_dir_in_game_dir else None
         ] if x is not None)))
-        if compat_mounts:
-            parts.append(f'STEAM_COMPAT_MOUNTS={shlex.quote(compat_mounts)}')
-            parts_has_prefix = True
+        if steam_compat_mounts:
+            env['STEAM_COMPAT_MOUNTS'] = steam_compat_mounts
 
         # set WINEDLLOVERRIDES to enable loading Mewjector, which shadows version.dll
         if config.dll_injection_enabled:
-            parts.append(f'WINEDLLOVERRIDES=version=n,b')
-            parts_has_prefix = True
-
-        if parts_has_prefix:
-            parts.append('%command%')
+            env['WINEDLLOVERRIDES'] = 'version=n,b'
+        
+        args = []
 
         if extra_args:
-            parts.extend(extra_args)
+            args.extend(extra_args)
 
         if mod_paths:
-            parts.append("-modpaths")
-            parts.extend(shlex.quote(str(p)) for p in mod_paths)
+            args.append("-modpaths")
+            args.extend(mod_paths)
+
+        return env, args
+
+    def launch(self, executable_path: str, mod_paths: List[str], game_dir: str, config: Config, extra_args: List[str], translation_service: TranslationService):
+        env = os.environ.copy()
+        cmd = []
+
+        env_standalone, cmd_standalone = self._launch_env_cmd_standalone(executable_path, mod_paths, game_dir, config, extra_args, translation_service)
+        env.update(env_standalone)
+        cmd.extend(cmd_standalone)
+
+        env_common, args_common = self._launch_env_args_common(mod_paths, game_dir, config, extra_args)
+        env.update(env_common)
+        cmd.extend(args_common)
+
+        subprocess.Popen(cmd, cwd=game_dir, env=env)
+
+    def get_launch_options(self, mod_paths: List[str], game_dir: str, config: Config, extra_args: List[str]) -> str:
+        env_common, args_common = self._launch_env_args_common(mod_paths, game_dir, config, extra_args)
+        parts = []
+
+        parts.extend([f'{k}={shlex.quote(v)}' for k, v in env_common.items()])
+
+        if parts:
+            parts.append('%command%')
+
+        parts.extend(shlex.quote(arg) for arg in args_common)
 
         return " ".join(parts)
 
-    def collect_launched_processes(self, executable_path: str, game_dir: str) -> set[psutil.Process]:
-        logger = get_logger()
-
+    def collect_launched_processes(self, executable_path: str, game_dir: str) -> Set[psutil.Process]:
         # Process tracker
         processes = set()
-        wineserver_process = None
 
         # Fetch the current user's handle
         current_user = psutil.Process().username()
@@ -355,7 +410,6 @@ class ProtonLaunchStrategy(LaunchStrategy):
         logger = get_logger()
 
         processes_to_kill = self.collect_launched_processes(executable_path, game_dir)
-        wineserver_process = None
 
         # Paths for running taskkill
         path_steam_client_root = Path.home() / '.steam/root'
@@ -444,6 +498,38 @@ class ProtonLaunchStrategy(LaunchStrategy):
 
         for proc in processes_to_kill:
             logger.warning(f"Failed to kill {proc.info['pid']}")
+
+    def generate_launch_script(self, executable_path: str, mod_paths: List[str], game_dir: str, config: Config, extra_args: List[str], translation_service: TranslationService) -> str:
+        env_common, args_common = self._launch_env_args_common(mod_paths, game_dir, config, extra_args)
+        str_env_common = "\n".join([f'export {k}={shlex.quote(v)}' for k, v in env_common.items()])
+        str_args_common = " ".join(shlex.quote(arg) for arg in args_common)
+
+        # Try to export the environment and command line needed to launch the game standalone.
+        # If this fails, stub the standalone launch branch with an error message.
+        try:
+            env_standalone, cmd_standalone = self._launch_env_cmd_standalone(executable_path, mod_paths, game_dir, config, extra_args, translation_service)
+            str_cmd_standalone = " ".join(shlex.quote(arg) for arg in cmd_standalone)
+            str_env_standalone = "\n".join([f'    export {k}={shlex.quote(v)}' for k, v in env_standalone.items()])
+        except Exception:
+            str_cmd_standalone = ""
+            no_standalone_message = translation_service.get("messages.export_bat_no_standalone", "This launch script cannot be used standalone. Please configure Steam Launch Options following instructions provided by Mewtator.")
+            str_env_standalone = f"    echo {shlex.quote(no_standalone_message)}\n    exit 1"
+
+        script_content = f'''#!/bin/sh
+# Mewtator Auto-Generated Launch Script
+# This script launches Mewgenics with mods
+
+{str_env_common}
+
+if [ "$#" -eq 0 ]; then
+{str_env_standalone}
+    set -- {str_cmd_standalone}
+fi
+
+exec "$@" {str_args_common}
+'''
+
+        return script_content
 
 class LaunchStrategyFactory:
     @staticmethod

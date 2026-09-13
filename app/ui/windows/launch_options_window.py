@@ -1,3 +1,4 @@
+import sys
 import tkinter as tk
 
 from app.ui.components.rounded_button import RoundedButton
@@ -155,9 +156,14 @@ class LaunchOptionsWindow(_ThemedDialogBase):
 
         close_button.pack(side="right")
 
+        if sys.platform == "win32":
+            script_extension = "BAT"
+        else:
+            script_extension = "SH"
+
         export_button = self._button(
             button_row,
-            self.t.get("messages.export_bat", "Export to .BAT File"),
+            self.t.get("messages.export_bat", "Export to .{extension} File").format(extension=script_extension),
             lambda: self.on_export(self.win),
             width=190,
         )

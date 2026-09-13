@@ -1,5 +1,6 @@
 import os
 import zipfile
+import sys
 import tkinter as tk
 from tkinter import filedialog, simpledialog
 from tkinter import ttk
@@ -706,7 +707,12 @@ class MainController:
 
     def _export_bat_file(self, enabled_paths, parent_dialog=None):
         """Export launch configuration to a .bat file."""
-        default_name = "launch_mewgenics_mods.bat"
+        if sys.platform == "win32":
+            default_name = "launch_mewgenics_mods.bat"
+            default_extension = ".bat"
+        else:
+            default_name = "launch_mewgenics_mods.sh"
+            default_extension = ".sh"
 
         with self.theme_service.file_dialog_safe_theme():
             filepath = filedialog.asksaveasfilename(
@@ -714,9 +720,9 @@ class MainController:
                 title=self.translation_service.get("messages.export_bat_title"),
                 initialfile=default_name,
                 initialdir=self.config.game_install_dir,
-                defaultextension=".bat",
+                defaultextension=default_extension,
                 filetypes=[
-                    (self.translation_service.get("messages.batch_files"), "*.bat"),
+                    (self.translation_service.get("messages.batch_files"), "*" + default_extension),
                     (self.translation_service.get("messages.all_files"), "*.*"),
                 ]
             )
@@ -730,7 +736,8 @@ class MainController:
                 enabled_paths,
                 filepath,
                 self.config,
-                self.mod_list
+                self.mod_list,
+                self.translation_service,
             )
             
             ExportSuccessWindow(
