@@ -25,7 +25,7 @@ from app.ui.windows.launch_options_window import LaunchOptionsWindow, ExportSucc
 from app.ui.components.pointer_menu import PointerMenu
 from app.ui.layout_utils import fit_window_to_content
 from app.utils.logging_utils import get_logger
-from app.utils.platform_utils import open_file_or_folder
+from app.utils.platform_utils import get_executable_dir, open_file_or_folder
 
 
 class MainController:
@@ -867,7 +867,7 @@ class MainController:
         ).show()
     
     def _unpack(self):
-        output_dir = os.path.join(self.config.mod_folder, "_unpacked")
+        output_dir = os.path.join(get_executable_dir(), "unpacked_resources")
         os.makedirs(output_dir, exist_ok=True)
         
         pw = ProgressWindow(self.root, self.translation_service.get("progress.unpacking"), 100, self.theme_service)
@@ -891,7 +891,7 @@ class MainController:
             )
     
     def _repack(self):
-        source_dir = os.path.join(self.config.mod_folder, "_unpacked")
+        source_dir = os.path.join(get_executable_dir(), "unpacked_resources")
         gpak_output = os.path.join(self.config.game_install_dir, "resources.gpak")
         
         pw = ProgressWindow(self.root, self.translation_service.get("progress.repacking"), 100, self.theme_service)

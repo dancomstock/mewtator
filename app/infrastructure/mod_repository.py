@@ -6,6 +6,8 @@ from pathlib import Path
 
 
 class ModRepository:
+    HIDDEN_MOD_NAMES = frozenset({"_unpacked", "unpacked_resources"})
+
     def __init__(self, mod_folder: str):
         self.mod_folder = mod_folder
         self.modlist_path = os.path.join(mod_folder, "modlist.txt")
@@ -17,6 +19,10 @@ class ModRepository:
             with open(self.modlist_path, "w", encoding="utf-8") as f:
                 f.write("")
     
+    @classmethod
+    def _is_hidden_mod_name(cls, name: str) -> bool:
+        return name.casefold() in cls.HIDDEN_MOD_NAMES
+
     def load_enabled_mod_names(self) -> List[str]:
         if not os.path.exists(self.modlist_path):
             return []
@@ -25,14 +31,15 @@ class ModRepository:
         with open(self.modlist_path, "r", encoding="utf-8") as f:
             for line in f:
                 name = line.strip()
-                if name:
+                if name and not self._is_hidden_mod_name(name):
                     mods.append(name)
         return mods
     
     def save_enabled_mod_names(self, mod_names: List[str]):
         with open(self.modlist_path, "w", encoding="utf-8") as f:
             for name in mod_names:
-                f.write(name + "\n")
+                if not self._is_hidden_mod_name(name):
+                    f.write(name + "\n")
     
     def get_mod_folders(self) -> List[str]:
         if not os.path.isdir(self.mod_folder):
@@ -40,7 +47,10 @@ class ModRepository:
         
         return sorted([
             d for d in os.listdir(self.mod_folder)
-            if os.path.isdir(os.path.join(self.mod_folder, d))
+            if (
+                os.path.isdir(os.path.join(self.mod_folder, d))
+                and not self._is_hidden_mod_name(d)
+            )
         ])
     
     def load_mod_metadata(self, mod_name: str) -> Tuple[Dict[str, Any], Optional[str]]:
@@ -121,7 +131,10 @@ class ModRepository:
         try:
             folder_names = tuple(sorted(
                 d for d in os.listdir(self.mod_folder)
-                if os.path.isdir(os.path.join(self.mod_folder, d))
+                if (
+                    os.path.isdir(os.path.join(self.mod_folder, d))
+                    and not self._is_hidden_mod_name(d)
+                )
             ))
         except OSError:
             folder_names = ()
