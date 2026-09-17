@@ -65,7 +65,8 @@
     "contains_dlls": "⚠ Zawiera pliki DLL — instaluj tylko z zaufanych źródeł!",
     "author": "Autor: {author}",
     "version": "Wersja {version}",
-    "description": "Opis"
+    "description": "Opis",
+    "mod_settings": "Ustawienia moda"
   },
   "context_menu": {
     "move_top": "Przenieś na górę",
@@ -264,5 +265,16 @@
     "arrow_buttons": "Przyciski Góra / Dół",
     "reorder_buttons": "Przesuń zaznaczony włączony mod o jedną pozycję w kolejności ładowania.",
     "focus_hint": "Skróty klawiaturowe listy modów działają, gdy lista modów ma fokus klawiatury. Sterowanie kolejnością ładowania dotyczy tylko włączonych modów."
+  },
+  "mod_settings": {
+    "window_title": "{mod} - Ustawienia moda",
+    "title": "Ustawienia moda",
+    "file": "Plik konfiguracyjny: {file}",
+    "general": "Ogólne",
+    "no_options": "Ten plik INI nie zawiera żadnych edytowalnych opcji klucz/wartość.",
+    "save": "Zapisz ustawienia",
+    "reset_defaults": "Przywróć domyślne",
+    "cancel": "Anuluj",
+    "save_failed": "Nie udało się zapisać ustawień moda: {error}"
   }
 }

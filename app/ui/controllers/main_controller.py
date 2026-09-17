@@ -15,6 +15,7 @@ from app.core.services.translation_service import TranslationService
 from app.core.services.pack_service import PackService
 from app.core.services.modlist_io_service import ModListIOService
 from app.core.services.mod_import_service import ModImportService, ExistingModError
+from app.core.services.mod_config_service import ModConfigService
 from app.core.services.theme_service import ThemeService
 from app.ui.windows.main_window import MainWindow
 from app.ui.windows.notification_window import NotificationWindow
@@ -23,6 +24,7 @@ from app.ui.windows.about_window import AboutWindow
 from app.ui.windows.controls_window import ControlsWindow
 from app.ui.windows.progress_window import ProgressWindow
 from app.ui.windows.launch_options_window import LaunchOptionsWindow, ExportSuccessWindow
+from app.ui.windows.mod_settings_window import ModSettingsWindow
 from app.ui.components.pointer_menu import PointerMenu
 from app.ui.layout_utils import fit_window_to_content
 from app.utils.logging_utils import get_logger
@@ -51,6 +53,7 @@ class MainController:
         self.pack_service = pack_service
         self.modlist_io_service = modlist_io_service
         self.mod_import_service = ModImportService()
+        self.mod_config_service = ModConfigService()
         self.theme_service = theme_service
         
         self.config = config_service.load_config()
@@ -98,6 +101,7 @@ class MainController:
         self.window.set_launch_action(self._launch_game)
         self.window.set_stop_action(self._stop_game)
         self.window.set_settings_action(self._show_settings)
+        self.window.preview_panel.set_mod_settings_action(self._show_selected_mod_settings)
 
         self._setup_menu_bar()
         self._setup_list_bindings()
@@ -244,6 +248,9 @@ class MainController:
         mod = self.mod_list.get_mod_by_name(name)
         if mod:
             has_dlls = self.dll_injection_service.mod_has_dlls(mod)
+            mod_config = None
+            if not mod.missing:
+                mod_config = self.mod_config_service.discover(mod.path)
             self.window.preview_panel.update_preview(
                 mod.title,
                 mod.author,
@@ -252,7 +259,43 @@ class MainController:
                 mod.preview_path,
                 mod.url,
                 has_dlls,
+                mod_config is not None,
             )
+
+    def _show_selected_mod_settings(self):
+        selection = self.window.mod_list_widget.get_selection()
+        if not selection:
+            return
+
+        _, name = selection
+        mod = self.mod_list.get_mod_by_name(name)
+        if not mod or mod.missing:
+            return
+
+        mod_config = self.mod_config_service.discover(mod.path)
+
+        if mod_config is None:
+            # The file may have been removed or opted out since the preview was
+            # rendered! Refresh mod info instead of opening stale... - Tim
+            self._update_preview()
+            return
+
+        def save_values(values):
+            self.mod_config_service.save(mod_config, values)
+            # Okay, edit came from Mewtator itself. Advance the filesystem-watch
+            # baseline so the next poll does not unnecessarily rebuild
+            # entire mod list just because the fucking settings were saved... - Tim
+            self._record_mod_filesystem_state()
+            self._update_preview()
+
+        ModSettingsWindow(
+            self.root,
+            mod.title,
+            mod_config,
+            self.translation_service,
+            self.theme_service,
+            save_values,
+        )
 
     def _enable_all(self):
         # Check for DLL mods before enabling all

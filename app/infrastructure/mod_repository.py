@@ -141,6 +141,7 @@ class ModRepository:
 
         metadata_filenames = ("description.json", "info.json", "modinfo.json")
         metadata_state = []
+        ini_state = []
 
         for folder_name in folder_names:
             mod_path = os.path.join(self.mod_folder, folder_name)
@@ -158,4 +159,36 @@ class ModRepository:
 
             metadata_state.append((folder_name, tuple(file_state)))
 
-        return modlist_contents, folder_names, tuple(metadata_state)
+            # Root-level ini creation/removal/edits affect whether mod settings
+            # should be exposed in the selected mod's preview. Track stats for
+            # every root ini without recursively scanning the mod payload... - Tim
+            root_ini_files = []
+
+            try:
+                entries = sorted(
+                    (
+                        entry for entry in os.scandir(mod_path)
+                        if entry.is_file() and entry.name.lower().endswith(".ini")
+                    ),
+                    key=lambda entry: entry.name.casefold(),
+                )
+            except OSError:
+                entries = []
+
+            for entry in entries:
+                try:
+                    stat = entry.stat()
+                    root_ini_files.append(
+                        (entry.name, stat.st_mtime_ns, stat.st_size)
+                    )
+                except OSError:
+                    root_ini_files.append((entry.name, None, None))
+
+            ini_state.append((folder_name, tuple(root_ini_files)))
+
+        return (
+            modlist_contents,
+            folder_names,
+            tuple(metadata_state),
+            tuple(ini_state),
+        )

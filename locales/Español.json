@@ -65,7 +65,8 @@
     "contains_dlls": "⚠ Contiene archivos DLL - ¡Solo instale de fuentes confiables!",
     "author": "Por {author}",
     "version": "Versión {version}",
-    "description": "Descripción"
+    "description": "Descripción",
+    "mod_settings": "Configuración del mod"
   },
   "context_menu": {
     "move_top": "Mover al Inicio",
@@ -264,5 +265,16 @@
     "arrow_buttons": "Botones Arriba / Abajo",
     "reorder_buttons": "Mueve el mod habilitado seleccionado una posición en el orden de carga.",
     "focus_hint": "Los controles de teclado de la lista de mods se aplican cuando la lista de mods tiene el foco del teclado. Los controles del orden de carga solo afectan a los mods habilitados."
+  },
+  "mod_settings": {
+    "window_title": "{mod} - Configuración del mod",
+    "title": "Configuración del mod",
+    "file": "Archivo de configuración: {file}",
+    "general": "General",
+    "no_options": "Este archivo INI no contiene opciones de clave/valor editables.",
+    "save": "Guardar configuración",
+    "reset_defaults": "Restablecer valores predeterminados",
+    "cancel": "Cancelar",
+    "save_failed": "No se pudo guardar la configuración del mod: {error}"
   }
 }

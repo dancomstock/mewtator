@@ -65,7 +65,8 @@
     "contains_dlls": "⚠ DLL ファイルが含まれています - 信頼できるソースからのみインストールしてください！",
     "author": "作者: {author}",
     "version": "バージョン {version}",
-    "description": "説明"
+    "description": "説明",
+    "mod_settings": "MOD設定"
   },
   "context_menu": {
     "move_top": "一番上に移動",
@@ -264,5 +265,16 @@
     "arrow_buttons": "上 / 下ボタン",
     "reorder_buttons": "選択した有効な Mod をロード順で 1 つ移動します。",
     "focus_hint": "Mod リストのキーボード操作は、Mod リストにキーボードフォーカスがあるときに有効です。ロード順の操作は有効な Mod のみに影響します。"
+  },
+  "mod_settings": {
+    "window_title": "{mod} - MOD設定",
+    "title": "MOD設定",
+    "file": "設定ファイル: {file}",
+    "general": "一般",
+    "no_options": "この INI には編集可能なキー/値オプションがありません。",
+    "save": "設定を保存",
+    "reset_defaults": "デフォルトに戻す",
+    "cancel": "キャンセル",
+    "save_failed": "MOD設定を保存できませんでした: {error}"
   }
 }

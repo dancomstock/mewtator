@@ -65,7 +65,8 @@
     "contains_dlls": "⚠ Contains DLL files - Only install from trusted sources!",
     "author": "By {author}",
     "version": "Version {version}",
-    "description": "Description"
+    "description": "Description",
+    "mod_settings": "Mod Settings"
   },
   "context_menu": {
     "move_top": "Move to Top",
@@ -264,5 +265,16 @@
     "arrow_buttons": "Up / Down buttons",
     "reorder_buttons": "Move the selected enabled mod one position in the load order.",
     "focus_hint": "Mod-list keyboard controls apply while the mod list has keyboard focus. Load-order controls affect enabled mods only."
+  },
+  "mod_settings": {
+    "window_title": "{mod} - Mod Settings",
+    "title": "Mod Settings",
+    "file": "Config file: {file}",
+    "general": "General",
+    "no_options": "This INI does not contain any editable key/value options.",
+    "save": "Save Settings",
+    "reset_defaults": "Reset to Defaults",
+    "cancel": "Cancel",
+    "save_failed": "Could not save mod settings: {error}"
   }
 }

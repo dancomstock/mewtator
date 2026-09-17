@@ -65,7 +65,8 @@
     "contains_dlls": "⚠ Enthält DLL-Dateien - Nur von vertrauenswürdigen Quellen installieren!",
     "author": "Von {author}",
     "version": "Version {version}",
-    "description": "Beschreibung"
+    "description": "Beschreibung",
+    "mod_settings": "Mod-Einstellungen"
   },
   "context_menu": {
     "move_top": "Nach Oben",
@@ -264,5 +265,16 @@
     "arrow_buttons": "Auf / Ab-Schaltflächen",
     "reorder_buttons": "Den ausgewählten aktivierten Mod in der Ladereihenfolge um eine Position verschieben.",
     "focus_hint": "Die Tastatursteuerung der Mod-Liste gilt, wenn die Mod-Liste den Tastaturfokus hat. Die Ladereihenfolge-Steuerung betrifft nur aktivierte Mods."
+  },
+  "mod_settings": {
+    "window_title": "{mod} - Mod-Einstellungen",
+    "title": "Mod-Einstellungen",
+    "file": "Konfigurationsdatei: {file}",
+    "general": "Allgemein",
+    "no_options": "Diese INI-Datei enthält keine bearbeitbaren Schlüssel-/Wert-Optionen.",
+    "save": "Einstellungen speichern",
+    "reset_defaults": "Auf Standardwerte zurücksetzen",
+    "cancel": "Abbrechen",
+    "save_failed": "Mod-Einstellungen konnten nicht gespeichert werden: {error}"
   }
 }

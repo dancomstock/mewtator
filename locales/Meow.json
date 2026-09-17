@@ -65,7 +65,8 @@
     "contains_dlls": "⚠ Meow .dll",
     "author": "Meow",
     "version": "Meow",
-    "description": "Meow"
+    "description": "Meow",
+    "mod_settings": "Meow"
   },
   "context_menu": {
     "move_top": "Meow",
@@ -264,5 +265,16 @@
     "arrow_buttons": "Meow / Meow",
     "reorder_buttons": "Meow meow meow meow.",
     "focus_hint": "Meow meow meow. Meow meow meow meow."
+  },
+  "mod_settings": {
+    "window_title": "{mod} - Meow",
+    "title": "Meow",
+    "file": "Meow: {file}",
+    "general": "Meow",
+    "no_options": "Meow INI meow meow meow.",
+    "save": "Meow",
+    "reset_defaults": "Meow",
+    "cancel": "Meow",
+    "save_failed": "Meow: {error}"
   }
 }

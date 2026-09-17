@@ -65,7 +65,8 @@
     "contains_dlls": "⚠ Ontains-Cay DLL iles-fay - Only-ay install-ay om-fray usted-tray ources-say!",
     "author": "Y-Bay {author}",
     "version": "Ersion-Vay {version}",
-    "description": "Escription-Day"
+    "description": "Escription-Day",
+    "mod_settings": "Od-May Ettings-Say"
   },
   "context_menu": {
     "move_top": "Ove-May o-tay Op-Tay",
@@ -264,5 +265,16 @@
     "arrow_buttons": "Up-ay / Own-Day uttons-bay",
     "reorder_buttons": "Ove-May e-thay elected-say enabled-ay od-may one-ay osition-pay in-ay e-thay oad-lay order-ay.",
     "focus_hint": "Od-May-ist-lay eyboard-kay ontrols-cay apply-ay ile-whay e-thay od-may ist-lay as-hay eyboard-kay ocus-fay. Oad-Lay-order-ay ontrols-cay affect-ay enabled-ay ods-may only-ay."
+  },
+  "mod_settings": {
+    "window_title": "{mod} - Od-May Ettings-Say",
+    "title": "Od-May Ettings-Say",
+    "file": "Onfig-Cay Ile-Fay: {file}",
+    "general": "Eneral-Gay",
+    "no_options": "Is-Thay INI-ay oes-day ot-nay ontain-cay any-ay editable-ay ey-kay/alue-vay options-ay.",
+    "save": "Ave-Say Ettings-Say",
+    "reset_defaults": "Eset-Ray o-tay Efaults-Day",
+    "cancel": "Ancel-Cay",
+    "save_failed": "Ould-Cay ot-nay ave-say od-may ettings-say: {error}"
   }
 }

@@ -22,7 +22,7 @@
       "open_game": "Ouvrir le Dossier du Jeu",
       "launch_game": "Lancer le Jeu",
       "copy_launch_options": "Options de lancement et exportation",
-      "stop_game" : "Arrêter le Jeu",
+      "stop_game": "Arrêter le Jeu",
       "cleanup_dlls": "Nettoyer l'Injection DLL",
       "exit": "Quitter"
     },
@@ -39,8 +39,8 @@
     "disable_all": "Tout Désactiver",
     "enable_all": "Tout Activer",
     "launch_game": "Lancer le Jeu",
-    "stop_game" : "Arrêter le Jeu",
-    "stopping" : "Arrêt en Cours...",
+    "stop_game": "Arrêter le Jeu",
+    "stopping": "Arrêt en Cours...",
     "no_preview": "Pas d'Image d'Aperçu",
     "app_name": "Mewtator",
     "app_subtitle": "Gestionnaire de mods Mewgenics",
@@ -65,7 +65,8 @@
     "contains_dlls": "⚠ Contient des fichiers DLL - Installez uniquement depuis des sources fiables !",
     "author": "Par {author}",
     "version": "Version {version}",
-    "description": "Description"
+    "description": "Description",
+    "mod_settings": "Paramètres du mod"
   },
   "context_menu": {
     "move_top": "Déplacer en Haut",
@@ -106,11 +107,11 @@
     "mewtator_intro": "Activer l’introduction de jeu personnalisée de Mewtator",
     "linux_steam_runtime_path": "Steam Linux Runtime",
     "linux_proton_path": "Proton",
-    "linux_allow_undefined_steam_runtime_or_proton" : "Autoriser le lancement sans Steam Linux Runtime ni Proton",
-    "linux_steam_gameoverlayrenderer_disabled" : "Désactiver la superposition de jeu Steam",
-    "linux_compatdata_override_dir" : "Remplacement du répertoire compatdata",
-    "concurrent_launches_enabled" : "Autoriser le lancement simultané d'instances du jeu",
-    "always_ungraceful_stop_enabled" : "Arrêter le jeu de manière non contrôlée"
+    "linux_allow_undefined_steam_runtime_or_proton": "Autoriser le lancement sans Steam Linux Runtime ni Proton",
+    "linux_steam_gameoverlayrenderer_disabled": "Désactiver la superposition de jeu Steam",
+    "linux_compatdata_override_dir": "Remplacement du répertoire compatdata",
+    "concurrent_launches_enabled": "Autoriser le lancement simultané d'instances du jeu",
+    "always_ungraceful_stop_enabled": "Arrêter le jeu de manière non contrôlée"
   },
   "messages": {
     "setup_required_title": "Configuration Requise",
@@ -197,10 +198,10 @@
     "path_invalid": "Le chemin d'accès à {name} n'est pas valide.",
     "proton_missing_compatdata_error": "Impossible de détecter les données de sauvegarde de Mewgenics (Proton compatdata).\n\nVeuillez vous assurer que le jeu a déjà été lancé via Steam afin d'initialiser ces données.",
     "copy_launch_options_advice": "Si vous rencontrez des problèmes avec le bouton de lancement de Mewtator, essayez une autre procédure de lancement :\n1. Utilisez l'option « Copier les options de lancement » dans le menu Fichier\n2. Collez-les dans Steam : clic droit sur Mewgenics → Propriétés → Options de lancement\n3. Lancez le jeu depuis Steam",
-    "stop_game_title" : "Arrêter la partie ?",
-    "stop_game_text" : "Les données de jeu non enregistrées risquent d'être perdues.\n(Steven risque de se fâcher...)",
-    "not_running" : "Le jeu n'est pas en cours d'exécution.",
-    "already_running" : "Le jeu est déjà en cours d'exécution."
+    "stop_game_title": "Arrêter la partie ?",
+    "stop_game_text": "Les données de jeu non enregistrées risquent d'être perdues.\n(Steven risque de se fâcher...)",
+    "not_running": "Le jeu n'est pas en cours d'exécution.",
+    "already_running": "Le jeu est déjà en cours d'exécution."
   },
   "dialog": {
     "yes": "Oui",
@@ -264,5 +265,16 @@
     "arrow_buttons": "Boutons Haut / Bas",
     "reorder_buttons": "Déplacer le mod activé sélectionné d'une position dans l'ordre de chargement.",
     "focus_hint": "Les contrôles clavier de la liste des mods s'appliquent lorsque la liste des mods a le focus clavier. Les contrôles de l'ordre de chargement n'affectent que les mods activés."
+  },
+  "mod_settings": {
+    "window_title": "{mod} - Paramètres du mod",
+    "title": "Paramètres du mod",
+    "file": "Fichier de configuration : {file}",
+    "general": "Général",
+    "no_options": "Ce fichier INI ne contient aucune option clé/valeur modifiable.",
+    "save": "Enregistrer les paramètres",
+    "reset_defaults": "Rétablir les valeurs par défaut",
+    "cancel": "Annuler",
+    "save_failed": "Impossible d’enregistrer les paramètres du mod : {error}"
   }
 }

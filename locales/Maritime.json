@@ -65,7 +65,8 @@
     "contains_dlls": "⚠ Contains DLL cargo - Only load from trusted ports!",
     "author": "By {author}",
     "version": "Mark {version}",
-    "description": "Tale"
+    "description": "Tale",
+    "mod_settings": "Mod Riggin'"
   },
   "context_menu": {
     "move_top": "Hoist to th' Crow's Nest",
@@ -264,5 +265,16 @@
     "arrow_buttons": "Up / Down buttons",
     "reorder_buttons": "Move the chosen enabled mod one berth in the load order.",
     "focus_hint": "Mod-manifest keyboard orders work while the mod list has keyboard focus. Load-order orders affect enabled mods only."
+  },
+  "mod_settings": {
+    "window_title": "{mod} - Mod Riggin'",
+    "title": "Mod Riggin'",
+    "file": "Riggin' chart: {file}",
+    "general": "General Riggin'",
+    "no_options": "This INI chart has no editable key/value riggin'.",
+    "save": "Save Riggin'",
+    "reset_defaults": "Reset t' Defaults",
+    "cancel": "Belay",
+    "save_failed": "Could not save mod riggin': {error}"
   }
 }

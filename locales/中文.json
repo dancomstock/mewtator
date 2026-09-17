@@ -65,7 +65,8 @@
     "contains_dlls": "⚠ 包含 DLL 文件 - 仅从可信源安装！",
     "author": "作者：{author}",
     "version": "版本 {version}",
-    "description": "描述"
+    "description": "描述",
+    "mod_settings": "模组设置"
   },
   "context_menu": {
     "move_top": "移至顶部",
@@ -264,5 +265,16 @@
     "arrow_buttons": "上 / 下按钮",
     "reorder_buttons": "在加载顺序中将所选的已启用模组移动一个位置。",
     "focus_hint": "仅当模组列表具有键盘焦点时，模组列表键盘控制才生效。加载顺序控制只影响已启用的模组。"
+  },
+  "mod_settings": {
+    "window_title": "{mod} - 模组设置",
+    "title": "模组设置",
+    "file": "配置文件：{file}",
+    "general": "常规",
+    "no_options": "此 INI 文件不包含任何可编辑的键/值选项。",
+    "save": "保存设置",
+    "reset_defaults": "恢复默认值",
+    "cancel": "取消",
+    "save_failed": "无法保存模组设置：{error}"
   }
 }

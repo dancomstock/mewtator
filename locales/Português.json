@@ -65,7 +65,8 @@
     "contains_dlls": "⚠ Contém arquivos DLL - Instale apenas de fontes confiáveis!",
     "author": "Por {author}",
     "version": "Versão {version}",
-    "description": "Descrição"
+    "description": "Descrição",
+    "mod_settings": "Configurações do mod"
   },
   "context_menu": {
     "move_top": "Mover para o Topo",
@@ -264,5 +265,16 @@
     "arrow_buttons": "Botões Cima / Baixo",
     "reorder_buttons": "Mova o mod ativado selecionado uma posição na ordem de carregamento.",
     "focus_hint": "Os controles de teclado da lista de mods se aplicam enquanto a lista de mods estiver com o foco do teclado. Os controles de ordem de carregamento afetam somente mods ativados."
+  },
+  "mod_settings": {
+    "window_title": "{mod} - Configurações do mod",
+    "title": "Configurações do mod",
+    "file": "Arquivo de configuração: {file}",
+    "general": "Geral",
+    "no_options": "Este arquivo INI não contém opções de chave/valor editáveis.",
+    "save": "Salvar configurações",
+    "reset_defaults": "Restaurar padrões",
+    "cancel": "Cancelar",
+    "save_failed": "Não foi possível salvar as configurações do mod: {error}"
   }
 }
