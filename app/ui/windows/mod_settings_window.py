@@ -8,6 +8,7 @@ from PIL import Image, ImageColor, ImageTk
 
 from app.core.models.mod_config import ModConfig, ModConfigOption
 from app.core.services.mod_config_service import ModConfigError
+from app.ui.components.compat_label import Label
 from app.ui.components.hover_tooltip import HoverTooltip
 from app.ui.components.rounded_button import RoundedButton
 from app.ui.components.wide_scrollbar import WideScrollbar
@@ -84,17 +85,19 @@ class ModSettingsWindow:
         header = ttk.Frame(self.win, padding=(22, 18, 22, 12))
         header.pack(fill="x")
 
-        ttk.Label(
+        Label(
             header,
             text=t.get("mod_settings.title", "Mod Settings"),
             font="MewtatorTitle",
         ).pack(anchor="w")
-        ttk.Label(
+
+        Label(
             header,
             text=self.mod_title,
             font="MewtatorSubheading",
         ).pack(anchor="w", pady=(2, 0))
-        ttk.Label(
+
+        Label(
             header,
             text=t.get("mod_settings.file", "Config file: {file}").format(
                 file=os.path.basename(self.config.path)
@@ -127,7 +130,7 @@ class ModSettingsWindow:
         self.canvas.bind("<Configure>", self._resize_content)
 
         if not self.config.options:
-            ttk.Label(
+            Label(
                 self.content,
                 text=t.get(
                     "mod_settings.no_options",
@@ -214,7 +217,8 @@ class ModSettingsWindow:
 
             section_font = self._section_header_font
         except Exception:
-            section_font = "MewtatorHeading"
+            self._section_header_font = "MewtatorHeading"
+            section_font = self._section_header_font
 
         style = ttk.Style(self.win)
         style.configure(style_name, background=self.colors["bg"])
@@ -237,17 +241,25 @@ class ModSettingsWindow:
 
             frame = ttk.LabelFrame(
                 self.content,
-                text=title,
                 padding=(14, 0),
                 style=self._section_frame_style,
             )
+
+            section_label = Label(
+                frame,
+                text=title,
+                font=self._section_header_font,
+                foreground=self.colors["fg"],
+            )
+            
+            frame.configure(labelwidget=section_label)
 
             frame.grid(row=row, column=0, sticky="ew", padx=4, pady=(0, 14))
             frame.columnconfigure(1, weight=1)
             row += 1
 
             for option_row, option in enumerate(section.options):
-                label = ttk.Label(frame, text=option.display_label)
+                label = Label(frame, text=option.display_label)
 
                 label.grid(
                     row=option_row,
