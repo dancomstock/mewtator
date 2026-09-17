@@ -1,5 +1,6 @@
 import os
 import tkinter as tk
+import tkinter.font as tkfont
 from tkinter import ttk
 from typing import Any, Callable, Dict
 
@@ -11,7 +12,7 @@ from app.ui.components.hover_tooltip import HoverTooltip
 from app.ui.components.rounded_button import RoundedButton
 from app.ui.components.wide_scrollbar import WideScrollbar
 from app.ui.layout_utils import fit_window_to_content
-from app.utils.resource_utils import resource_path
+from app.utils.resource_utils import register_private_font, resource_path
 
 class ModSettingsWindow:
     """Generated settings editor for a mod's ini"""
@@ -54,6 +55,7 @@ class ModSettingsWindow:
         theme_service.apply_titlebar(self.win, theme_service.get_current_theme())
 
         self._spinbox_styles = self._ensure_spinbox_styles()
+        self._section_frame_style = self._ensure_section_frame_style()
 
         self._build()
 
@@ -195,6 +197,37 @@ class ModSettingsWindow:
 
         self._install_scroll_bindings()
 
+    def _ensure_section_frame_style(self):
+        """Style ini [Section] text"""
+
+        style_name = "ModSettingsSection.TLabelframe"
+
+        try:
+            if "Sour Gummy" not in tkfont.families(self.win):
+                register_private_font(resource_path("assets", "fonts", "SourGummy-Bold.ttf"))
+            self._section_header_font = tkfont.Font(
+                root=self.win,
+                family="Sour Gummy",
+                size=15,
+                weight="bold",
+            )
+
+            section_font = self._section_header_font
+        except Exception:
+            section_font = "MewtatorHeading"
+
+        style = ttk.Style(self.win)
+        style.configure(style_name, background=self.colors["bg"])
+
+        style.configure(
+            f"{style_name}.Label",
+            font=section_font,
+            background=self.colors["bg"],
+            foreground=self.colors["fg"],
+        )
+
+        return style_name
+
     def _build_sections(self):
         row = 0
         for section in self.config.sections:
@@ -202,7 +235,13 @@ class ModSettingsWindow:
                 "mod_settings.general", "General"
             )
 
-            frame = ttk.LabelFrame(self.content, text=title, padding=(14, 12))
+            frame = ttk.LabelFrame(
+                self.content,
+                text=title,
+                padding=(14, 0),
+                style=self._section_frame_style,
+            )
+
             frame.grid(row=row, column=0, sticky="ew", padx=4, pady=(0, 14))
             frame.columnconfigure(1, weight=1)
             row += 1
@@ -605,22 +644,19 @@ class ModSettingsWindow:
 
         scale.grid(row=0, column=0, sticky="ew")
 
-        def jump_to_click(event):
-            try:
-                element = scale.identify(event.x, event.y)
-            except tk.TclError:
-                element = ""
-            if "slider" in str(element).lower():
-                return None
+        def track_pointer(event):
+            """Move the slider directly under pointer for click-and-drag, like every other good slider implementation in existence"""
             try:
                 value = float(scale.get(event.x, event.y))
             except (TypeError, ValueError, tk.TclError):
-                return None
+                return "break"
             set_both(value)
-
+            # Suppress ttk's stupid native drag... - Tim
             return "break"
 
-        scale.bind("<Button-1>", jump_to_click, add="+")
+        scale.bind("<Button-1>", track_pointer)
+        scale.bind("<B1-Motion>", track_pointer)
+        scale.bind("<ButtonRelease-1>", lambda _event: "break")
 
         number_entry = ttk.Entry(
             holder,
