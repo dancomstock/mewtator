@@ -1,6 +1,5 @@
 import os
 import tkinter as tk
-import tkinter.font as tkfont
 from tkinter import ttk
 from typing import Any, Callable, Dict
 
@@ -13,7 +12,7 @@ from app.ui.components.hover_tooltip import HoverTooltip
 from app.ui.components.rounded_button import RoundedButton
 from app.ui.components.wide_scrollbar import WideScrollbar
 from app.ui.layout_utils import fit_window_to_content
-from app.utils.resource_utils import register_private_font, resource_path
+from app.utils.resource_utils import resource_path
 
 class ModSettingsWindow:
     """Generated settings editor for a mod's ini"""
@@ -90,13 +89,11 @@ class ModSettingsWindow:
             text=t.get("mod_settings.title", "Mod Settings"),
             font="MewtatorTitle",
         ).pack(anchor="w")
-
         Label(
             header,
             text=self.mod_title,
             font="MewtatorSubheading",
         ).pack(anchor="w", pady=(2, 0))
-
         Label(
             header,
             text=t.get("mod_settings.file", "Config file: {file}").format(
@@ -205,27 +202,13 @@ class ModSettingsWindow:
 
         style_name = "ModSettingsSection.TLabelframe"
 
-        try:
-            if "Sour Gummy" not in tkfont.families(self.win):
-                register_private_font(resource_path("assets", "fonts", "SourGummy-Bold.ttf"))
-            self._section_header_font = tkfont.Font(
-                root=self.win,
-                family="Sour Gummy",
-                size=15,
-                weight="bold",
-            )
-
-            section_font = self._section_header_font
-        except Exception:
-            self._section_header_font = "MewtatorHeading"
-            section_font = self._section_header_font
+        self._section_header_font = "MewtatorHeading"
 
         style = ttk.Style(self.win)
         style.configure(style_name, background=self.colors["bg"])
-
         style.configure(
             f"{style_name}.Label",
-            font=section_font,
+            font=self._section_header_font,
             background=self.colors["bg"],
             foreground=self.colors["fg"],
         )
@@ -244,14 +227,12 @@ class ModSettingsWindow:
                 padding=(14, 0),
                 style=self._section_frame_style,
             )
-
             section_label = Label(
                 frame,
                 text=title,
                 font=self._section_header_font,
                 foreground=self.colors["fg"],
             )
-            
             frame.configure(labelwidget=section_label)
 
             frame.grid(row=row, column=0, sticky="ew", padx=4, pady=(0, 14))
