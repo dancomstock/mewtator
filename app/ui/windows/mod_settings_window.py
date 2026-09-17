@@ -515,7 +515,7 @@ class ModSettingsWindow:
                 pass
 
         try:
-            self.win.after_idle(clear_selection)
+            self.win.after(0, clear_selection)
         except tk.TclError:
             pass
 
