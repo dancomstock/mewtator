@@ -24,6 +24,7 @@ from app.ui.windows.controls_window import ControlsWindow
 from app.ui.windows.progress_window import ProgressWindow
 from app.ui.windows.launch_options_window import LaunchOptionsWindow, ExportSuccessWindow
 from app.ui.components.pointer_menu import PointerMenu
+from app.ui.components.top_level import Toplevel
 from app.ui.layout_utils import fit_window_to_content
 from app.utils.logging_utils import get_logger
 from app.utils.platform_utils import get_executable_dir, open_file_or_folder
@@ -1157,7 +1158,7 @@ class MainController:
     
     def _show_dll_prompt_dialog(self, title: str, message: str, show_link: bool = True):
         """Show a custom yes/no dialog with optional clickable Mewjector link. Returns True if user clicks Yes."""
-        dialog = tk.Toplevel(self.root)
+        dialog = Toplevel(self.root)
         dialog.withdraw()
         dialog.title(title)
         dialog.resizable(False, False)

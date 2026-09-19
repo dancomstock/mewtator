@@ -3,6 +3,7 @@ import tkinter as tk
 
 from app.ui.components.rounded_button import RoundedButton
 from app.ui.layout_utils import fit_window_to_content
+from app.ui.components.top_level import Toplevel
 
 class _ThemedDialogBase:
     """Shared stuff for launch/export windows..."""
@@ -12,7 +13,7 @@ class _ThemedDialogBase:
         self.theme_service = theme_service
         self.colors = theme_service.get_color_scheme(theme_service.get_current_theme())
 
-        self.win = tk.Toplevel(parent)
+        self.win = Toplevel(parent)
         self.win.withdraw()
         self.win.title(title)
         self.win.configure(background=self.colors["bg"])

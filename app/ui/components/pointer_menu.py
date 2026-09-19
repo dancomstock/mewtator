@@ -1,7 +1,8 @@
 import tkinter as tk
 from typing import Callable, Optional
+from app.ui.components.top_level import Toplevel
 
-class PointerMenu(tk.Toplevel):
+class PointerMenu(Toplevel):
     """Small popup menu whose selectable rows reliably use a hand cursor..."""
 
     _DEFAULT_FONT = "TkMenuFont"

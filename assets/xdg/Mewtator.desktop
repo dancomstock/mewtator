@@ -1,0 +1,26 @@
+[Desktop Entry]
+# https://specifications.freedesktop.org/desktop-entry/1.0/recognized-keys.html
+Type=Application
+Version=1.0
+Name=Mewtator
+GenericName=Mewgenics Mod Manager
+GenericName[de]=Mewgenics-Mod-Manager
+GenericName[es]=Gestor de mods de Mewgenics
+GenericName[fr]=Gestionnaire de mods Mewgenics
+GenericName[it]=Gestore mod di Mewgenics
+GenericName[pl]=Menedżer modów Mewgenics
+GenericName[pt_BR]=Gerenciador de Mods do Mewgenics
+GenericName[zh_CN]=Mewgenics 模组管理器
+GenericName[ja]=Mewgenics Mod マネージャー
+Comment=Mewtator is a community-made mod manager for Mewgenics, designed to make installing, managing, organizing, and using mods simple and convenient.
+Comment[de]=Mewtator ist ein von der Community entwickelter Mod-Manager für Mewgenics, der das Installieren, Verwalten, Organisieren und Verwenden von Mods einfach und bequem macht.
+Comment[es]=Mewtator es un gestor de mods para Mewgenics creado por la comunidad, diseñado para que instalar, gestionar, organizar y usar mods sea sencillo y cómodo.
+Comment[fr]=Mewtator est un gestionnaire de mods pour Mewgenics créé par la communauté, conçu pour simplifier et faciliter l’installation, la gestion, l’organisation et l’utilisation des mods.
+Comment[it]=Mewtator è un gestore di mod per Mewgenics creato dalla community, progettato per rendere semplice e comoda l’installazione, la gestione, l’organizzazione e l’utilizzo delle mod.
+Comment[pl]=Mewtator to stworzony przez społeczność menedżer modów do Mewgenics, zaprojektowany tak, aby instalowanie, zarządzanie, organizowanie i używanie modów było proste i wygodne.
+Comment[pt_BR]=Mewtator é um gerenciador de mods para Mewgenics feito pela comunidade, projetado para tornar a instalação, o gerenciamento, a organização e o uso de mods simples e convenientes.
+Comment[zh_CN]=Mewtator 是一个由社区制作的 Mewgenics 模组管理器，旨在让模组的安装、管理、整理和使用变得简单方便。
+Comment[ja]=Mewtator はコミュニティによって作られた Mewgenics 用の Mod マネージャーで、Mod のインストール、管理、整理、利用を簡単かつ便利にすることを目的としています。
+Icon=mewtator
+Exec=Mewtator
+Categories=Game;

@@ -1,4 +1,4 @@
-from tkinter import Toplevel
+from app.ui.components.top_level import Toplevel
 from tkinter import ttk
 from app.ui.components.dialog_text import dialog_frame, dialog_label
 from app.utils.resource_utils import apply_app_icon

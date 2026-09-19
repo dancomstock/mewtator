@@ -1,8 +1,9 @@
 import tkinter as tk
 import tkinter.font as tkfont
-from tkinter import Toplevel, END, StringVar, BooleanVar, filedialog
+from tkinter import END, StringVar, BooleanVar, filedialog
 from tkinter import ttk
 from app.ui.components.compat_label import Label
+from app.ui.components.top_level import Toplevel
 from typing import Callable, Optional
 import os
 import webbrowser
@@ -28,7 +29,7 @@ class SettingsWindow:
         self.on_save = on_save
         self.on_cancel = on_cancel
 
-        self.win = Toplevel(parent)
+        self.win = Toplevel(parent, class_="Mewtator")
         self.win.withdraw()
         self.win.title(translation_service.get("settings.title", "Settings"))
         self.win.resizable(True, True)

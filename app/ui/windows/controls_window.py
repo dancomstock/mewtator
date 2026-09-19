@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Toplevel
+from app.ui.components.top_level import Toplevel
 from tkinter import ttk
 from app.ui.components.dialog_text import dialog_label
 
