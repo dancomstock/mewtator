@@ -11,6 +11,7 @@ from app.core.services.config_service import ConfigService
 from app.core.services.mod_service import ModService
 from app.core.services.game_launcher_service import GameLauncherService
 from app.core.services.dll_injection_service import DllInjectionService
+from app.core.services.game_version_service import GameVersionService
 from app.core.services.translation_service import TranslationService
 from app.core.services.pack_service import PackService
 from app.core.services.modlist_io_service import ModListIOService
@@ -154,6 +155,13 @@ def main():
     mod_service = ModService(mod_repo)
     dll_injection_service = DllInjectionService()
     launcher_service = GameLauncherService(dll_injection_service)
+    executable_path = launcher_service.find_executable(config.game_install_dir)
+    game_version, game_build = GameVersionService.read_executable_version(
+        executable_path
+    )
+    config.game_version = game_version or ""
+    config.game_build = game_build or ""
+    config_service.save_config(config)
     pack_service = PackService()
     modlist_io_service = ModListIOService()
     

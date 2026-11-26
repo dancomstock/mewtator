@@ -619,8 +619,27 @@ class MainController:
         logger = get_logger()
         enabled_mods = [(mod.name, mod.path) for mod in self.mod_list.enabled_mods]
         logger.info("Launching game with %d user-enabled mods", len(enabled_mods))
+        logger.info(
+            "Detected game version: %s, build: %s",
+            self.config.game_version or "unknown",
+            self.config.game_build or "unknown",
+        )
         for name, path in enabled_mods:
             logger.info("Enabled mod: %s | %s", name, path)
+            mod = self.mod_list.get_mod_by_name(name)
+            if mod:
+                required_version = mod.game_requires_version
+                if required_version:
+                    logger.info(
+                        "Mod %s requires game version %s (from modinfo.gon)",
+                        name,
+                        required_version,
+                    )
+                else:
+                    logger.info(
+                        "Mod %s has no readable requires_version in modinfo.gon",
+                        name,
+                    )
         if self.config.mewtator_intro_enabled and user_enabled_paths:
             logger.info("Bundled Mewtator intro mod enabled: %s", enabled_paths[-1])
         elif self.config.mewtator_intro_enabled:

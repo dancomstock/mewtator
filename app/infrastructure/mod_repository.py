@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import shutil
 from typing import List, Tuple, Optional, Dict, Any
 from pathlib import Path
@@ -7,6 +8,7 @@ from pathlib import Path
 
 class ModRepository:
     HIDDEN_MOD_NAMES = frozenset({"_unpacked", "unpacked_resources"})
+    GON_VERSION_PATTERN = re.compile(r"^\s*requires_version\s+([^\s#]+)", re.IGNORECASE)
 
     def __init__(self, mod_folder: str):
         self.mod_folder = mod_folder
@@ -76,6 +78,18 @@ class ModRepository:
                     metadata = json.load(f)
             except Exception:
                 metadata = {}
+
+        gon_path = os.path.join(mod_path, "modinfo.gon")
+        
+        try:
+            with open(gon_path, "r", encoding="utf-8-sig") as f:
+                for line in f:
+                    match = self.GON_VERSION_PATTERN.match(line)
+                    if match:
+                        metadata["game_requires_version"] = match.group(1)
+                        break
+        except (OSError, UnicodeError):
+            pass
         
         preview_path = None
         for name in os.listdir(mod_path):
@@ -139,7 +153,7 @@ class ModRepository:
         except OSError:
             folder_names = ()
 
-        metadata_filenames = ("description.json", "info.json", "modinfo.json")
+        metadata_filenames = ("description.json", "info.json", "modinfo.json", "modinfo.gon")
         metadata_state = []
 
         for folder_name in folder_names:

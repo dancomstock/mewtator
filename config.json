@@ -16,5 +16,7 @@
     "linux_proton_path": "",
     "linux_compatdata_override_dir": "",
     "concurrent_launches_enabled": false,
-    "always_ungraceful_stop_enabled": false
+    "always_ungraceful_stop_enabled": false,
+    "game_version": "",
+    "game_build": ""
 }
