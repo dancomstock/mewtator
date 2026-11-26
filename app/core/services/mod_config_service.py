@@ -69,16 +69,11 @@ class ModConfigService:
             except (OSError, UnicodeError, ModConfigError):
                 # A malformed/fucked up ini should not break mod info... - Tim
                 continue
-            if config.gui_enabled:
+            if config.has_mewtator_config:
                 candidates.append(config)
 
         if not candidates:
             return None
-
-        primaries = [config for config in candidates if config.primary]
-
-        if primaries:
-            return primaries[0]
 
         mod_name = os.path.basename(os.path.normpath(mod_path)).casefold()
 
@@ -111,6 +106,7 @@ class ModConfigService:
             lines = [text]
 
         file_metadata: Dict[str, str] = {}
+        has_mewtator_config = False
         sections: List[ModConfigSection] = []
         section_lookup: Dict[str, ModConfigSection] = {}
         current_section_name = ""
@@ -139,6 +135,7 @@ class ModConfigService:
                 file_directive = self._extract_directive(comment_body, self.FILE_DIRECTIVE)
 
                 if file_directive is not None:
+                    has_mewtator_config = True
                     file_metadata.update(self._parse_metadata(file_directive))
                     continue
 
@@ -225,26 +222,13 @@ class ModConfigService:
         # Do NOT create a visually empty General section when all options are inside explicit headers...
         sections = [section for section in sections if section.options]
 
-        gui_enabled = self._metadata_bool(
-            file_metadata,
-            ("enabled", "gui", "detect", "show"),
-            default=True,
-        )
-
-        primary = self._metadata_bool(
-            file_metadata,
-            ("primary", "main"),
-            default=False,
-        )
-
         return ModConfig(
             path=path,
             sections=sections,
             lines=lines,
             encoding=encoding,
             has_bom=has_bom,
-            gui_enabled=gui_enabled,
-            primary=primary,
+            has_mewtator_config=has_mewtator_config,
             metadata=file_metadata,
         )
 
@@ -1029,7 +1013,7 @@ class ModConfigService:
                 key, value = token.split("=", 1)
                 metadata[key.strip().lower().replace("-", "_")] = value.strip()
             elif token:
-                # Bare flags are treated as true, so primary is shorthand for primary=true...
+                # Bare flags are treated as true, so a directive can be written as a flag or key=value...
                 metadata[token.strip().lower().replace("-", "_")] = "true"
         return metadata
 
@@ -1123,15 +1107,6 @@ class ModConfigService:
         if has_bom and encoding.lower().replace("_", "-") == "utf-8":
             return b"\xef\xbb\xbf" + raw
         return raw
-
-    @staticmethod
-    def _metadata_bool(
-        metadata: Dict[str, str], keys: Iterable[str], default: bool
-    ) -> bool:
-        for key in keys:
-            if key in metadata:
-                return ModConfigService._coerce_bool(metadata[key])
-        return default
 
     @staticmethod
     def _metadata_float(metadata: Dict[str, str], keys: Iterable[str]) -> Optional[float]:

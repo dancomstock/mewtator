@@ -67,8 +67,7 @@ class ModConfig:
     lines: List[str]
     encoding: str = "utf-8"
     has_bom: bool = False
-    gui_enabled: bool = True
-    primary: bool = False
+    has_mewtator_config: bool = False
     metadata: Dict[str, str] = field(default_factory=dict)
 
     @property
