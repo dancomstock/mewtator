@@ -11,6 +11,8 @@ from app.core.services.mod_service import ModService
 from app.core.services.config_service import ConfigService
 from app.core.services.game_launcher_service import GameLauncherService
 from app.core.services.dll_injection_service import DllInjectionService
+from app.core.services.game_version_service import GameVersionService
+from app.core.models.game_version import GameVersionInfo
 from app.core.services.translation_service import TranslationService
 from app.core.services.pack_service import PackService
 from app.core.services.modlist_io_service import ModListIOService
@@ -41,7 +43,8 @@ class MainController:
         pack_service: PackService,
         modlist_io_service: ModListIOService,
         theme_service: ThemeService,
-        dll_injection_service: DllInjectionService = None
+        dll_injection_service: DllInjectionService = None,
+        game_version_info: GameVersionInfo = None,
     ):
         self.root = root
         self.config_service = config_service
@@ -55,6 +58,8 @@ class MainController:
         self.theme_service = theme_service
         
         self.config = config_service.load_config()
+        self.game_version_service = GameVersionService()
+        self.game_version_info = game_version_info or self._read_game_version_info()
         self.mod_list: ModList = None
         self.window: MainWindow = None
         
@@ -65,6 +70,10 @@ class MainController:
         self._mod_filesystem_watch_job = None
         self._mod_filesystem_watch_interval_ms = 750
         self._last_mod_filesystem_state = None
+
+    def _read_game_version_info(self) -> GameVersionInfo:
+        executable_path = self.launcher_service.find_executable(self.config.game_install_dir)
+        return self.game_version_service.read_executable_version(executable_path)
     
     def start(self):
         if not self.config_service.validate_config(self.config):
@@ -621,8 +630,8 @@ class MainController:
         logger.info("Launching game with %d user-enabled mods", len(enabled_mods))
         logger.info(
             "Detected game version: %s, build: %s",
-            self.config.game_version or "unknown",
-            self.config.game_build or "unknown",
+            self.game_version_info.version or "unknown",
+            self.game_version_info.build or "unknown",
         )
         for name, path in enabled_mods:
             logger.info("Enabled mod: %s | %s", name, path)
@@ -1182,6 +1191,12 @@ class MainController:
         def on_save(new_config):
             self.config = new_config
             self.config_service.save_config(new_config)
+            self.game_version_info = self._read_game_version_info()
+            get_logger().info(
+                "Detected game version after settings update: %s, build: %s",
+                self.game_version_info.version or "unknown",
+                self.game_version_info.build or "unknown",
+            )
             self.translation_service.load_language(new_config.language)
             self._reload_ui()
         

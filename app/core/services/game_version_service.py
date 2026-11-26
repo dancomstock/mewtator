@@ -1,6 +1,6 @@
 import re
 from pathlib import Path
-from typing import Optional, Tuple
+from app.core.models.game_version import GameVersionInfo
 
 class GameVersionService:
     VERSION_MARKER = re.compile(
@@ -8,21 +8,21 @@ class GameVersionService:
     )
 
     @classmethod
-    def read_executable_version(cls, executable_path: str) -> Tuple[Optional[str], Optional[str]]:
+    def read_executable_version(cls, executable_path: str) -> GameVersionInfo:
         """Reads the game's version and build from static embedded string!"""
         try:
             contents = Path(executable_path).read_bytes()
         except OSError:
-            return None, None
+            return GameVersionInfo()
 
         match = cls.VERSION_MARKER.search(contents)
         
         if not match:
-            return None, None
+            return GameVersionInfo()
 
         try:
             version, build = (value.decode("ascii") for value in match.groups())
         except UnicodeDecodeError:
-            return None, None
+            return GameVersionInfo()
 
-        return version, build
+        return GameVersionInfo(version=version, build=build)

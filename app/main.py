@@ -21,6 +21,7 @@ from app.ui.windows.settings_window import SettingsWindow
 from app.utils.resource_utils import apply_app_icon
 from app.ui.layout_utils import fit_combobox_to_values, fit_window_to_content
 from app.utils.platform_utils import get_executable_dir
+from app.utils.logging_utils import get_logger
 from app.version import versioned_title
 
 
@@ -156,12 +157,14 @@ def main():
     dll_injection_service = DllInjectionService()
     launcher_service = GameLauncherService(dll_injection_service)
     executable_path = launcher_service.find_executable(config.game_install_dir)
-    game_version, game_build = GameVersionService.read_executable_version(
+    game_version_info = GameVersionService.read_executable_version(
         executable_path
     )
-    config.game_version = game_version or ""
-    config.game_build = game_build or ""
-    config_service.save_config(config)
+    get_logger().info(
+        "Detected game version at startup: %s, build: %s",
+        game_version_info.version or "unknown",
+        game_version_info.build or "unknown",
+    )
     pack_service = PackService()
     modlist_io_service = ModListIOService()
     
@@ -174,7 +177,8 @@ def main():
         pack_service,
         modlist_io_service,
         theme_service,
-        dll_injection_service
+        dll_injection_service,
+        game_version_info,
     )
     
     controller.start()
