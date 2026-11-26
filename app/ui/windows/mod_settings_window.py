@@ -255,12 +255,6 @@ class ModSettingsWindow:
                     self._set_control_disabled(control)
                 if option.tooltip:
                     self._tooltips.append(HoverTooltip(label, option.tooltip, self.colors))
-                    self._tooltips.append(HoverTooltip(control, option.tooltip, self.colors))
-
-                    for child in control.winfo_children():
-                        self._tooltips.append(
-                            HoverTooltip(child, option.tooltip, self.colors)
-                        )
 
     def _build_control(self, parent, option: ModConfigOption, row: int):
         if option.control_type == "bool":
