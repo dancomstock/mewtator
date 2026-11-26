@@ -18,6 +18,13 @@ class ModConfigService:
 
     FILE_DIRECTIVE = "@mewtator-config"
     OPTION_DIRECTIVE = "@mewtator"
+    GON_FILE_SUFFIXES = (
+        ".gon",
+        ".gon.merge",
+        ".gon.append",
+        ".gon.patch",
+    )
+
     _SECTION_RE = re.compile(r"^\s*\[([^\]]+)\]\s*(?:[;#].*)?$")
     _KEY_RE = re.compile(r"^(\s*([^=:#\s][^=:#]*?)\s*([=:])\s*)(.*)$")
     _NUMBER_INT_RE = re.compile(r"^[+-]?\d+$")
@@ -427,7 +434,7 @@ class ModConfigService:
             ]
 
             for filename in filenames:
-                if not filename.lower().endswith(".gon"):
+                if not filename.lower().endswith(self.GON_FILE_SUFFIXES):
                     continue
                 candidate = Path(dirpath, filename)
                 try:
@@ -518,8 +525,12 @@ class ModConfigService:
             raise ModConfigError("GON filename cannot be empty.")
         if normalized.startswith("/") or re.match(r"^[A-Za-z]:/", normalized):
             raise ModConfigError("GON paths must be relative to the mod folder.")
-        if not normalized.lower().endswith(".gon"):
-            raise ModConfigError("GON bindings may only target .gon files.")
+        if not normalized.lower().endswith(self.GON_FILE_SUFFIXES):
+            suffixes = ", ".join(self.GON_FILE_SUFFIXES)
+
+            raise ModConfigError(
+                f"GON bindings can only target files ending in {suffixes}!"
+            )
 
         contains_subfolder = "/" in normalized
 
