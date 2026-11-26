@@ -36,6 +36,10 @@ class Mod:
     @property
     def version(self) -> str:
         return self.metadata.get("version", "Unknown")
+
+    @property
+    def game_requires_version(self) -> Optional[str]:
+        return self.metadata.get("game_requires_version")
     
     @property
     def description(self) -> str:
