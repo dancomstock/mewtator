@@ -597,6 +597,25 @@ class MainController:
         
         user_enabled_paths = self.mod_service.get_enabled_mod_paths(self.mod_list)
         enabled_paths = self.mod_service.get_launch_mod_paths(self.mod_list, self.config)
+
+        mods_missing_modinfo = self.mod_service.get_mods_missing_modinfo(self.mod_list)
+        if mods_missing_modinfo:
+            result = self._ask_confirmation(
+                self.translation_service.get(
+                    "messages.modinfo_warning_title",
+                    "Mod Compatibility Warning",
+                ),
+                self.translation_service.get(
+                    "messages.modinfo_warning_text",
+                    "The following mods do not contain a modinfo.gon file:\n\n{missing}\n\n"
+                    "After Mewgenics updates to 1.2, it will block mods without this file "
+                    "from launching. If you are already running 1.2, these mods may already "
+                    "be blocked.\n\nContinue launching anyway?",
+                ).format(missing="\n".join(mods_missing_modinfo)),
+            )
+            if not result:
+                return
+
         logger = get_logger()
         enabled_mods = [(mod.name, mod.path) for mod in self.mod_list.enabled_mods]
         logger.info("Launching game with %d user-enabled mods", len(enabled_mods))

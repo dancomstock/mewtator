@@ -121,6 +121,8 @@
     "game_dir_not_found": "Nie znaleziono",
     "game_dir_not_detected": "Nie udało się wykryć instalacji Mewgenics.",
     "missing_mods_title": "Brakujące mody",
+    "modinfo_warning_title": "Ostrzeżenie o zgodności modów",
+    "modinfo_warning_text": "Następujące mody nie zawierają pliku modinfo.gon:\n\n{missing}\n\nPo aktualizacji Mewgenics do wersji 1.2 gra zablokuje uruchamianie modów bez tego pliku. Jeśli korzystasz już z wersji 1.2, te mody mogą być już blokowane.\n\nCzy mimo to kontynuować uruchamianie?",
     "missing_mods_text": "Następujące włączone mody nie znajdują się w folderze modów:\n\n{missing}\n\nProszę usuń je z listy włączonych lub przywróć foldery.",
     "exe_not_found": "Nie znaleziono pliku Mewgenics.exe w wybranym folderze gry.",
     "launch_error": "Błąd",

@@ -122,6 +122,8 @@
     "game_dir_not_detected": "Unable to detect the Mewgenics installation.",
     "missing_mods_title": "Missing Mods",
     "missing_mods_text": "The following enabled mods are missing from the mods folder:\n\n{missing}\n\nPlease remove them from the enabled list or restore the folders.",
+    "modinfo_warning_title": "Mod Compatibility Warning",
+    "modinfo_warning_text": "The following mods do not contain a modinfo.gon file:\n\n{missing}\n\nAfter Mewgenics updates to 1.2, it will block mods without this file from launching. If you are already running 1.2, these mods may already be blocked.\n\nContinue launching anyway?",
     "exe_not_found": "Mewgenics.exe not found in the selected game directory.",
     "launch_error": "Error",
     "launch_failed": "Failed to launch Mewgenics:\n{error}",

@@ -121,6 +121,8 @@
     "game_dir_not_found": "Meow",
     "game_dir_not_detected": "Meow",
     "missing_mods_title": "Meow",
+    "modinfo_warning_title": "Meow Mod Compatibility Warning",
+    "modinfo_warning_text": "These mods are missing their modinfo.gon file, meow:\n\n{missing}\n\nWhen Mewgenics updates to 1.2, mods without this file will be blocked from launching. If you're already running 1.2, these mods may already be blocked.\n\nContinue launching anyway, meow?",
     "missing_mods_text": "Meow",
     "exe_not_found": "Mewgenics.exe",
     "launch_error": "Meow",

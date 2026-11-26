@@ -121,6 +121,8 @@
     "game_dir_not_found": "見つかりません",
     "game_dir_not_detected": "Mewgenics のインストールを検出できませんでした。",
     "missing_mods_title": "Mod が見つかりません",
+    "modinfo_warning_title": "Mod 互換性の警告",
+    "modinfo_warning_text": "次の Mod には modinfo.gon ファイルがありません：\n\n{missing}\n\nMewgenics が 1.2 に更新されると、このファイルがない Mod は起動できなくなります。すでに 1.2 を実行している場合、これらの Mod はすでにブロックされている可能性があります。\n\nそれでも起動しますか？",
     "missing_mods_text": "次の有効な Mod が Mod フォルダにありません：\n\n{missing}\n\n有効リストから削除するか、フォルダを復元してください。",
     "exe_not_found": "選択したゲームディレクトリに Mewgenics.exe が見つかりません。",
     "launch_error": "エラー",

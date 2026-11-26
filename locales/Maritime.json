@@ -121,6 +121,8 @@
     "game_dir_not_found": "Lost at Sea",
     "game_dir_not_detected": "Can't spot th' Mewgenics port from here.",
     "missing_mods_title": "Missing Cargo",
+    "modinfo_warning_title": "Mod Compatibility Warning",
+    "modinfo_warning_text": "Th' followin' mods be missin' a modinfo.gon file:\n\n{missing}\n\nWhen Mewgenics updates to 1.2, it'll bar mods without this file from launchin'. If ye be runnin' 1.2 already, these mods may already be blocked.\n\nLaunch anyway?",
     "missing_mods_text": "Th' followin' mods be missin' from th' cargo hold:\n\n{missing}\n\nRemove 'em from th' manifest or find th' lost treasure.",
     "exe_not_found": "Mewgenics.exe not spotted in th' selected port.",
     "launch_error": "Shipwreck!",
