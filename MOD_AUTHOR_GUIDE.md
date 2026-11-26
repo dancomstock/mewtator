@@ -5,6 +5,7 @@ This guide explains how to create mods for Mewgenics and use Mewtator.
 ## Table of Contents
 
 - [Overview](#overview)
+- [Mod Settings](#mod-settings)
 - [description.json Format](#descriptionjson-format)
   - [Available Fields](#available-fields)
   - [Complete Example](#complete-example)
@@ -14,6 +15,10 @@ This guide explains how to create mods for Mewgenics and use Mewtator.
 ## Overview
 
 Mods for Mewgenics are folders placed in the `mods` directory. Each mod folder should contain a `description.json` file that tells Mewtator about your mod. Mewtator also supports `info.json` or `modinfo.json` as alternative filenames.
+
+## Mod Settings
+
+Mewtator's Mod Settings feature allows mod authors to expose linked GON settings that are configurable through a user-friendly GUI. See the [Mod Settings Author Guide](MOD_SETTINGS.md) for the format, supported controls and metadata, GON bindings, and various examples.
 
 ## description.json Format
 
