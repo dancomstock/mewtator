@@ -3,7 +3,7 @@ from tkinter import ttk
 
 from app.ui.components.dialog_text import dialog_label
 from app.ui.layout_utils import fit_window_to_content
-
+from app.ui.components.top_level import Toplevel
 
 class ProgressWindow:
     def __init__(self, root, title, maximum, theme_service=None):
@@ -17,7 +17,7 @@ class ProgressWindow:
                 "fg": "#e6e6e6",
             }
 
-        self.win = tk.Toplevel(root)
+        self.win = Toplevel(root)
         self.win.withdraw()
         self.win.title(title)
         self.win.resizable(False, False)

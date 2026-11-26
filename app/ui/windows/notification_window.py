@@ -2,6 +2,7 @@ import tkinter as tk
 
 from app.ui.components.rounded_button import RoundedButton
 from app.ui.layout_utils import fit_window_to_content
+from app.ui.components.top_level import Toplevel
 
 class NotificationWindow:
     """Small notification..."""
@@ -23,7 +24,7 @@ class NotificationWindow:
             theme_service.get_current_theme()
         )
 
-        self.win = tk.Toplevel(parent)
+        self.win = Toplevel(parent)
         self.win.withdraw()
         self.win.title(title)
         self.win.resizable(False, False)

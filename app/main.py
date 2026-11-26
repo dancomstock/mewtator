@@ -24,7 +24,8 @@ from app.version import versioned_title
 
 
 def show_language_selection_dialog(root, translation_service, theme_service, theme_name: str):
-    from tkinter import Toplevel, StringVar
+    from app.ui.components.top_level import Toplevel
+    from tkinter import StringVar
     from tkinter import ttk
     
     win = Toplevel(root)
@@ -116,7 +117,10 @@ def show_language_selection_dialog(root, translation_service, theme_service, the
 
 
 def main():
-    root = tk.Tk()
+    # Wayland-based window managers use app_id/WM_CLASS to pair a window with a .desktop
+    # file in order to draw a custom icon on an app bar
+    # (particularly GNOME 3, which does not implement alternative icon heuristics)
+    root = tk.Tk(className="Mewtator")
     root.withdraw()
     apply_app_icon(root)
     

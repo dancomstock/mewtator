@@ -2,7 +2,7 @@ import tkinter as tk
 
 from app.ui.components.dialog_text import dialog_label
 from app.ui.layout_utils import fit_window_to_content
-
+from app.ui.components.top_level import Toplevel
 
 class CheckingWindow:
     def __init__(self, root, title="Please wait...", message="Checking...", theme_service=None):
@@ -12,7 +12,7 @@ class CheckingWindow:
         else:
             colors = {"bg": "#1c1c1c", "fg": "#e6e6e6"}
 
-        self.win = tk.Toplevel(root)
+        self.win = Toplevel(root)
         self.win.withdraw()
         self.win.title(title)
         self.win.resizable(False, False)

@@ -60,9 +60,9 @@ When checked, Mewtator will load a built-in mod that customizes the game's start
 ### Enable DLL Mod Support (`dll_injection_enabled`)
 When checked, Mewtator will:
 
-- allow mods containing `.dll` files to be loaded.
+- allow mods containing `.dll` files to be loaded
 - create a manifest file listing `.dll` files to load within enabled mods
-- interoperate with [Mewtator](https://github.com/githubuser508/mewjector), including
+- interoperate with [Mewjector](https://github.com/githubuser508/mewjector), including
     - writing `chainloader.ini`
     - on Linux, instructing Proton to load `version.dll`
 
@@ -119,6 +119,6 @@ When checked, disables loading the Steam game overlay.
 
 Path to the `compatdata` directory used to store the Proton prefix, where game save data is stored.
 
-If this path is blank, defaults to `<game_install_dir>/../../compatdata/686060/`
+If this path is blank, will check both `<game_install_dir>/../../compatdata/686060/` and `~/.steam/root/steamapps/compatdata/686060/`.
 
 This option may be useful for advanced users who wish to place their save data outside of Steam's default location.

@@ -1,5 +1,6 @@
 import os
 import zipfile
+import sys
 import tkinter as tk
 from tkinter import filedialog, simpledialog
 from tkinter import ttk
@@ -23,9 +24,10 @@ from app.ui.windows.controls_window import ControlsWindow
 from app.ui.windows.progress_window import ProgressWindow
 from app.ui.windows.launch_options_window import LaunchOptionsWindow, ExportSuccessWindow
 from app.ui.components.pointer_menu import PointerMenu
+from app.ui.components.top_level import Toplevel
 from app.ui.layout_utils import fit_window_to_content
 from app.utils.logging_utils import get_logger
-from app.utils.platform_utils import open_file_or_folder
+from app.utils.platform_utils import get_executable_dir, open_file_or_folder
 
 
 class MainController:
@@ -706,7 +708,12 @@ class MainController:
 
     def _export_bat_file(self, enabled_paths, parent_dialog=None):
         """Export launch configuration to a .bat file."""
-        default_name = "launch_mewgenics_mods.bat"
+        if sys.platform == "win32":
+            default_name = "launch_mewgenics_mods.bat"
+            default_extension = ".bat"
+        else:
+            default_name = "launch_mewgenics_mods.sh"
+            default_extension = ".sh"
 
         with self.theme_service.file_dialog_safe_theme():
             filepath = filedialog.asksaveasfilename(
@@ -714,9 +721,9 @@ class MainController:
                 title=self.translation_service.get("messages.export_bat_title"),
                 initialfile=default_name,
                 initialdir=self.config.game_install_dir,
-                defaultextension=".bat",
+                defaultextension=default_extension,
                 filetypes=[
-                    (self.translation_service.get("messages.batch_files"), "*.bat"),
+                    (self.translation_service.get("messages.batch_files"), "*" + default_extension),
                     (self.translation_service.get("messages.all_files"), "*.*"),
                 ]
             )
@@ -730,7 +737,8 @@ class MainController:
                 enabled_paths,
                 filepath,
                 self.config,
-                self.mod_list
+                self.mod_list,
+                self.translation_service,
             )
             
             ExportSuccessWindow(
@@ -867,7 +875,7 @@ class MainController:
         ).show()
     
     def _unpack(self):
-        output_dir = os.path.join(self.config.mod_folder, "_unpacked")
+        output_dir = os.path.join(get_executable_dir(), "unpacked_resources")
         os.makedirs(output_dir, exist_ok=True)
         
         pw = ProgressWindow(self.root, self.translation_service.get("progress.unpacking"), 100, self.theme_service)
@@ -891,7 +899,7 @@ class MainController:
             )
     
     def _repack(self):
-        source_dir = os.path.join(self.config.mod_folder, "_unpacked")
+        source_dir = os.path.join(get_executable_dir(), "unpacked_resources")
         gpak_output = os.path.join(self.config.game_install_dir, "resources.gpak")
         
         pw = ProgressWindow(self.root, self.translation_service.get("progress.repacking"), 100, self.theme_service)
@@ -1150,7 +1158,7 @@ class MainController:
     
     def _show_dll_prompt_dialog(self, title: str, message: str, show_link: bool = True):
         """Show a custom yes/no dialog with optional clickable Mewjector link. Returns True if user clicks Yes."""
-        dialog = tk.Toplevel(self.root)
+        dialog = Toplevel(self.root)
         dialog.withdraw()
         dialog.title(title)
         dialog.resizable(False, False)

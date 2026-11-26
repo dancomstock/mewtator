@@ -1,5 +1,7 @@
 import os
 import shlex
+import sys
+from pathlib import Path
 from typing import List
 from app.core.models.config import Config
 from app.core.models.mod_list import ModList
@@ -107,7 +109,7 @@ class GameLauncherService:
         
         launch_strategy.launch(exe_path, converted_paths, game_dir, config, extra_args, translation_service)
     
-    def get_launch_options(self, game_dir: str, mod_paths: List[str], config=None, mod_list=None) -> str:
+    def get_launch_options(self, game_dir: str, mod_paths: List[str], config: Config, mod_list: ModList) -> str:
         launch_strategy = LaunchStrategyFactory.create(game_dir)
         path_strategy = PathStrategyFactory.create(game_dir)
         
@@ -128,7 +130,7 @@ class GameLauncherService:
 
         launch_strategy.stop(exe_path, game_dir, config, translation_service)
 
-    def export_bat_file(self, game_dir: str, mod_paths: List[str], output_path: str, config=None, mod_list=None) -> str:
+    def export_bat_file(self, game_dir: str, mod_paths: List[str], output_path: str, config: Config, mod_list: ModList, translation_service: TranslationService) -> str:
         """
         Export launch options to a .bat file.
         
@@ -143,28 +145,24 @@ class GameLauncherService:
             Steam launch option string to use with the .bat file
         """
         exe_path = self.find_executable(game_dir)
+
+        launch_strategy = LaunchStrategyFactory.create(game_dir)
         path_strategy = PathStrategyFactory.create(game_dir)
         
         extra_args = self._build_extra_args(config, mod_list)
         converted_paths = path_strategy.convert_mod_paths(mod_paths, game_dir)
         
-        bat_content = "@echo off\n"
-        bat_content += "REM Mewtator Auto-Generated Launch Script\n"
-        bat_content += "REM This script launches Mewgenics with mods\n"
-        
-        cmd_parts = [f'start "" "{exe_path}"']
-        cmd_parts.extend(f'"{arg}"' if ' ' in str(arg) else str(arg) for arg in extra_args)
-        
-        if converted_paths:
-            cmd_parts.append("-modpaths")
-            cmd_parts.extend(f'"{path}"' for path in converted_paths)
-        
-        bat_content += " ".join(cmd_parts) + "\n"
-        bat_content += "exit\n"
-        
+        script_contents = launch_strategy.generate_launch_script(exe_path, converted_paths, game_dir, config, extra_args, translation_service)
+
         with open(output_path, "w", encoding="utf-8") as f:
-            f.write(bat_content)
-        
+            f.write(script_contents)
+
+        if sys.platform != "win32":
+            path_output_path = Path(output_path)
+            mode = path_output_path.stat().st_mode
+            # Copy read permission bits to execute bits
+            path_output_path.chmod(mode | ((mode & 0o444) >> 2))
+
         return f'"{output_path}" %command%'
     
     def should_warn_external_mods(self, game_dir: str, mod_paths: List[str]) -> bool:
