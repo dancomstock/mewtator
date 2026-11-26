@@ -121,6 +121,8 @@
     "game_dir_not_found": "Ot-Nay Ound-Fay",
     "game_dir_not_detected": "Unable-ay o-tay etect-day e-thay Ewgenics-May installation-ay.",
     "missing_mods_title": "Issing-May Ods-May",
+    "modinfo_warning_title": "Od-May ompatibility-Cay arning-Way",
+    "modinfo_warning_text": "E-Thay ollowing-fay ods-may o-day ot-nay ontain-cay e-thay modinfo.gon ile-fay:\n\n{missing}\n\nAfter-ay Ewmagenics-May updates-ay ot-tay ersion-vay 1.2, it-ay ill-way ock-blay ods-may ithout-way is-thay ile-fay om-fray aunching-lay. If-ay ou-yay are-ay already-ay unning-ray 1.2, ese-thay ods-may ay-may already-ay e-bay ocked-blay.\n\nOntinue-Cay aunching-lay anyway-ay?",
     "missing_mods_text": "E-Thay ollowing-fay enabled-ay ods-may are-ay issing-may om-fray e-thay ods-may older-fay:\n\n{missing}\n\nEase-play emove-ray em-thay om-fray e-thay enabled-ay ist-lay or-ay estore-ray e-thay olders-fay.",
     "exe_not_found": "Ewgenics-May.exe-ay ot-nay ound-fay in-ay e-thay elected-say ame-gay irectory-day.",
     "launch_error": "Error-ay",

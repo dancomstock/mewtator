@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import List, Dict, Tuple
 from app.core.models.mod import Mod
 from app.core.models.mod_list import ModList
@@ -90,6 +91,13 @@ class ModService:
     
     def get_enabled_mod_paths(self, mod_list: ModList) -> List[str]:
         return [mod.path for mod in mod_list.enabled_mods]
+
+    def get_mods_missing_modinfo(self, mod_list: ModList) -> List[str]:
+        return [
+            mod.name
+            for mod in mod_list.enabled_mods
+            if not Path(mod.path, "modinfo.gon").is_file()
+        ]
     
     def get_launch_mod_paths(self, mod_list: ModList, config=None) -> List[str]:
         """Return the effective mod paths used to launch the game...

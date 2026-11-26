@@ -121,6 +121,8 @@
     "game_dir_not_found": "未找到",
     "game_dir_not_detected": "无法检测到 Mewgenics 安装。",
     "missing_mods_title": "缺少模组",
+    "modinfo_warning_title": "模组兼容性警告",
+    "modinfo_warning_text": "以下模组缺少 modinfo.gon 文件：\n\n{missing}\n\nMewgenics 更新到 1.2 后，将阻止缺少此文件的模组启动。如果你已经在运行 1.2，这些模组可能已经被阻止。\n\n仍要继续启动吗？",
     "missing_mods_text": "以下已启用的模组在模组文件夹中缺失：\n\n{missing}\n\n请将它们从已启用列表中删除或恢复文件夹。",
     "exe_not_found": "在所选游戏目录中未找到 Mewgenics.exe。",
     "launch_error": "错误",
