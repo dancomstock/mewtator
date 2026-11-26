@@ -142,6 +142,25 @@ class PreviewPanel(ttk.Frame):
         self.url_label.grid(row=3, column=0, sticky="ew", padx=4, pady=(2, 8))
         self.url_label.bind("<Button-1>", self._on_url_click)
 
+        self.mod_settings_button = ttk.Button(
+            self.content,
+            text=self.translation_service.get(
+                "preview.mod_settings",
+                "Mod Settings",
+            ),
+            cursor="hand2",
+        )
+
+        self.mod_settings_button.grid(
+            row=4,
+            column=0,
+            sticky="w",
+            padx=4,
+            pady=(0, 10),
+        )
+        
+        self.mod_settings_button.grid_remove()
+
         self.image_stage = tk.Canvas(
             self.content,
             height=self.EMPTY_PREVIEW_HEIGHT,
@@ -150,7 +169,7 @@ class PreviewPanel(ttk.Frame):
             relief="flat",
         )
 
-        self.image_stage.grid(row=4, column=0, sticky="ew", padx=4)
+        self.image_stage.grid(row=5, column=0, sticky="ew", padx=4)
         self.image_stage.bind("<Configure>", self._schedule_image_render)
 
         # The description is sized from the preview viewport, not from its
@@ -159,7 +178,7 @@ class PreviewPanel(ttk.Frame):
         # and get clipped instead of wrapping... - Tim
         self.desc_frame = ttk.Frame(self.content)
         self.desc_frame.grid(
-            row=5,
+            row=6,
             column=0,
             sticky="ew",
             padx=self.CONTENT_ROW_PADDING,
@@ -193,6 +212,7 @@ class PreviewPanel(ttk.Frame):
             self.version_label,
             self.dll_info_label,
             self.url_label,
+            self.mod_settings_button,
             self.image_stage,
             self.desc_frame,
             self.desc_label,
@@ -298,6 +318,7 @@ class PreviewPanel(ttk.Frame):
         preview_path: Optional[str],
         url: str = "",
         has_dlls: bool = False,
+        has_mod_settings: bool = False,
     ):
         self._show_details()
         self.title_label.config(text=title)
@@ -326,6 +347,11 @@ class PreviewPanel(ttk.Frame):
             self.url_label.config(text=url_text)
         else:
             self.url_label.config(text="")
+
+        if has_mod_settings:
+            self.mod_settings_button.grid()
+        else:
+            self.mod_settings_button.grid_remove()
 
         self.desc_label.config(text=description or "")
         # update_preview can run before another <Configure> occurs, 
@@ -448,6 +474,7 @@ class PreviewPanel(ttk.Frame):
         self.version_label.config(text="")
         self.dll_info_label.config(text="")
         self.url_label.config(text="")
+        self.mod_settings_button.grid_remove()
         self.current_url = ""
         self.source_image = None
         self.live_source_image = None
@@ -458,6 +485,9 @@ class PreviewPanel(ttk.Frame):
         )
         self.empty_message_label.config(text=self._empty_text)
         self._show_empty_state()
+
+    def set_mod_settings_action(self, command):
+        self.mod_settings_button.configure(command=command)
 
     def _on_url_click(self, _event):
         """Open the URL in a web browser."""
